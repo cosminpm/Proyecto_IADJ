@@ -32,14 +32,19 @@ public class AgentNPC : Agent
     private void ApplySteering()
     {
         Rotation = steer.angular;
-        Velocity += steer.linear;
+
+        if (steer.linear == null)
+        {
             
+        }
+        Velocity += steer.linear;
         Position += Velocity * Time.deltaTime;
         Orientation += Rotation * Time.deltaTime;
+        
+        transform.rotation = new Quaternion();
+        transform.Rotate(Vector3.up, Orientation * Mathf.Rad2Deg);
     }
-
-
-
+    
     public virtual void LateUpdate()
     {
         // Reseteamos el steering final.

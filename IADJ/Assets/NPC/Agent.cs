@@ -83,16 +83,27 @@ public abstract class Agent : Body
     {
         if (_drawGizmos)
         {
-            // Color del circulo interior
+            // Circulo interior
             Handles.color = Color.green;
             Handles.DrawWireDisc(Position, Vector3.up, _interiorRadius, _anchuraCirculo);
-            // Color circulo exterior
+            // Circulo exterior
             Handles.color = new Color(0.0431f, 0.423f, 0, 1);
             Handles.DrawWireDisc(Position, Vector3.up, ArrivalRadius, _anchuraCirculo);
 
-            // Color velocidad
+            // Velocidad
             Handles.color = Color.red;
             Handles.DrawLine(Position, Position + Velocity, _anchuraLinea);
+
+            // Angulo interior
+            Handles.color = Color.cyan;
+            Quaternion intRot1 = Quaternion.Euler(0, _interiorAngle * Mathf.Rad2Deg, 0);
+            Quaternion intRot2 = Quaternion.Euler(0, -_interiorAngle * Mathf.Rad2Deg, 0);
+            var position = transform.position;
+            var forward = transform.forward;
+            Handles.DrawLine(position, position + intRot1 * forward);
+            Handles.DrawLine(position, position + intRot2 * forward);
+
+            // Angulo Exterior
         }
     }
 }

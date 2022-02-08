@@ -85,12 +85,15 @@ public class SeleccionarObjetivos : MonoBehaviour
                                 npc.GetComponent<Seek>().NewTarget(targetTerrain);
                             if (npc.GetComponent<Flee>())
                                 npc.GetComponent<Flee>().NewTarget(targetTerrain);
-                            
                         }
                         else if (hitInfo.collider.CompareTag("Protagonista") || hitInfo.collider.CompareTag("NPC"))
                         {
                             if (npc.GetComponent<VelocityMatching>())
                                 npc.GetComponent<VelocityMatching>().NewTarget(hitInfo.transform.gameObject.GetComponent<AgentPlayer>());
+                            if (npc.GetComponent<Arrive>())
+                                npc.GetComponent<Arrive>().NewTarget(hitInfo.transform.gameObject.GetComponent<AgentPlayer>());
+                            if (npc.GetComponent<Align>())
+                                npc.GetComponent<Align>().NewTarget(hitInfo.transform.gameObject.GetComponent<AgentPlayer>());
                         }
                     }
                 }

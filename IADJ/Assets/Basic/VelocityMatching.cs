@@ -5,44 +5,38 @@ public class VelocityMatching : SteeringBehaviour
     /*
      * Velocity Matching consiste en igualar la velocidad del usuario actual con la velocidad del agente seleccionado
      */
-    [SerializeField]
-    private float timeToTarget = 0.1f;
-    public void NewTarget(Agent a)
-    {
-        _target = a;
-    }
-    
-    
-    [SerializeField]
-    private Agent _target;
-    
-    
+    [SerializeField] private Agent target;
+    [SerializeField] private float timeToTarget = 0.1f;
+
     public Agent Target
     {
-        get => _target;
-        set =>_target = value;
+        get => target;
+        set => target = value;
     }
-    
+
+    public void NewTarget(Agent a)
+    {
+        target = a;
+    }
+
     public override Steering GetSteering(Agent agent)
     {
         Steering steer = new Steering();
-        
+
         steer.angular = 0;
-        if (_target == null)
+        if (target == null)
         {
             steer.linear = Vector3.zero;
             return steer;
         }
-        
-        steer.linear = (_target.Velocity - agent.Velocity) / timeToTarget;
-        //Debug.Log(_target.name);
+
+        steer.linear = (target.Velocity - agent.Velocity) / timeToTarget;
         if (steer.linear.magnitude > agent.MaxAcceleration)
         {
             steer.linear.Normalize();
             steer.linear *= agent.MaxAcceleration;
         }
-        
-        //Debug.Log(steer.linear);
+
         return steer;
     }
 }

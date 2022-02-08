@@ -42,17 +42,18 @@ public class Flee : SteeringBehaviour
         Vector3 destino = _target;
 
         // Se calcula el vector entre dos puntos
-        Vector3 direccion = -(destino - origen);
-
-
+        Vector3 direccion = new Vector3(-(destino.x - origen.x),0, -(destino.z - origen.z));
+        
         if (direccion.magnitude > disMaxFlee)
         {
-            direccion = Vector3.zero;
+            direccion = -agent.Velocity;
+            steer.linear = direccion;
+            return steer;
         }
         
         // Se normaliza y se multiplica por la maxima aceleracion del agente
-        direccion = Vector3.Normalize(direccion) * agent.MaxAcceleration;
-        
+        Vector3 vVelocidad = Vector3.Normalize(direccion) * agent.MaxSpeed;
+
         steer.linear = direccion;
         steer.angular = 0;
 
