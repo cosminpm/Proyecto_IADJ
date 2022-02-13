@@ -6,20 +6,20 @@ public class Flee : SteeringBehaviour
 {
     // Declaramos el objeto del que huir 
     [SerializeField]
-    private Vector3 _target;
+    private Agent _target;
     // La distancia maxima que va a huir el personaje
     [SerializeField]
     private float disMaxFlee;
     
     
     // Declara las variables que necesites para este SteeringBehaviour
-    public Vector3 Target
+    public Agent Target
     {
         get => _target;
         set => _target = value;
     }
 
-    public void NewTarget(Vector3 t)
+    public void NewTarget(Agent t)
     {
         _target = t;
     }
@@ -39,7 +39,7 @@ public class Flee : SteeringBehaviour
         Vector3 origen = agent.Position;
 
         // Calculamos la posicion actual
-        Vector3 destino = _target;
+        Vector3 destino = _target.Position;
 
         // Se calcula el vector entre dos puntos
         Vector3 direccion = new Vector3(-(destino.x - origen.x),0, -(destino.z - origen.z));

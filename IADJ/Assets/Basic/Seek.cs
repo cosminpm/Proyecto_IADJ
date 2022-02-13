@@ -4,12 +4,12 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Seek : SteeringBehaviour
 {
-    [SerializeField] private Vector3 target;
+    [SerializeField] private Agent target;
 
     [SerializeField] private float threshHold = 0.5f;
 
     // Declara las variables que necesites para este SteeringBehaviour
-    public Vector3 Target
+    public Agent Target
     {
         get => target;
         set => target = value;
@@ -17,7 +17,7 @@ public class Seek : SteeringBehaviour
 
     // TODO: Preguntar al profesor si esto es correcto
     // Por ahora esto funciona
-    public void NewTarget(Vector3 t)
+    public void NewTarget(Agent t)
     {
         target = t;
     }
@@ -33,20 +33,22 @@ public class Seek : SteeringBehaviour
         steer.angular = 0;
         // Donde queremos estar, es la posicion del nuevo soldado
 
-        if (target == Vector3.zero)
+        if (target == null)
         {
             steer.linear = -agent.Velocity;
             return steer;
         }
         
+        // Posicion de origen
         Vector3 origen = agent.Position;
-        // Donde estamos ahora mismo
-        Vector3 destino = target;
-        // Se calcula el vector entre dos puntos
+
+        // Posicion de destino.
+        Vector3 destino = target.Position;
+
+        // Se calcula el vector entre dos puntos.
         Vector3 direccion = destino - origen;
-        // Se normaliza y se multiplica por la maxima aceleracion del agente
-        
-        
+
+        // Comprobamos si hemos llegado al objetivo. Si es el caso, el agente se para.
         if (direccion.magnitude < threshHold)
         {
             direccion = -agent.Velocity;
@@ -54,6 +56,9 @@ public class Seek : SteeringBehaviour
             return steer;
         }
 
+        // Se normaliza el vector posicion del agente y se multiplica por la velocidad maxima del mismo.
+        // El resultado obtenido sera un vector con la direccion y sentido con origen el agente y destino el target.
+        // El modulo de dicho vector sera la velocidad indicada.
         direccion = Vector3.Normalize(direccion) * agent.MaxSpeed;
         steer.linear = direccion;
         return steer;

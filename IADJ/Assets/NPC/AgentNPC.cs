@@ -37,12 +37,13 @@ public class AgentNPC : Agent
         {
             
         }
+
         Velocity += steer.linear;
         Position += Velocity * Time.deltaTime;
         Orientation += Rotation * Time.deltaTime;
         
         transform.rotation = new Quaternion();
-        transform.Rotate(Vector3.up, Orientation * Mathf.Rad2Deg);
+        transform.Rotate(Vector3.up, Orientation);
     }
     
     public virtual void LateUpdate()
@@ -52,7 +53,7 @@ public class AgentNPC : Agent
         
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
-            GetSteering(behavior);
+                GetSteering(behavior);
     }
     
     private void GetSteering(SteeringBehaviour behavior)

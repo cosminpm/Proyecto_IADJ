@@ -16,8 +16,9 @@ public abstract class Agent : Body
 
     [Tooltip("Ángulo exterior de la IA")] [SerializeField]
     protected float _exteriorAngle = 8.0f; // ángulo sexagesimal.
-
-    [SerializeField] private bool _drawGizmos;
+    
+    [Tooltip("Dibujar todo")] [SerializeField]
+    protected bool _drawGizmos;
     // AÑADIR LAS PROPIEDADES PARA ESTOS ATRIBUTOS. SI LO VES NECESARIO.
 
     [SerializeField] private float _anchuraCirculo = 3;
@@ -78,6 +79,22 @@ public abstract class Agent : Body
             return _interiorRadius;
         }
     }
+    
+    public bool DrawGizmos
+    {
+        get
+        {
+            return _drawGizmos;
+        }
+
+        set
+        {
+            _drawGizmos = value;
+        }
+    }
+
+    
+    
 
     public void OnDrawGizmos()
     {

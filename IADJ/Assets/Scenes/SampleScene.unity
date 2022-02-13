@@ -149,9 +149,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 92832154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9481ee8bea9171145bc457ef4c4a8c67, type: 3}
+  m_Script: {fileID: 11500000, guid: 0112ff4541bef0447a07203055957484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  personajeInvisible: {fileID: 919132149155446097, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
 --- !u!4 &92832156
 Transform:
   m_ObjectHideFlags: 0
@@ -175,7 +176,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -426,6 +427,31 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
   m_PrefabInstance: {fileID: 1013712607}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &724049859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724049857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81e6733aeed8bfd4a98f3aefbf898901, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mass: 1
+  _maxSpeed: 10
+  _maxRotation: 1
+  _maxAcceleration: 1
+  _maxAngularAcc: 1
+  _maxForce: 1
+  _interiorRadius: 9
+  _arrivalRadius: 15
+  _interiorAngle: 45
+  _exteriorAngle: 120
+  _drawGizmos: 1
+  _anchuraCirculo: 3
+  _anchuraLinea: 3
 --- !u!64 &724049861
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -440,31 +466,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4711208715938537054, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
---- !u!114 &724049862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724049857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9397acc2009420c9978652a750f9cec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mass: 0.01
-  _maxSpeed: 1
-  _maxRotation: 1
-  _maxAcceleration: 4
-  _maxAngularAcc: 1
-  _maxForce: 1
-  _interiorRadius: 11.07
-  _arrivalRadius: 27.38
-  _interiorAngle: 11.67
-  _exteriorAngle: 21.45
-  _drawGizmos: 1
-  _anchuraCirculo: 3
-  _anchuraLinea: 3
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,9 +576,9 @@ Transform:
   m_LocalPosition: {x: -0.43820095, y: -1.3368368, z: 1.5510702}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1873587135}
   - {fileID: 724049858}
   - {fileID: 1545304882}
-  - {fileID: 1873587135}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -590,11 +591,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.96
+      value: 17.29
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -602,7 +603,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15.2
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -642,7 +643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_TagString
-      value: Protagonista
+      value: Prota
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
@@ -663,13 +664,43 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545304881}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bbbce573d7d74242bcb01c97c592418, type: 3}
+  m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  timeToTarget: 2
+  target: {fileID: 724049859}
+  threshHold: 0.5
+--- !u!114 &1545304884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545304881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929cd0377a7a59142b1c9f85920f8641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mass: 1
+  _maxSpeed: 5
+  _maxRotation: 1
+  _maxAcceleration: 1
+  _maxAngularAcc: 1
+  _maxForce: 1
+  _interiorRadius: 1
+  _arrivalRadius: 3
+  _interiorAngle: 5.5
+  _exteriorAngle: 8.08
+  _drawGizmos: 1
+  _anchuraCirculo: 3
+  _anchuraLinea: 3
+  steer:
+    angular: 0
+    linear: {x: 0, y: 0, z: 0}
+  listSteerings:
+  - {fileID: 1545304888}
 --- !u!64 &1545304885
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -684,37 +715,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4711208715938537054, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
---- !u!114 &1545304886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545304881}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b6190731f6442278e95ba64ab92b472, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mass: 1
-  _maxSpeed: 6.23
-  _maxRotation: 1
-  _maxAcceleration: 1
-  _maxAngularAcc: 1
-  _maxForce: 1
-  _interiorRadius: 1
-  _arrivalRadius: 3
-  _interiorAngle: 3
-  _exteriorAngle: 8
-  _drawGizmos: 1
-  _anchuraCirculo: 3.29
-  _anchuraLinea: 3
-  steer:
-    angular: 0
-    linear: {x: 0, y: 0, z: 0}
-  listSteerings:
-  - {fileID: 1545304887}
---- !u!114 &1545304887
+--- !u!114 &1545304888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -723,38 +724,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1545304881}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 057d5cd35d0d78d4d9156a4a4ae95f8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8afe35e16ae88444c955fed426d19a25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {x: 0, y: 0, z: 0}
---- !u!114 &1545304888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545304881}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7968ad7a26a24d25ba654471fd546012, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  timeToTarget: 0.1
---- !u!114 &1545304889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545304881}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdf339269e7f4ba3ae63cb8ae169740e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _target: {x: 0, y: 0, z: 0}
-  disMaxFlee: 20
+  target: {fileID: 724049859}
+  timeToTarget: 0
 --- !u!1 &1873587134 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
@@ -788,18 +762,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1873587134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b6190731f6442278e95ba64ab92b472, type: 3}
+  m_Script: {fileID: 11500000, guid: 929cd0377a7a59142b1c9f85920f8641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 3.66
+  _maxSpeed: 5
   _maxRotation: 1
   _maxAcceleration: 1
   _maxAngularAcc: 1
   _maxForce: 1
   _interiorRadius: 1
   _arrivalRadius: 3
-  _interiorAngle: 4.16
+  _interiorAngle: 5.96
   _exteriorAngle: 8
   _drawGizmos: 1
   _anchuraCirculo: 3
@@ -818,10 +792,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1873587134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 057d5cd35d0d78d4d9156a4a4ae95f8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 27ef95e935564fc49b2891af65828572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {x: 0, y: 0, z: 0}
+  target: {fileID: 724049859}
+  timeToTarget: 0.1
 --- !u!1001 &2079230919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -831,7 +806,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
       propertyPath: m_LocalScale.x

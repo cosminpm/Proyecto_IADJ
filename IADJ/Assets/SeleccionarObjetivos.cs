@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class SeleccionarObjetivos : MonoBehaviour
 {
     private List<GameObject> listNPCs = new List<GameObject>();
     private Material matRojo, matBlanco;
-
+    [SerializeField] private GameObject personajeInvisible;
     private void Start()
     {
         matRojo = new Material(Shader.Find("Standard"));
@@ -34,11 +35,12 @@ public class SeleccionarObjetivos : MonoBehaviour
     void Update()
     {
         SelectNPCs();
-        sendOrder();
+        SendOrder();
     }
+
     private void SelectNPCs()
     {
-        // Comprobamos si el ratón golpea a algo en el escenario.
+        // Comprobamos si se hace click en algun punto del escenario.
         if (Input.GetMouseButtonUp(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -50,6 +52,7 @@ public class SeleccionarObjetivos : MonoBehaviour
                     GameObject npc = GameObject.Find(hitInfo.collider.gameObject.name);
                     if (listNPCs.Contains(npc))
                     {
+                        SendNewTarget(npc, null);
                         listNPCs.Remove(npc);
                         npc.GetComponent<MeshRenderer>().material = matBlanco;
                     }
@@ -63,7 +66,7 @@ public class SeleccionarObjetivos : MonoBehaviour
         }
     }
 
-    private void sendOrder()
+    private void SendOrder()
     {
         if (Input.GetMouseButtonUp(1))
         {
@@ -73,31 +76,88 @@ public class SeleccionarObjetivos : MonoBehaviour
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo))
             {
-                Vector3 targetTerrain = hitInfo.point;
                 // Si se esta chocando algo...
                 if (hitInfo.collider != null)
                 {
+                    Agent agent;
+                    if (hitInfo.collider.CompareTag("Terrain"))
+                    {
+                        Vector3 position = hitInfo.point;
+                        GameObject ai = CreateInvisibleAgent(position);
+                        agent = ai.GetComponent<Agent>();
+                    }
+                  
+                    else if (hitInfo.collider.CompareTag("Prota") || hitInfo.collider.CompareTag("NPC"))
+                    {
+                        agent = hitInfo.transform.gameObject.GetComponent<Agent>();
+                    }
+                    
+                    else
+                    {
+                        return;
+                    }
+
                     foreach (var npc in listNPCs)
                     {
-                        if (hitInfo.collider.CompareTag("Terrain"))
-                        {
-                            if (npc.GetComponent<Seek>())
-                                npc.GetComponent<Seek>().NewTarget(targetTerrain);
-                            if (npc.GetComponent<Flee>())
-                                npc.GetComponent<Flee>().NewTarget(targetTerrain);
-                        }
-                        else if (hitInfo.collider.CompareTag("Protagonista") || hitInfo.collider.CompareTag("NPC"))
-                        {
-                            if (npc.GetComponent<VelocityMatching>())
-                                npc.GetComponent<VelocityMatching>().NewTarget(hitInfo.transform.gameObject.GetComponent<AgentPlayer>());
-                            if (npc.GetComponent<Arrive>())
-                                npc.GetComponent<Arrive>().NewTarget(hitInfo.transform.gameObject.GetComponent<AgentPlayer>());
-                            if (npc.GetComponent<Align>())
-                                npc.GetComponent<Align>().NewTarget(hitInfo.transform.gameObject.GetComponent<AgentPlayer>());
-                        }
+                        SendNewTarget(npc, agent);
                     }
+
+                    //EliminarInvisibles();
                 }
             }
         }
     }
+
+    private void SendNewTarget(GameObject npc, Agent agent)
+    {
+        {
+            if (npc.GetComponent<Seek>())
+                npc.GetComponent<Seek>().NewTarget(agent);
+                        
+            if (npc.GetComponent<Flee>())
+                npc.GetComponent<Flee>().NewTarget(agent);
+                        
+            if (npc.GetComponent<VelocityMatching>())
+                npc.GetComponent<VelocityMatching>().NewTarget(agent);
+                        
+            if (npc.GetComponent<Arrive>())
+                npc.GetComponent<Arrive>().NewTarget(agent);
+                        
+            if (npc.GetComponent<Align>())
+                npc.GetComponent<Align>().NewTarget(agent);
+        } 
+    }
+    
+
+    private GameObject CreateInvisibleAgent(Vector3 positionSpawn)
+    {
+        GameObject ai;
+        if (!GameObject.Find("AgenteInvisible"))
+        {
+            ai = Instantiate(personajeInvisible, positionSpawn, Quaternion.identity);
+            ai.AddComponent<AgentInvisible>();
+            ai.AddComponent<MeshCollider>();
+            ai.GetComponent<AgentInvisible>().DrawGizmos = true;
+            ai.GetComponent<MeshRenderer>().enabled = false;
+            ai.GetComponent<Agent>().Position = transform.position;
+            ai.tag = "agentesInvisibles";
+            ai.name = "AgenteInvisible";
+            return ai;
+        }
+
+        ai = GameObject.Find("AgenteInvisible");
+        ai.transform.position = positionSpawn;
+        return ai;
+
+    }
+
+    private void EliminarInvisibles()
+    {
+        GameObject[] agentesInvisibles = GameObject.FindGameObjectsWithTag("agentesInvisibles");
+        foreach(GameObject a in agentesInvisibles)
+        {
+            Destroy(a);
+        }
+    }
+    
 }
