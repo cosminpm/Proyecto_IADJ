@@ -657,20 +657,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
   m_PrefabInstance: {fileID: 2079230919}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1545304883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545304881}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 724049859}
-  threshHold: 0.5
 --- !u!114 &1545304884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,7 +686,7 @@ MonoBehaviour:
     angular: 0
     linear: {x: 0, y: 0, z: 0}
   listSteerings:
-  - {fileID: 1545304888}
+  - {fileID: 1545304889}
 --- !u!64 &1545304885
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -722,13 +708,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545304881}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8afe35e16ae88444c955fed426d19a25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 724049859}
   timeToTarget: 0
+--- !u!114 &1545304889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545304881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  threshHold: 0.5
 --- !u!1 &1873587134 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
@@ -795,8 +795,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ef95e935564fc49b2891af65828572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 724049859}
+  target: {fileID: 0}
   timeToTarget: 0.1
+--- !u!114 &1873587141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873587134}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  threshHold: 0.5
 --- !u!1001 &2079230919
 PrefabInstance:
   m_ObjectHideFlags: 0

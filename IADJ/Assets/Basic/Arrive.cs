@@ -62,12 +62,6 @@ public class Arrive : SteeringBehaviour
             speedToTarget = agent.MaxSpeed;
         }
 
-        // TODO: No se si se hace así 
-        // if (distance <= target.InteriorAngle)
-        // {
-        //     steer.angular = target.Orientation;
-        // }
-
         Vector3 velocityToTarget = Vector3.Normalize(direction) * speedToTarget;
         steer.linear = (velocityToTarget - agent.Velocity) / timeToTarget;
 

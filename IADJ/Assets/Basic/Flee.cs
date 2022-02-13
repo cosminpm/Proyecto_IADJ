@@ -35,6 +35,13 @@ public class Flee : SteeringBehaviour
         // Construimos el nuevo steering
         Steering steer = new Steering();
 
+        if (_target == null)
+        {
+            steer.linear = -agent.Velocity;
+            return steer;
+        }
+        
+        
         // Calculamos la posicion contraria a la del agente (la posicion objetivo)
         Vector3 origen = agent.Position;
 

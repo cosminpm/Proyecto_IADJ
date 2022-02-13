@@ -27,21 +27,14 @@ public class AgentNPC : Agent
     {
         ApplySteering();
     }
-
-
+    
     private void ApplySteering()
     {
-        Rotation = steer.angular;
-
-        if (steer.linear == null)
-        {
-            
-        }
-
-        Velocity += steer.linear;
-        Position += Velocity * Time.deltaTime;
-        Orientation += Rotation * Time.deltaTime;
+        Velocity += steer.linear * Time.deltaTime;
+        Position += Velocity  * Time.deltaTime;
+        Rotation += steer.angular * Time.deltaTime;
         
+        Orientation = mapToRange(Rotation) ;
         transform.rotation = new Quaternion();
         transform.Rotate(Vector3.up, Orientation);
     }
@@ -67,5 +60,19 @@ public class AgentNPC : Agent
 
         // El resultado final se guarda para ser aplicado en el siguiente frame.
         steer = kinematicFinal;
+    }
+    
+    private float mapToRange(float rotation)
+    {
+        rotation %= 360;
+
+        if (Mathf.Abs(rotation) > 180)
+        {
+            if (rotation < 0.0f)
+                rotation += 360;
+            else
+                rotation -= 360;
+        }
+        return rotation;
     }
 }

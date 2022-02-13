@@ -2,14 +2,10 @@
 
 public class Align : SteeringBehaviour
 {
-    
-
     // Declaramos las variables que vamos a necesitar. 
-    [SerializeField]
-    private Agent target;
+    [SerializeField] private Agent target;
 
-    [SerializeField]
-    private float timeToTarget;
+    [SerializeField] private float timeToTarget;
 
     private float targetRotation;
 
@@ -24,19 +20,16 @@ public class Align : SteeringBehaviour
     {
         target = t;
     }
-    
+
     void Start()
     {
         nameSteering = "Align Steering";
     }
-    
+
     public override Steering GetSteering(Agent agent)
     {
         // Creamos el steering.
         Steering steer = new Steering();
-        steer.linear = Vector3.zero;
-        
-        // Si el target no existe, no hacemos nada.
         if (target == null)
         {
             steer.linear = Vector3.zero;
@@ -46,36 +39,33 @@ public class Align : SteeringBehaviour
         // Obtenemos la direccion de giro.
         float rotation = target.Orientation - agent.Orientation;
 
-        // Mapeamos el resultado a un intervalo de (0, 360) grados.
+        // Mapeamos el resultado a un intervalo de (-180, 180) grados.
         rotation = mapToRange(rotation);
         float rotationSize = Mathf.Abs(rotation);
-
-        if (rotationSize < target.InteriorAngle)
+        
+        if (rotationSize <= target.InteriorAngle)
         {
-            steer.angular = -target.Rotation;
-            return steer;
+            if (Mathf.Abs(agent.Rotation) < 0.1 )
+                return steer;
         }
-
-        if (rotationSize > target.ExteriorAngle)
+        
+        else if (rotationSize > target.ExteriorAngle)
             targetRotation = target.MaxRotation;
         else
             targetRotation = target.MaxRotation * rotationSize / target.ExteriorAngle;
-
-
+        
+        // Multiplicacion por +-1
         targetRotation *= rotation / rotationSize;
-
-        steer.angular = targetRotation - agent.Rotation;
-
+        steer.angular = targetRotation- agent.Rotation; 
         steer.angular /= timeToTarget;
-
         float angularAcceleration = Mathf.Abs(steer.angular);
-
+        
         if (angularAcceleration > target.MaxAcceleration)
         {
             steer.angular /= angularAcceleration;
             steer.angular *= target.MaxAcceleration;
         }
-
+        steer.angular = rotation;
         steer.linear = Vector3.zero;
         return steer;
     }
@@ -83,14 +73,14 @@ public class Align : SteeringBehaviour
     private float mapToRange(float rotation)
     {
         rotation %= 360;
-        
-        if (Mathf.Abs(rotation) > 180) {
+
+        if (Mathf.Abs(rotation) > 180)
+        {
             if (rotation < 0.0f)
                 rotation += 360;
             else
                 rotation -= 360;
         }
-
         return rotation;
     }
 }

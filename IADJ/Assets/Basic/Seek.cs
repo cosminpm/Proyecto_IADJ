@@ -6,8 +6,6 @@ public class Seek : SteeringBehaviour
 {
     [SerializeField] private Agent target;
 
-    [SerializeField] private float threshHold = 0.5f;
-
     // Declara las variables que necesites para este SteeringBehaviour
     public Agent Target
     {
@@ -38,7 +36,7 @@ public class Seek : SteeringBehaviour
             steer.linear = -agent.Velocity;
             return steer;
         }
-        
+
         // Posicion de origen
         Vector3 origen = agent.Position;
 
@@ -49,7 +47,7 @@ public class Seek : SteeringBehaviour
         Vector3 direccion = destino - origen;
 
         // Comprobamos si hemos llegado al objetivo. Si es el caso, el agente se para.
-        if (direccion.magnitude < threshHold)
+        if (direccion.magnitude < target.ArrivalRadius)
         {
             direccion = -agent.Velocity;
             steer.linear = direccion;

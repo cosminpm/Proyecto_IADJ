@@ -10,13 +10,12 @@ public class Body : MonoBehaviour
     [SerializeField] protected float _maxForce = 1;
 
     protected Vector3 _acceleration; // aceleración lineal
-    protected float _angularAcc; // aceleración angular
     private Vector3 _velocity; // velocidad lineal
     protected float _rotation; // velocidad angular
     protected float _speed; // velocidad escalar
 
     // Vamos a guardar la orientacion como angulos de 0 a 360
-    protected float _orientation; // 'posición' angular
+    [SerializeField] protected float _orientation; // 'posición' angular
 
     public float Mass
     {
@@ -40,10 +39,13 @@ public class Body : MonoBehaviour
     {
         get
         {
-            _velocity = limitVelocity(_velocity);
+            _velocity = LimitVelocity(_velocity);
             return _velocity;
         }
-        set { _velocity = limitVelocity(value); }
+        set
+        {
+            _velocity = LimitVelocity(value);
+        }
     }
 
     public float MaxRotation
@@ -55,7 +57,14 @@ public class Body : MonoBehaviour
     public float Rotation
     {
         get { return _rotation; }
-        set { _rotation = value; }
+        set
+        {
+            if (Mathf.Abs(value) < 0.1)
+            {
+                _rotation = 0;
+            }
+            _rotation = value;
+        }
     }
 
     public float MaxAcceleration
@@ -68,12 +77,6 @@ public class Body : MonoBehaviour
     {
         get { return _acceleration; }
         set { _acceleration = value; }
-    }
-
-    public float AngularAcc
-    {
-        get { return _angularAcc; }
-        set { _angularAcc = value; }
     }
 
     // public Vector3 Position. Recuerda. Esta es la única propiedad que trabaja sobre transform.
@@ -89,11 +92,19 @@ public class Body : MonoBehaviour
         get { return _orientation; }
         set
         {
-            // TODO: Creo que aquí es donde hay que cambiar la rotación según los ángulos
-            if (_velocity.magnitude > 0)
-                _orientation = Mathf.Atan2(Velocity.x, Velocity.z);
+            _orientation = value;
+            
         }
     }
+    public float MaxAngularAcceleartion
+    {
+        get { return _maxAngularAcc; }
+        set
+        {
+            _maxAcceleration = value;
+        }
+    }
+    
 
     public float Speed
     {
@@ -114,11 +125,15 @@ public class Body : MonoBehaviour
     // public float PredictNearestApproachTime(Bodi other, float timeInit, float timeEnd)
     // public float PredictNearestApproachDistance3(Bodi other, float timeInit, float timeEnd)
 
-    private Vector3 limitVelocity(Vector3 v)
+    private Vector3 LimitVelocity(Vector3 v)
     {
+        
         _velocity = v;
         if (_velocity.magnitude > _maxSpeed)
+        {
             _velocity = _velocity.normalized * _maxSpeed;
+        }
+           
         return _velocity;
     }
 }

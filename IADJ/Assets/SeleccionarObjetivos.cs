@@ -92,6 +92,7 @@ public class SeleccionarObjetivos : MonoBehaviour
                         agent = hitInfo.transform.gameObject.GetComponent<Agent>();
                     }
                     
+                    // En caso de que no se esté clickando nada, el método termina
                     else
                     {
                         return;
@@ -101,8 +102,7 @@ public class SeleccionarObjetivos : MonoBehaviour
                     {
                         SendNewTarget(npc, agent);
                     }
-
-                    //EliminarInvisibles();
+                    
                 }
             }
         }
@@ -131,33 +131,21 @@ public class SeleccionarObjetivos : MonoBehaviour
 
     private GameObject CreateInvisibleAgent(Vector3 positionSpawn)
     {
+        string nombreAI = "AgenteInvisible";
         GameObject ai;
-        if (!GameObject.Find("AgenteInvisible"))
+        if (!GameObject.Find(nombreAI))
         {
             ai = Instantiate(personajeInvisible, positionSpawn, Quaternion.identity);
             ai.AddComponent<AgentInvisible>();
-            ai.AddComponent<MeshCollider>();
             ai.GetComponent<AgentInvisible>().DrawGizmos = true;
             ai.GetComponent<MeshRenderer>().enabled = false;
-            ai.GetComponent<Agent>().Position = transform.position;
-            ai.tag = "agentesInvisibles";
-            ai.name = "AgenteInvisible";
+            ai.name = nombreAI;
             return ai;
         }
 
-        ai = GameObject.Find("AgenteInvisible");
+        ai = GameObject.Find(nombreAI);
         ai.transform.position = positionSpawn;
         return ai;
 
     }
-
-    private void EliminarInvisibles()
-    {
-        GameObject[] agentesInvisibles = GameObject.FindGameObjectsWithTag("agentesInvisibles");
-        foreach(GameObject a in agentesInvisibles)
-        {
-            Destroy(a);
-        }
-    }
-    
 }
