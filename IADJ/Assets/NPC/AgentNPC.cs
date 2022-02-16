@@ -31,10 +31,10 @@ public class AgentNPC : Agent
     private void ApplySteering()
     {
         Velocity += steer.linear * Time.deltaTime;
-        Position += Velocity  * Time.deltaTime;
+        Position += Velocity * Time.deltaTime;
         Rotation += steer.angular * Time.deltaTime;
-        
-        Orientation = mapToRange(Rotation) ;
+
+        Orientation = Orientation + steer.angular * Time.deltaTime;
         transform.rotation = new Quaternion();
         transform.Rotate(Vector3.up, Orientation);
     }

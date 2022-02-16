@@ -4,17 +4,11 @@ public class AntiAlign : SteeringBehaviour
 {
     
     [SerializeField]
-    private Vector3 _target;
-
-    public Vector3 Target
-    {
-        get => _target;
-        set =>_target = value;
-    }
+    private Vector3 target;
     
     public void NewTarget(Vector3 t)
     {
-        _target = t;
+        target = t;
     }
     
     void Start()

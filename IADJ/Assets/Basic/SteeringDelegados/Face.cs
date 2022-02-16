@@ -3,18 +3,6 @@ using UnityEngine;
 
 public class Face : Align
 {
-    private Agent Target
-    {
-        get => target;
-        set => target = value;
-    }
-
-    // Obtenemos el target.
-    public void NewTarget(Agent t)
-    {
-        target = t;
-    }
-
     void Start()
     {
         nameSteering = "Face Steering";
@@ -23,10 +11,10 @@ public class Face : Align
     public override Steering GetSteering(Agent agent)
     {
 
-        if (target == null)
+        if (Target == null)
             return new Steering();
 
-        Agent explicitTarget = this.target;
+        Agent explicitTarget = Target;
 
         // Calculamos la dirección al objetivo.
         Vector3 direction = explicitTarget.Position - agent.Position;
@@ -38,8 +26,8 @@ public class Face : Align
         }
 
         // Juntamos los objetivos.
-        base.target = explicitTarget;
-        base.target.Orientation = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        Target = explicitTarget;
+        Target.Orientation = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
 
         // Delegamos el resultado a Align. 
         return base.GetSteering(agent);

@@ -7,13 +7,6 @@ public class VelocityMatching : SteeringBehaviour
      */
     [SerializeField] private Agent target;
     [SerializeField] private float timeToTarget = 0.1f;
-
-    public Agent Target
-    {
-        get => target;
-        set => target = value;
-    }
-
     public void NewTarget(Agent a)
     {
         target = a;

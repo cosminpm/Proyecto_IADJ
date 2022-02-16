@@ -9,7 +9,7 @@ public class Align : SteeringBehaviour
 
     private float targetRotation;
 
-    private Agent Target
+    protected Agent Target
     {
         get => target;
         set => target = value;

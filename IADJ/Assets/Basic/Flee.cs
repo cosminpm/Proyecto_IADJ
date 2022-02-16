@@ -6,22 +6,21 @@ public class Flee : SteeringBehaviour
 {
     // Declaramos el objeto del que huir 
     [SerializeField]
-    private Agent _target;
+    private Agent target;
     // La distancia maxima que va a huir el personaje
     [SerializeField]
     private float disMaxFlee;
     
-    
     // Declara las variables que necesites para este SteeringBehaviour
-    public Agent Target
+    protected Agent Target
     {
-        get => _target;
-        set => _target = value;
+        get => target;
+        set => target = value;
     }
 
-    public void NewTarget(Agent t)
+    public virtual void NewTarget(Agent t)
     {
-        _target = t;
+        target = t;
     }
 
     // Start is called before the first frame update
@@ -35,7 +34,7 @@ public class Flee : SteeringBehaviour
         // Construimos el nuevo steering
         Steering steer = new Steering();
 
-        if (_target == null)
+        if (target == null)
         {
             steer.linear = -agent.Velocity;
             return steer;
@@ -46,7 +45,7 @@ public class Flee : SteeringBehaviour
         Vector3 origen = agent.Position;
 
         // Calculamos la posicion actual
-        Vector3 destino = _target.Position;
+        Vector3 destino = target.Position;
 
         // Se calcula el vector entre dos puntos
         Vector3 direccion = new Vector3(-(destino.x - origen.x),0, -(destino.z - origen.z));
@@ -61,7 +60,7 @@ public class Flee : SteeringBehaviour
         // Se normaliza y se multiplica por la maxima aceleracion del agente
         Vector3 vVelocidad = Vector3.Normalize(direccion) * agent.MaxSpeed;
 
-        steer.linear = direccion;
+        steer.linear = vVelocidad;
         steer.angular = 0;
 
         return steer;

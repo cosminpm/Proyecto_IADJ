@@ -9,11 +9,6 @@ public class Arrive : SteeringBehaviour
     [SerializeField] private float timeToTarget = 0.1f;
 
     // Declara las variables que necesites para este SteeringBehaviour
-    public Agent Target
-    {
-        get => target;
-        set => target = value;
-    }
 
     public void NewTarget(Agent a)
     {

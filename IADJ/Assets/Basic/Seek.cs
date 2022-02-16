@@ -6,16 +6,9 @@ public class Seek : SteeringBehaviour
 {
     [SerializeField] protected Agent target;
 
-    // Declara las variables que necesites para este SteeringBehaviour
-    protected Agent Target
-    {
-        get => target;
-        set => target = value;
-    }
-
     // TODO: Preguntar al profesor si esto es correcto
     // Por ahora esto funciona
-    public void NewTarget(Agent t)
+    public virtual void NewTarget(Agent t)
     {
         target = t;
     }
@@ -23,6 +16,11 @@ public class Seek : SteeringBehaviour
     void Start()
     {
         nameSteering = "Seek Steering";
+    }
+    public Agent Target
+    {
+        get => target;
+        set => target = value;
     }
 
     public override Steering GetSteering(Agent agent)

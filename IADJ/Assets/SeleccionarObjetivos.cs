@@ -111,6 +111,7 @@ public class SeleccionarObjetivos : MonoBehaviour
     private void SendNewTarget(GameObject npc, Agent agent)
     {
         {
+            // Steerings Basicos
             if (npc.GetComponent<Seek>())
                 npc.GetComponent<Seek>().NewTarget(agent);
                         
@@ -125,11 +126,22 @@ public class SeleccionarObjetivos : MonoBehaviour
                         
             if (npc.GetComponent<Align>())
                 npc.GetComponent<Align>().NewTarget(agent);
+            
+            // Steerings Delegados
+            if (npc.GetComponent<Pursue>())
+                npc.GetComponent<Pursue>().NewTarget(agent);
+            
+            if (npc.GetComponent<Evade>())
+                npc.GetComponent<Evade>().NewTarget(agent);
+            
+            if (npc.GetComponent<Face>())
+                npc.GetComponent<Face>().NewTarget(agent);
+            
         } 
     }
     
 
-    private GameObject CreateInvisibleAgent(Vector3 positionSpawn)
+    public virtual GameObject CreateInvisibleAgent(Vector3 positionSpawn)
     {
         string nombreAI = "AgenteInvisible";
         GameObject ai;
@@ -146,6 +158,5 @@ public class SeleccionarObjetivos : MonoBehaviour
         ai = GameObject.Find(nombreAI);
         ai.transform.position = positionSpawn;
         return ai;
-
     }
 }
