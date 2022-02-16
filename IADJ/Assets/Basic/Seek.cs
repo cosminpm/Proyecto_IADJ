@@ -4,10 +4,10 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Seek : SteeringBehaviour
 {
-    [SerializeField] private Agent target;
+    [SerializeField] protected Agent target;
 
     // Declara las variables que necesites para este SteeringBehaviour
-    public Agent Target
+    protected Agent Target
     {
         get => target;
         set => target = value;
