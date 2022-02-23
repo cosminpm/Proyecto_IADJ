@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using System.Drawing;
+
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.XR;
 using Color = UnityEngine.Color;
 
 namespace Grid
@@ -35,8 +33,8 @@ namespace Grid
             {
                 for (int j = 0; j < zSize; j++)
                 {
-                    float x = (i * sizeOfCell[0] - sizeOfMap[0] / 2) + sizeOfCell[0] / 2;
-                    float z = (j * sizeOfCell[1] - sizeOfMap[1] / 2) + sizeOfCell[0] / 2;
+                    float x = i * sizeOfCell[0] - sizeOfMap[0] / 2 + sizeOfCell[0] / 2;
+                    float z = j * sizeOfCell[1] - sizeOfMap[1] / 2 + sizeOfCell[1] / 2;
                     Vector3 center = new Vector3(x, 0, z);
                     gridMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center);
                 }
