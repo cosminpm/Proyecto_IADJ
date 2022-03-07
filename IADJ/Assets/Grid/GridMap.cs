@@ -9,21 +9,26 @@ namespace Grid
     public class GridMap : MonoBehaviour
     {
         // Public variables
-     
-        
         public int xSize, zSize;
         public bool drawWireGM, drawCenterGM;
 
         // Private variables
         private bool _initialized;
         private Cell[,] _gridMap;
-        private List<Cell> _cellsClicked;
+
+        private Cell cellClicked;
+        private List<Cell> _allowedCells;
+        private List<Cell> _notAllowedCells;
+
         void Start()
         {
+            _allowedCells = new List<Cell>();
+            _notAllowedCells = new List<Cell>();
             CreateGrid();
-            _cellsClicked = new List<Cell>();
+            
             
             _initialized = true;
+            AddAllowedCells();
             CreateAllBoxColliders();
         }
 
@@ -32,7 +37,6 @@ namespace Grid
             CheckIfCellClicked();
             
         }
-
 
         private void CreateGrid()
         {
@@ -59,35 +63,48 @@ namespace Grid
             return new[] {x, z};
         }
 
-
-        public float[] GetSizeOfCell()
+        private float[] GetSizeOfCell()
         {
             float x = GetSizeOfPlane()[0] / xSize;
             float z = GetSizeOfPlane()[1] / zSize;
             return new[] {x, z};
         }
 
-
         private void OnDrawGizmos()
         {
             if (_initialized)
             {
                 DrawGridMap();
-                DrawCellsClicked();
+                DrawCellClicked();
+                DrawCellsAllowance();
             }
-   
         }
 
-        private void DrawCellsClicked()
+        private void DrawCellClicked()
         {
-            foreach (var cell in _cellsClicked)
+            if (cellClicked != null)
             {
-                cell.DrawCellColored();
+                cellClicked.DrawCellColored(Color.blue);
             }
         }
-        
-        
-        public void DrawGridMap()
+
+        private void DrawCellsAllowance()
+        {
+            foreach (var cell in _allowedCells)
+            {
+                Color c = new Color(.25f, .25f, .95f, 0.75f);
+                cell.DrawCellColored(c);
+            }
+
+            foreach (var cell in _notAllowedCells)
+            {
+                Color c = new Color(0.952f, 0.286f, 0.286f, 0.75f);
+                cell.DrawCellColored(c);
+            }
+            
+        }
+
+        private void DrawGridMap()
         {
             Handles.color = Color.black;
             for (int i = 0; i < xSize; i++)
@@ -96,7 +113,7 @@ namespace Grid
                 {
                     if (drawCenterGM)
                         _gridMap[i, j].DrawCenter();
-                    
+
                     if (drawWireGM)
                         _gridMap[i, j].DrawCell();
                 }
@@ -107,9 +124,11 @@ namespace Grid
         {
             GameObject parent = new GameObject();
             parent.name = "parent";
-            _gridMap[0, 0].CreateBoxCollider(parent);
+            foreach (var cell in _notAllowedCells)
+            {
+                cell.CreateBoxCollider(parent);
+            }
         }
-
 
         private void CheckIfCellClicked()
         {
@@ -117,16 +136,33 @@ namespace Grid
             {
                 for (int j = 0; j < zSize; j++)
                 {
-                    if (_gridMap[i, j].CheckIfCellClicked() && !_cellsClicked.Contains(_gridMap[i, j]))
+                    if (_gridMap[i, j].CheckIfCellClicked())
                     {
-                        _cellsClicked.Add(_gridMap[i, j]);
+                        cellClicked = _gridMap[i, j];
                     }
                 }
             }
         }
-        
 
-        // Métodos de DEBUG
+
+        private void AddAllowedCells()
+        {
+            _allowedCells = new List<Cell>();
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < zSize; j++)
+                {
+                    if (_gridMap[i, j].CheckCollision() && !_notAllowedCells.Contains(_gridMap[i, j]))
+                        _notAllowedCells.Add(_gridMap[i,j]);
+
+                    else if (!_gridMap[i, j].CheckCollision() && !_allowedCells.Contains(_gridMap[i, j]))
+                        _allowedCells.Add(_gridMap[i, j]);
+                }
+            }
+        }
+
+
+        // Metodos de DEBUG
         private void GridMapToString()
         {
             Debug.Log("Start of Grid");

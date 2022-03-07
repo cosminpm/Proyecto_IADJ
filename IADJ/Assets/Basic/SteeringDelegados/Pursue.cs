@@ -46,7 +46,6 @@ public class Pursue : Seek
         {
             prediccion = maxPrediccion;
         }
-        //Debug.Log("a");
         Target.Position = targetAux.Position;
         Target.Position += targetAux.Velocity * prediccion;
         prediccionGO.transform.position = Target.Position;
