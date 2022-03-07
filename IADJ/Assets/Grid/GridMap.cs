@@ -1,4 +1,5 @@
-
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Color = UnityEngine.Color;
@@ -7,25 +8,35 @@ namespace Grid
 {
     public class GridMap : MonoBehaviour
     {
+        // Public variables
+     
+        
         public int xSize, zSize;
-        public Cell[,] gridMap;
-        private bool _initialized;
+        public bool drawWireGM, drawCenterGM;
 
+        // Private variables
+        private bool _initialized;
+        private Cell[,] _gridMap;
+        private List<Cell> _cellsClicked;
         void Start()
         {
             CreateGrid();
-            GridMapToString();
+            _cellsClicked = new List<Cell>();
+            
             _initialized = true;
+            CreateAllBoxColliders();
         }
 
         void Update()
         {
+            CheckIfCellClicked();
+            
         }
 
 
         private void CreateGrid()
         {
-            gridMap = new Cell[xSize, zSize];
+            _gridMap = new Cell[xSize, zSize];
             float[] sizeOfMap = GetSizeOfPlane();
             float[] sizeOfCell = GetSizeOfCell();
 
@@ -36,7 +47,7 @@ namespace Grid
                     float x = i * sizeOfCell[0] - sizeOfMap[0] / 2 + sizeOfCell[0] / 2;
                     float z = j * sizeOfCell[1] - sizeOfMap[1] / 2 + sizeOfCell[1] / 2;
                     Vector3 center = new Vector3(x, 0, z);
-                    gridMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center);
+                    _gridMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center);
                 }
             }
         }
@@ -56,6 +67,66 @@ namespace Grid
             return new[] {x, z};
         }
 
+
+        private void OnDrawGizmos()
+        {
+            if (_initialized)
+            {
+                DrawGridMap();
+                DrawCellsClicked();
+            }
+   
+        }
+
+        private void DrawCellsClicked()
+        {
+            foreach (var cell in _cellsClicked)
+            {
+                cell.DrawCellColored();
+            }
+        }
+        
+        
+        public void DrawGridMap()
+        {
+            Handles.color = Color.black;
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < zSize; j++)
+                {
+                    if (drawCenterGM)
+                        _gridMap[i, j].DrawCenter();
+                    
+                    if (drawWireGM)
+                        _gridMap[i, j].DrawCell();
+                }
+            }
+        }
+
+        private void CreateAllBoxColliders()
+        {
+            GameObject parent = new GameObject();
+            parent.name = "parent";
+            _gridMap[0, 0].CreateBoxCollider(parent);
+        }
+
+
+        private void CheckIfCellClicked()
+        {
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < zSize; j++)
+                {
+                    if (_gridMap[i, j].CheckIfCellClicked() && !_cellsClicked.Contains(_gridMap[i, j]))
+                    {
+                        _cellsClicked.Add(_gridMap[i, j]);
+                    }
+                }
+            }
+        }
+        
+
+        // Métodos de DEBUG
         private void GridMapToString()
         {
             Debug.Log("Start of Grid");
@@ -64,32 +135,11 @@ namespace Grid
                 Debug.Log("ROW " + i);
                 for (int j = 0; j < zSize; j++)
                 {
-                    Debug.Log(gridMap[i, j].GetCenter());
+                    Debug.Log(_gridMap[i, j].GetCenter());
                 }
             }
 
             Debug.Log("Finish of Map");
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (_initialized)
-                DrawGridMap();
-        }
-
-        private void DrawGridMap()
-        {
-            Handles.color = Color.black;
-            for (int i = 0; i < xSize; i++)
-            {
-                for (int j = 0; j < zSize; j++)
-                {
-                    Handles.DrawWireCube(gridMap[i, j].GetCenter(),
-                        new Vector3(gridMap[i, j].GetSizeX(), 0, gridMap[i, j].GetSizeZ()));
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(gridMap[i, j].GetCenter(), 5);
-                }
-            }
         }
     }
 }

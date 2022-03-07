@@ -3,7 +3,7 @@
 public class Align : SteeringBehaviour
 {
     // Declaramos las variables que vamos a necesitar. 
-    [SerializeField] private Agent target;
+    [SerializeField] protected Agent target;
 
     [SerializeField] private float timeToTarget;
 

@@ -136,4 +136,9 @@ public class Body : MonoBehaviour
            
         return _velocity;
     }
+    
+    public Vector3 OrientationToVector()
+    {
+        return new Vector3(Mathf.Sin(_orientation), 0, Mathf.Cos(_orientation));
+    }
 }
