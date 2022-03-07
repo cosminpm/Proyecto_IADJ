@@ -112,16 +112,13 @@ public class Cell
 
     public bool CheckCollision()
     {
-        if (Physics.OverlapBox(_center, new Vector3(_sizeX, 1, _sizeZ) / 2).Length > 0)
+        Collider[] colls = Physics.OverlapBox(_center, new Vector3(_sizeX, 1, _sizeZ) / 2);
+        foreach (var c in colls)
         {
-            return true;
+            if (c.transform.CompareTag("Untagged"))
+                return true;
         }
-            
-        else
-        {
-            return false;
-        }
-        //return _collider.GetComponent<Coll>().collisionBool;
+        return false;
     }
 
 }

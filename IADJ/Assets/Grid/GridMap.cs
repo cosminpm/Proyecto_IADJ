@@ -25,8 +25,6 @@ namespace Grid
             _allowedCells = new List<Cell>();
             _notAllowedCells = new List<Cell>();
             CreateGrid();
-            
-            
             _initialized = true;
             AddAllowedCells();
             CreateAllBoxColliders();
