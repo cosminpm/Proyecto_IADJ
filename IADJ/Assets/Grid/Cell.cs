@@ -90,7 +90,6 @@ public class Cell
         cube.name = "CubeCollider";
         cube.tag = "Terrain";
         
-
         float sizeX = cube.GetComponent<Renderer>().bounds.size.x;
         float sizeZ = cube.GetComponent<Renderer>().bounds.size.z;
 
