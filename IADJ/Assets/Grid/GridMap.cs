@@ -236,8 +236,6 @@ namespace Grid
                 DrawCellClicked();
                 DrawCellsAllowance();
             }
-
-            Handles.color = Color.green;
         }
 
         private void DrawCellClicked()
