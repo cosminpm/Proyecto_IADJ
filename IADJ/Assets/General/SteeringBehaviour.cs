@@ -9,6 +9,9 @@ public abstract class SteeringBehaviour : MonoBehaviour
 
     protected string nameSteering = "no steering";
 
+    // El peso asociado a cada steering.
+    public float weight;
+
     public string NameSteering
     {
         set { nameSteering = value; }

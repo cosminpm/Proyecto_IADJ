@@ -125,6 +125,8 @@ public class Body : MonoBehaviour
     // public float PredictNearestApproachTime(Bodi other, float timeInit, float timeEnd)
     // public float PredictNearestApproachDistance3(Bodi other, float timeInit, float timeEnd)
 
+
+    
     private Vector3 LimitVelocity(Vector3 v)
     {
         
