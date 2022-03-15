@@ -214,10 +214,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba8c72d764e8be408ee1b64f11c94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSize: 50
-  zSize: 50
-  drawWireGM: 1
-  drawCenterGM: 0
+  LIMITER_CELLS: 1000
+  drawWireGm: 1
+  drawCenterGm: 0
+  drawAllowedCells: 1
+  modeOfTerrain: 0
+  nameFloor: Floor(Clone)
+  nameParent: Plane
 --- !u!1 &169954593
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,8 +467,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424779055}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 40.66643, y: 40.66643, z: 40.66643}
+  m_LocalPosition: {x: 0, y: 0, z: 153.3}
+  m_LocalScale: {x: 160, y: 50, z: 60}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -1350,7 +1353,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836609189}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -23.2, y: 7, z: -201.2}
+  m_LocalPosition: {x: -23.2, y: -4.5, z: -195}
   m_LocalScale: {x: 403.69, y: 31.709488, z: 1}
   m_Children: []
   m_Father: {fileID: 31104081}
