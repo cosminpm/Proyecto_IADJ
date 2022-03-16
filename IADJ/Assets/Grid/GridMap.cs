@@ -24,7 +24,7 @@ namespace Grid
         private List<Cell> _allowedCells;
         private List<Cell> _notAllowedCells;
 
-        private float _sizePlaneX, _sizePlaneZ;
+        private float _sizePlaneX, _sizePlaneZ, _heightTerrain;
 
         public String nameFloor = "Floor(Clone)";
         public String nameParent = "MazePathFinderLRTA";
@@ -51,7 +51,6 @@ namespace Grid
             _gridMap = new Cell[_xSize, _zSize];
 
             float[] sizeOfCell = GetSizeOfCell();
-            Debug.Log(sizeOfCell[0]);
 
             for (int i = 0; i < _xSize; i++)
             {
@@ -63,8 +62,8 @@ namespace Grid
                     z = j * sizeOfCell[1] + sizeOfCell[1] / 2;
                     x += primerVector3.x;
                     z += primerVector3.z;
-                    
-                    Vector3 center = new Vector3(x, 0, z);
+
+                    Vector3 center = new Vector3(x, _heightTerrain, z);
                     _gridMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center);
                 }
             }
@@ -75,7 +74,7 @@ namespace Grid
             GameObject father = GameObject.Find(nameParent);
             if (modeOfTerrain != 0)
                 return CornerTopLeftMultiple(father);
-            
+
             else
                 return CornerOnePlane(father);
         }
@@ -90,10 +89,12 @@ namespace Grid
                 Transform child = father.transform.GetChild(i);
                 if (child.name.Equals(nameFloor))
                 {
-                    corner = child.GetComponent<Renderer>().bounds.center - child.GetComponent<Renderer>().bounds.extents;
+                    corner = child.GetComponent<Renderer>().bounds.center -
+                             child.GetComponent<Renderer>().bounds.extents;
                     break;
                 }
             }
+
             return corner;
         }
 
@@ -101,7 +102,7 @@ namespace Grid
         {
             return father.GetComponent<Renderer>().bounds.center - father.GetComponent<Renderer>().bounds.extents;
         }
-        
+
         private float GreatestCommonDivisor(float a, float b)
         {
             float res;
@@ -121,6 +122,7 @@ namespace Grid
             String nombreUnPlano = nameParent;
             float x = GameObject.Find(nombreUnPlano).GetComponent<Renderer>().bounds.size.x;
             float z = GameObject.Find(nombreUnPlano).GetComponent<Renderer>().bounds.size.z;
+            _heightTerrain = GameObject.Find(nombreUnPlano).transform.position.y;
             return new[] {x, z};
         }
 
@@ -139,6 +141,7 @@ namespace Grid
                 {
                     x += child.GetComponent<Renderer>().bounds.size.x;
                     z += child.GetComponent<Renderer>().bounds.size.z;
+                    _heightTerrain = child.transform.position.y;
                 }
             }
 
@@ -242,7 +245,8 @@ namespace Grid
         {
             if (_cellClicked != null)
             {
-                _cellClicked.DrawCellColored(Color.blue);
+                Color c = new Color(1, 1, 1, 1);
+                _cellClicked.DrawCellColored(Color.black);
             }
         }
 
@@ -252,7 +256,7 @@ namespace Grid
             {
                 foreach (var cell in _allowedCells)
                 {
-                    Color c = new Color(.25f, .25f, .95f, 0.75f);
+                    Color c = new Color(.15f, .15f, .95f, 0.75f);
                     cell.DrawCellColored(c);
                 }
 

@@ -249,7 +249,7 @@ Transform:
   m_GameObject: {fileID: 169954593}
   m_LocalRotation: {x: -0, y: 0.71851337, z: -0, w: 0.6955132}
   m_LocalPosition: {x: 195.8, y: 7, z: -2.3}
-  m_LocalScale: {x: 403.69, y: 31.709488, z: 1}
+  m_LocalScale: {x: 262.88696, y: 31.709488, z: 1}
   m_Children: []
   m_Father: {fileID: 31104081}
   m_RootOrder: 2
@@ -467,8 +467,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424779055}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 153.3}
-  m_LocalScale: {x: 160, y: 50, z: 60}
+  m_LocalPosition: {x: 0, y: -46, z: 8}
+  m_LocalScale: {x: 41.651, y: 41.651, z: 41.651}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -1047,13 +1047,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266231200}
-  m_LocalRotation: {x: -0, y: 0.70464146, z: -0, w: 0.7095635}
-  m_LocalPosition: {x: -197.9, y: 7, z: 1.8}
-  m_LocalScale: {x: 403.69, y: 31.709488, z: 1}
+  m_LocalRotation: {x: -0.042712316, y: 0.47873542, z: -0.023713872, w: 0.87659895}
+  m_LocalPosition: {x: -23, y: 7, z: 3}
+  m_LocalScale: {x: 155.21881, y: 31.709488, z: 1}
   m_Children: []
   m_Father: {fileID: 31104081}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 89.601, z: 0}
+  m_LocalEulerAnglesHint: {x: -2.991, y: 57.404, z: -4.737}
 --- !u!65 &1266231202
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1143,8 +1143,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364491787}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: 200.8}
-  m_LocalScale: {x: 403.69, y: 31.709488, z: 1}
+  m_LocalPosition: {x: 0, y: 7, z: -105}
+  m_LocalScale: {x: 176.51344, y: 31.709488, z: 1}
   m_Children: []
   m_Father: {fileID: 31104081}
   m_RootOrder: 1
@@ -1278,6 +1278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8afe35e16ae88444c955fed426d19a25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   timeToTarget: 10
 --- !u!114 &1545304889
@@ -1292,6 +1293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
 --- !u!1 &1558357689
 GameObject:
@@ -1353,8 +1355,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836609189}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -23.2, y: -4.5, z: -195}
-  m_LocalScale: {x: 403.69, y: 31.709488, z: 1}
+  m_LocalPosition: {x: -23.2, y: -4.5, z: 76}
+  m_LocalScale: {x: 185.01517, y: 31.709488, z: 1}
   m_Children: []
   m_Father: {fileID: 31104081}
   m_RootOrder: 0
@@ -1601,6 +1603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ef95e935564fc49b2891af65828572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   timeToTarget: 0.1
 --- !u!114 &1873587141
@@ -1615,6 +1618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
 --- !u!114 &1873587142
 MonoBehaviour:
@@ -1628,6 +1632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8afe35e16ae88444c955fed426d19a25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   timeToTarget: 0
 --- !u!114 &1873587143
@@ -1642,6 +1647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec841aa815f10ab4aa67e0607e9228e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   timeToTarget: 0.1
 --- !u!114 &1873587144
@@ -1656,6 +1662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c309c127bd022449b65bb9726aa4e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   disMaxFlee: 0
 --- !u!114 &1873587145
@@ -1670,6 +1677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4150804bc6f01794cbdb44ff67a56fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   disMaxFlee: 3.03
   maxPrediccion: 11.71
@@ -1685,6 +1693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45590743200bfe4f8428c9f374a82e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   maxPrediccion: 403.6
 --- !u!114 &1873587147
@@ -1699,6 +1708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 194811008332ace4696920010acca005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 0
   target: {fileID: 0}
   timeToTarget: 0
 --- !u!1001 &2079230919

@@ -7,7 +7,8 @@ public class Cell
     private float _sizeX, _sizeZ;
     private Vector3 _center;
     private GameObject _collider;
-
+    private bool _allowedCell;
+    
     public Cell(float sizeX, float sizeZ, Vector3 center)
     {
         _sizeX = sizeX;
@@ -25,6 +26,11 @@ public class Cell
         return _sizeZ;
     }
 
+    public bool GetIsAllowedCell()
+    {
+        return _allowedCell;
+    }
+
     public Vector3 GetCenter()
     {
         return _center;
@@ -35,10 +41,11 @@ public class Cell
         if (Input.GetMouseButtonDown(0))
         {
             
-            RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            
-            if (Physics.Raycast(ray, out hit) && CheckVector3InsideBox(hit.point) && hit.transform.CompareTag("Terrain"))
+            RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
+           
+           
+           if (CheckVector3InsideBox(hits))
             {
                 return true;
             }
@@ -52,18 +59,23 @@ public class Cell
             return false;
     }
 
-    private bool CheckVector3InsideBox(Vector3 point)
+    private bool CheckVector3InsideBox(RaycastHit[] hits)
     {
-        float amplitudeX = _sizeX / 2;
-        float amplitudeZ = _sizeZ / 2;
+        foreach (var h in hits)
+        {
+            float amplitudeX = _sizeX / 2;
+            float amplitudeZ = _sizeZ / 2;
+            Vector3 point = h.point;
+            if (h.transform.CompareTag("Terrain") &&
+                point.x > (_center.x - amplitudeX) &&
+                point.x < (_center.x + amplitudeX) &&
+                point.z > (_center.z - amplitudeZ) &&
+                point.z < (_center.z + amplitudeZ)
+            )
+                return true;
+        }
 
-        if (point.x > (_center.x - amplitudeX) &&
-            point.x < (_center.x + amplitudeX) &&
-            point.z > (_center.z - amplitudeZ) &&
-            point.z < (_center.z + amplitudeZ))
-            return true;
-        else
-            return false;
+        return false;
     }
 
     public void DrawCell()
@@ -80,7 +92,7 @@ public class Cell
     public void DrawCellColored(Color color)
     {
         Gizmos.color = color;
-        Gizmos.DrawCube(_center, new Vector3(_sizeX, 0.1f,_sizeZ));
+        Gizmos.DrawCube(_center, new Vector3(_sizeX, 0,_sizeZ));
     }
     public void CreateBoxCollider(GameObject parent)
     {
@@ -88,8 +100,7 @@ public class Cell
         cube.transform.position = _center;
         cube.transform.parent = parent.transform;
         cube.name = "CubeCollider";
-        cube.tag = "Terrain";
-        
+
         float sizeX = cube.GetComponent<Renderer>().bounds.size.x;
         float sizeZ = cube.GetComponent<Renderer>().bounds.size.z;
 
@@ -104,8 +115,6 @@ public class Cell
         cube.AddComponent<BoxCollider>();
         cube.GetComponent<Renderer>().enabled = false;
         cube.transform.localScale = localScale;
-
-        cube.AddComponent<Coll>();
         _collider = cube;
     }
 
@@ -115,8 +124,14 @@ public class Cell
         foreach (var c in colls)
         {
             if (c.transform.CompareTag("Untagged"))
+            {
+                _allowedCell = true;
                 return true;
+            }
+               
         }
+
+        _allowedCell = false;
         return false;
     }
 
