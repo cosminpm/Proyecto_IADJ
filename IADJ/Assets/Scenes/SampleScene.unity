@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba8c72d764e8be408ee1b64f11c94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LIMITER_CELLS: 1000
+  LIMITER_CELLS: 2000
   drawWireGm: 1
   drawCenterGm: 0
   drawAllowedCells: 1
@@ -405,7 +405,7 @@ MeshCollider:
   m_GameObject: {fileID: 424779055}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -467,7 +467,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424779055}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -46, z: 8}
+  m_LocalPosition: {x: 0, y: 2.6, z: 8}
   m_LocalScale: {x: 41.651, y: 41.651, z: 41.651}
   m_Children: []
   m_Father: {fileID: 0}
@@ -804,8 +804,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.3037305, y: -0.64410883, z: 0.31019694, w: 0.62980115}
-  m_LocalPosition: {x: 250.11502, y: 372.18655, z: -142.81363}
+  m_LocalRotation: {x: 0.51977354, y: -0.48138973, z: 0.5247016, w: 0.47200382}
+  m_LocalPosition: {x: -49.328312, y: 452.53616, z: -1.1836202}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

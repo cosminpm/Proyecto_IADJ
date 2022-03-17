@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Color = UnityEngine.Color;
@@ -29,10 +30,14 @@ namespace Grid
         public String nameFloor = "Floor(Clone)";
         public String nameParent = "MazePathFinderLRTA";
 
+        private List<Cell> _cellsAdyacent;
+
+
         void Start()
         {
             _allowedCells = new List<Cell>();
             _notAllowedCells = new List<Cell>();
+            _cellsAdyacent = new List<Cell>();
 
             GetSizeXAndSizeZ();
             CreateGrid();
@@ -64,7 +69,7 @@ namespace Grid
                     z += primerVector3.z;
 
                     Vector3 center = new Vector3(x, _heightTerrain, z);
-                    _gridMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center);
+                    _gridMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j);
                 }
             }
         }
@@ -78,7 +83,6 @@ namespace Grid
             else
                 return CornerOnePlane(father);
         }
-
 
         private Vector3 CornerTopLeftMultiple(GameObject father)
         {
@@ -196,7 +200,6 @@ namespace Grid
             }
         }
 
-
         private void GetSizeXAndSizeZ()
         {
             float[] sizes;
@@ -229,6 +232,59 @@ namespace Grid
             }
         }
 
+        // Methods for LRTA*
+
+        public Cell[] GetHorizontalCells(Cell c)
+        {
+            Cell top, bot, left, right;
+            top = bot = left = right = null;
+            if ((c.GetCoorX() + 1 < _xSize) && _gridMap[c.GetCoorX() + 1, c.GetCoorZ()].GetIsAllowedCell())
+                right = _gridMap[c.GetCoorX() + 1, c.GetCoorZ()];
+
+            if ((c.GetCoorZ() + 1 < _zSize) && _gridMap[c.GetCoorX(), c.GetCoorZ() + 1].GetIsAllowedCell())
+                bot = _gridMap[c.GetCoorX(), c.GetCoorZ() + 1];
+
+            if ((c.GetCoorX() - 1 >= 0) && _gridMap[c.GetCoorX() - 1, c.GetCoorZ()].GetIsAllowedCell())
+                left = _gridMap[c.GetCoorX() - 1, c.GetCoorZ()];
+
+            if ((c.GetCoorZ() - 1 >= 0) && _gridMap[c.GetCoorX(), c.GetCoorZ() - 1].GetIsAllowedCell())
+                top = _gridMap[c.GetCoorX(), c.GetCoorZ() - 1];
+            return new[] {right, left, top, bot};
+        }
+
+        public Cell[] GetDiagonalCells(Cell c)
+        {
+            Cell topLeft, topRight, botLeft, botRight;
+            topLeft = topRight = botLeft = botRight = null;
+            if ((c.GetCoorX() + 1 < _xSize) &&
+                (c.GetCoorZ() - 1 >= 0) &&
+                _gridMap[c.GetCoorX() + 1, c.GetCoorZ() - 1].GetIsAllowedCell())
+                topRight = _gridMap[c.GetCoorX() + 1, c.GetCoorZ() - 1];
+
+            if ((c.GetCoorX() + 1 < _xSize) &&
+                (c.GetCoorZ() + 1 < _zSize) &&
+                _gridMap[c.GetCoorX() + 1, c.GetCoorZ() + 1].GetIsAllowedCell())
+                botRight = _gridMap[c.GetCoorX() + 1, c.GetCoorZ() + 1];
+
+            if ((c.GetCoorX() - 1 >= 0) &&
+                (c.GetCoorZ() - 1 >= 0) &&
+                _gridMap[c.GetCoorX() - 1, c.GetCoorZ() - 1].GetIsAllowedCell())
+                topLeft = _gridMap[c.GetCoorX() - 1, c.GetCoorZ() - 1];
+
+            if ((c.GetCoorZ() + 1 < _zSize) &&
+                (c.GetCoorX() - 1 >= 0) &&
+                _gridMap[c.GetCoorX() - 1, c.GetCoorZ() + 1].GetIsAllowedCell())
+                botLeft = _gridMap[c.GetCoorX() - 1, c.GetCoorZ() + 1];
+            return new[] {topLeft, topRight, botLeft, botRight};
+        }
+
+        public Cell[] GetAllNeighbours(Cell c)
+        {
+            List<Cell> c1 = GetDiagonalCells(c).ToList();
+            List<Cell> c2 = GetHorizontalCells(c).ToList();
+            c1.AddRange(c2);
+            return c1.ToArray();
+        }
 
         // Draw Methods
         private void OnDrawGizmos()
@@ -241,12 +297,28 @@ namespace Grid
             }
         }
 
+        private void DrawAdyacentCells(Cell c)
+        {
+            List<Cell> cells = GetDiagonalCells(c).ToList();
+            List<Cell> cells2 = GetHorizontalCells(c).ToList();
+            cells.AddRange(cells2);
+        
+            foreach (var i in cells)
+            {
+                if (i != null)
+                {
+                    i.DrawCellColored(Color.magenta);
+                }
+            }
+        }
+        
         private void DrawCellClicked()
         {
             if (_cellClicked != null)
             {
                 Color c = new Color(1, 1, 1, 1);
                 _cellClicked.DrawCellColored(Color.black);
+                DrawAdyacentCells(_cellClicked);
             }
         }
 
