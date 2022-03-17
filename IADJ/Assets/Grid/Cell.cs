@@ -9,7 +9,6 @@ public class Cell
     private GameObject _collider;
     private bool _allowedCell;
     private int _coorX, _coorZ, _cost;
-
     public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ)
     {
         _sizeX = sizeX;

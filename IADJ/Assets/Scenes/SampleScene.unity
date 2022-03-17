@@ -215,11 +215,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba8c72d764e8be408ee1b64f11c94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LIMITER_CELLS: 2000
+  LIMITER_CELLS: 1000
   drawWireGm: 1
   drawCenterGm: 0
   drawAllowedCells: 1
-  intensityAllowedCells: 0.5
+  drawCellClicked: 1
+  intensityAllowedCells: 0.25
   modeOfTerrain: 0
   nameFloor: Floor(Clone)
   nameParent: Plane
@@ -235,8 +236,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ec71ee1e48b70b4caa0d1fea72954c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startColor: {r: 0, g: 1, b: 1, a: 1}
-  finishColor: {r: 1, g: 0, b: 0, a: 1}
+  startColor: {r: 0.064415336, g: 1, b: 0, a: 1}
+  finishColor: {r: 1, g: 0, b: 0.8258381, a: 1}
 --- !u!1 &169954593
 GameObject:
   m_ObjectHideFlags: 0
