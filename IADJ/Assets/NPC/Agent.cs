@@ -41,6 +41,7 @@ public abstract class Agent : Body
                 _exteriorAngle = _interiorAngle;
             return _exteriorAngle;
         }
+
     }
 
     public float InteriorAngle
@@ -53,6 +54,7 @@ public abstract class Agent : Body
                 _exteriorAngle = _interiorAngle;
             return _interiorAngle;
         }
+
     }
 
     public float ArrivalRadius
@@ -64,6 +66,13 @@ public abstract class Agent : Body
             if (_interiorRadius > _arrivalRadius)
                 _arrivalRadius = _interiorRadius;
             return _arrivalRadius;
+        }
+
+
+        set
+        {
+            // TODO: hacer comprobaciones del get aqui tambien.
+            _arrivalRadius = value;
         }
     }
 
@@ -77,6 +86,12 @@ public abstract class Agent : Body
             if (_interiorRadius > _arrivalRadius)
                 _arrivalRadius = _interiorRadius;
             return _interiorRadius;
+        }
+
+        set
+        {
+            // TODO: hacer comprobaciones del get aqui tambien.
+            _interiorRadius = value;
         }
     }
     
