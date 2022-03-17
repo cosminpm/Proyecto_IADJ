@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba8c72d764e8be408ee1b64f11c94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LIMITER_CELLS: 1000
+  LIMITER_CELLS: 100
   drawWireGm: 1
   drawCenterGm: 0
   drawAllowedCells: 1
@@ -224,6 +224,7 @@ MonoBehaviour:
   modeOfTerrain: 0
   nameFloor: Floor(Clone)
   nameParent: Plane
+  tagFloor: Terrain
 --- !u!114 &92832158
 MonoBehaviour:
   m_ObjectHideFlags: 0

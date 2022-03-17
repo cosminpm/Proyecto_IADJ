@@ -35,10 +35,11 @@ namespace Grid
             Cell finishCellLr = new Cell(finish);
 
             Cell actualCell = startCellLr;
+            actualCell.SetCost(Manhattan(actualCell, finish));
+            closed.Add(start);
 
             int contador = 0;
 
-            closed.Add(start);
             while (!(actualCell.GetCoorX() == finishCellLr.GetCoorX() &&
                      actualCell.GetCoorZ() == finishCellLr.GetCoorZ()))
             {
@@ -53,24 +54,38 @@ namespace Grid
                 }
 
                 // Get the next cell
-                int maxCost = int.MaxValue;
-                var nextCell = neighbours[0];
+                int minCost = int.MaxValue;
+
+                Cell nextCell = neighbours[0];
 
                 foreach (var n in neighbours)
                 {
-                    if (!closed.Contains(n) && n.GetCost() < maxCost)
+                    if (!closed.Contains(n))
                     {
-                        nextCell = n;
-                        maxCost = n.GetCost();
+                        if (minCost == int.MaxValue)
+                        {
+                            nextCell = n;
+                            minCost = n.GetCost();
+                        }
+                        else if (n.GetCost() < nextCell.GetCost())
+                        {
+                            nextCell = n;
+                            minCost = n.GetCost();
+                        }
                     }
+                }
+
+                if (nextCell == null)
+                {
+                    return null;
                 }
 
                 closed.Add(nextCell);
                 actualCell = nextCell;
 
-                // DEBUG
+                //DEBUG
                 contador += 1;
-                if (contador >= 5000)
+                if (contador >= 200)
                     return closed;
             }
 
@@ -85,7 +100,7 @@ namespace Grid
             if (startCell != null && finishCell != null && startCell != finishCell)
             {
                 _path = LRTAStar(startCell, finishCell, gridMap);
-                return true;
+                return _path != null;
             }
 
             return false;

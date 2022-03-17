@@ -1,4 +1,5 @@
-﻿using Grid;
+﻿using System;
+using Grid;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class Cell
     private GameObject _collider;
     private bool _allowedCell;
     private int _coorX, _coorZ, _cost;
+
     public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ)
     {
         _sizeX = sizeX;
@@ -100,7 +102,7 @@ public class Cell
             float amplitudeX = _sizeX / 2;
             float amplitudeZ = _sizeZ / 2;
             Vector3 point = h.point;
-            if (h.transform.CompareTag("Terrain") &&
+            if (h.transform.CompareTag(GameObject.Find("Controlador").GetComponent<GridMap>().tagFloor) &&
                 point.x > (_center.x - amplitudeX) &&
                 point.x < (_center.x + amplitudeX) &&
                 point.z > (_center.z - amplitudeZ) &&

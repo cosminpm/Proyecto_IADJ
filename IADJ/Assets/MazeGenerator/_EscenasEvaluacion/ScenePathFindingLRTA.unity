@@ -199,8 +199,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 113542814}
-  m_LocalRotation: {x: -0.00056611, y: 0.88252515, z: -0.47026375, w: -0.0010621567}
-  m_LocalPosition: {x: 27.47, y: 38.17, z: 60.78}
+  m_LocalRotation: {x: 0.5409524, y: -0.46092275, z: 0.516015, w: 0.47817287}
+  m_LocalPosition: {x: 10.956724, y: 59.406937, z: 21.106218}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -313,6 +313,7 @@ GameObject:
   - component: {fileID: 1441039700}
   - component: {fileID: 1441039699}
   - component: {fileID: 1441039698}
+  - component: {fileID: 1441039701}
   m_Layer: 0
   m_Name: Controlador
   m_TagString: Untagged
@@ -332,10 +333,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba8c72d764e8be408ee1b64f11c94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawWireGm: 0
+  LIMITER_CELLS: 300
+  drawWireGm: 1
   drawCenterGm: 0
-  drawAllowedCells: 0
+  drawAllowedCells: 1
+  drawCellClicked: 1
+  intensityAllowedCells: 0.35
   modeOfTerrain: 1
+  nameFloor: Floor(Clone)
+  nameParent: MazePathFinderLRTA
+  tagFloor: Floor
 --- !u!114 &1441039699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,6 +370,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1441039701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441039697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ec71ee1e48b70b4caa0d1fea72954c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startColor: {r: 0.069517374, g: 1, b: 0, a: 1}
+  finishColor: {r: 1, g: 0, b: 0.70647144, a: 1}
 --- !u!1 &1624826355
 GameObject:
   m_ObjectHideFlags: 0

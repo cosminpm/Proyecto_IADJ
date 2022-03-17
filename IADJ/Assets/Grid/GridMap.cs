@@ -29,7 +29,8 @@ namespace Grid
 
         public String nameFloor = "Floor(Clone)";
         public String nameParent = "MazePathFinderLRTA";
-
+        public String tagFloor = "Floor";
+        
         private List<Cell> _cellsAdyacent;
 
 
