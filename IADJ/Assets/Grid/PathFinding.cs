@@ -6,10 +6,11 @@ namespace Grid
 {
     public class PathFinding : MonoBehaviour
     {
-
         // Public variables
         public Color startColor = Color.cyan;
+
         public Color finishColor = Color.red;
+
         // Private variables
         private List<Cell> _path;
         private Cell startCell;
@@ -23,30 +24,38 @@ namespace Grid
         private void Update()
         {
             ApllyLRTAStar(GetComponent<GridMap>());
-            Debug.Log("PathLenght:"+_path.Count);
         }
 
 
         private List<Cell> LRTAStar(Cell start, Cell finish, GridMap gridMap)
         {
             List<Cell> closed = new List<Cell>();
-            Cell actualCell = start;
-            while (actualCell != finish)
+
+            Cell startCellLr = new Cell(start);
+            Cell finishCellLr = new Cell(finish);
+
+            Cell actualCell = startCellLr;
+
+            int contador = 0;
+
+            closed.Add(start);
+            while (!(actualCell.GetCoorX() == finishCellLr.GetCoorX() &&
+                     actualCell.GetCoorZ() == finishCellLr.GetCoorZ()))
             {
                 // Get all neighbours and set the cost for each, from the actual cell to the finish cell
                 Cell[] neighbours = gridMap.GetAllNeighbours(actualCell);
                 actualCell.SetCost(0);
-                
+
                 foreach (var n in neighbours)
                 {
-                    int cost = Manhattan(n, finish);
+                    int cost = Manhattan(n, finishCellLr);
                     n.SetCost(cost);
                 }
-                
+
                 // Get the next cell
                 int maxCost = int.MaxValue;
                 var nextCell = neighbours[0];
-                
+
                 foreach (var n in neighbours)
                 {
                     if (!closed.Contains(n) && n.GetCost() < maxCost)
@@ -55,22 +64,30 @@ namespace Grid
                         maxCost = n.GetCost();
                     }
                 }
+
                 closed.Add(nextCell);
                 actualCell = nextCell;
+
+                // DEBUG
+                contador += 1;
+                if (contador >= 5000)
+                    return closed;
             }
+
             return closed;
         }
 
         public bool ApllyLRTAStar(GridMap gridMap)
         {
-            startCell = gridMap.CheckIfCellClicked(Input.GetKeyDown(KeyCode.S));
-            finishCell = gridMap.CheckIfCellClicked(Input.GetKeyDown(KeyCode.F));
-            
-            if (startCell != null && finishCell != null)
+            startCell = gridMap.CheckIfCellClicked(Input.GetKeyDown(KeyCode.Alpha1));
+            finishCell = gridMap.CheckIfCellClicked(Input.GetKeyDown(KeyCode.Alpha2));
+
+            if (startCell != null && finishCell != null && startCell != finishCell)
             {
-                _path = LRTAStar(startCell, finishCell, gridMap); ;
+                _path = LRTAStar(startCell, finishCell, gridMap);
                 return true;
             }
+
             return false;
         }
 
@@ -82,7 +99,11 @@ namespace Grid
                 for (var index = 0; index < _path.Count; index++)
                 {
                     var c = _path[index];
-                    Color col = Color.Lerp(startColor, finishColor, index / pathLen);
+                    float t = index / (float) pathLen;
+                    Debug.Log("I:" + index);
+                    Debug.Log("PL:" + pathLen);
+                    Debug.Log("T:" + t);
+                    Color col = Color.Lerp(startColor, finishColor, t);
                     c.DrawCellColored(col);
                 }
             }

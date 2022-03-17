@@ -13,7 +13,7 @@ namespace Grid
 
         // Public variables
         private int _xSize, _zSize;
-        public bool drawWireGm, drawCenterGm, drawAllowedCells;
+        public bool drawWireGm, drawCenterGm, drawAllowedCells, drawCellClicked;
         public float intensityAllowedCells = 0.5f;
         public int modeOfTerrain;
 
@@ -315,7 +315,7 @@ namespace Grid
         
         private void DrawCellClicked()
         {
-            if (_cellClicked != null)
+            if (drawCellClicked && _cellClicked != null)
             {
                 Color c = new Color(1, 1, 1, 1);
                 _cellClicked.DrawCellColored(Color.black);

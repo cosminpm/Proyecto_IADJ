@@ -19,6 +19,17 @@ public class Cell
         _coorZ = coorZ;
         _cost = int.MaxValue;
     }
+    
+    public Cell(Cell c)
+    {
+        _sizeX = c._sizeX;
+        _sizeZ = c._sizeZ;
+        _center = c._center;
+        _coorX = c._coorX;
+        _coorZ = c._coorZ;
+        _cost = int.MaxValue;
+    }
+    
 
     public float GetSizeX()
     {
