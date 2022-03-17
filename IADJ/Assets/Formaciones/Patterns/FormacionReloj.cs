@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FormacionCuadrados : FormationManager
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FormacionReloj : FormationManager
 {
 
     [SerializeField] private int distanciaSeparacion;
     [SerializeField] private float radioExteriorInvisible;
     [SerializeField] private float radioInteriorInvisible;
 
-    private int maxSlots = 4 ;
+    private int maxSlots = 11;
 
     private List<AgentInvisible> agentesInvisibles;
 
@@ -29,12 +33,12 @@ public class FormacionCuadrados : FormationManager
     }
     // Start is called before the first frame update
     void Start()
-     {
-         agentesInvisibles = new List<AgentInvisible>();
+    {
+        agentesInvisibles = new List<AgentInvisible>();
 
-        for(int i = 0; i < maxSlots ; i++ )
+        for (int i = 0; i < maxSlots; i++)
         {
-            GameObject go = new GameObject("agenteInvisibleNumero : "+i);
+            GameObject go = new GameObject("agenteInvisibleNumero : " + i);
             AgentInvisible invisible = go.AddComponent<AgentInvisible>() as AgentInvisible;
             invisible.GetComponent<AgentInvisible>().DrawGizmos = true;
             invisible.ArrivalRadius = radioExteriorInvisible;
@@ -44,29 +48,32 @@ public class FormacionCuadrados : FormationManager
         }
         inicializarSlots();
         updateSlots();
-     }
+    }
 
-    void Update(){
-         updateSlots();
+    void Update()
+    {
+        updateSlots();
     }
 
 
-    protected override void updateSlots(){
+    protected override void updateSlots()
+    {
 
-        // Obtenemos el lider de la formaci贸n
+        // Obtenemos el lider de la formaci髇
         Agent lider = getLeader();
 
         lider.Orientation *= -1;
-        for (int i = 1; i < listaSlotsOcupados.Count ; i++){
+        for (int i = 1; i < listaSlotsOcupados.Count; i++)
+        {
 
             //Agent aux = listaSlotsOcupados[i].GetCharacter();
 
             LocalizacionSlot aux = getSlotLocation(i);
 
-            Vector3 position = new Vector3(   Mathf.Cos(lider.Orientation)*aux.GetPosicion().x - Mathf.Sin(lider.Orientation)* aux.GetPosicion().z ,0,
-                                              Mathf.Sin(lider.Orientation)*aux.GetPosicion().x + Mathf.Cos(lider.Orientation)*aux.GetPosicion().z);
+            Vector3 position = new Vector3(Mathf.Cos(lider.Orientation) * aux.GetPosicion().x - Mathf.Sin(lider.Orientation) * aux.GetPosicion().z, 0,
+                                              Mathf.Sin(lider.Orientation) * aux.GetPosicion().x + Mathf.Cos(lider.Orientation) * aux.GetPosicion().z);
 
-            
+
             agentesInvisibles[i].Orientation = -(lider.Orientation + aux.GetOrientacion());
 
             // Seek to relative position.
@@ -83,28 +90,41 @@ public class FormacionCuadrados : FormationManager
 
     }
 
-    // Calcula el numero de slots ocupados en la formaci贸n.
-    protected int calculateNumberOfSlots(List<SlotAssignment> listaSlots){
+    // Calcula el numero de slots ocupados en la formaci髇.
+    protected int calculateNumberOfSlots(List<SlotAssignment> listaSlots)
+    {
         return listaSlots.Count;
     }
 
-    public LocalizacionSlot getSlotLocation(int slotNumber){
+    public LocalizacionSlot getSlotLocation(int slotNumber)
+    {
 
         LocalizacionSlot ls = new LocalizacionSlot();
 
-        if (slotNumber == 0) {
+        for (int i = 0; i < maxSlots; i++)
+        { 
+        
+        
+        
+        }
+
+        if (slotNumber == 0)
+        {
             ls.SetPosicion(Vector3.zero);
             ls.SetOrientacion(0);
         }
-        else if (slotNumber == 1) {
+        else if (slotNumber == 1)
+        {
             ls.SetPosicion(new Vector3(distanciaSeparacion, 0, 0));
             ls.SetOrientacion(0);
         }
-        else if (slotNumber == 2) {
+        else if (slotNumber == 2)
+        {
             ls.SetPosicion(new Vector3(distanciaSeparacion, 0, -distanciaSeparacion));
             ls.SetOrientacion(0);
         }
-        else {
+        else
+        {
             ls.SetPosicion(new Vector3(0, 0, -distanciaSeparacion));
             ls.SetOrientacion(0);
         }
@@ -112,10 +132,12 @@ public class FormacionCuadrados : FormationManager
         return ls;
     }
 
-    // Devuelve la posici贸n de un slot concreto dentro de la formaci贸n. TODO NOMBRE?
-    protected override Agent getAgentSlotLocation(int slotNumber){
+    // Devuelve la posici髇 de un slot concreto dentro de la formaci髇. TODO NOMBRE?
+    protected override Agent getAgentSlotLocation(int slotNumber)
+    {
 
-        if ( listaSlotsOcupados.Count >= slotNumber){
+        if (listaSlotsOcupados.Count >= slotNumber)
+        {
 
             Agent agente = getCharacterBySlotNumber(slotNumber);
 
@@ -126,9 +148,11 @@ public class FormacionCuadrados : FormationManager
         return null;
     }
 
-    // Devuelve true si quedan slots libres en la formaci贸n
-    protected override bool soportaSlots(int slotNumber){
+    // Devuelve true si quedan slots libres en la formaci髇
+    protected override bool soportaSlots(int slotNumber)
+    {
 
         return maxSlots >= slotNumber;
     }
 }
+
