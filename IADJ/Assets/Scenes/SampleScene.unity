@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 92832156}
   - component: {fileID: 92832155}
   - component: {fileID: 92832157}
+  - component: {fileID: 92832158}
   m_Layer: 0
   m_Name: Controlador
   m_TagString: Untagged
@@ -218,9 +219,24 @@ MonoBehaviour:
   drawWireGm: 1
   drawCenterGm: 0
   drawAllowedCells: 1
+  intensityAllowedCells: 0.5
   modeOfTerrain: 0
   nameFloor: Floor(Clone)
   nameParent: Plane
+--- !u!114 &92832158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92832154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ec71ee1e48b70b4caa0d1fea72954c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startColor: {r: 0, g: 1, b: 1, a: 1}
+  finishColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &169954593
 GameObject:
   m_ObjectHideFlags: 0

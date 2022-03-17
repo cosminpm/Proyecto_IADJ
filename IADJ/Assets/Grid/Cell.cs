@@ -60,9 +60,9 @@ public class Cell
         return _center;
     }
 
-    public bool CheckIfCellClicked()
+    public bool CheckIfCellClicked(bool input)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (input)
         {
             
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

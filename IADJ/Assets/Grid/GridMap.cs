@@ -14,7 +14,7 @@ namespace Grid
         // Public variables
         private int _xSize, _zSize;
         public bool drawWireGm, drawCenterGm, drawAllowedCells;
-
+        public float intensityAllowedCells = 0.5f;
         public int modeOfTerrain;
 
         // Private variables
@@ -48,7 +48,6 @@ namespace Grid
 
         void Update()
         {
-            CheckIfCellClicked();
         }
 
         private void CreateGrid()
@@ -170,18 +169,19 @@ namespace Grid
             }
         }
 
-        private void CheckIfCellClicked()
+        public Cell CheckIfCellClicked(bool input)
         {
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    if (_gridMap[i, j].CheckIfCellClicked())
+                    if (_gridMap[i, j].CheckIfCellClicked(input))
                     {
                         _cellClicked = _gridMap[i, j];
                     }
                 }
             }
+            return _cellClicked;
         }
 
         private void AddAllowedCells()
@@ -283,6 +283,7 @@ namespace Grid
             List<Cell> c1 = GetDiagonalCells(c).ToList();
             List<Cell> c2 = GetHorizontalCells(c).ToList();
             c1.AddRange(c2);
+            c1.RemoveAll(item => item == null);
             return c1.ToArray();
         }
 
@@ -328,13 +329,13 @@ namespace Grid
             {
                 foreach (var cell in _allowedCells)
                 {
-                    Color c = new Color(.15f, .15f, .95f, 0.75f);
+                    Color c = new Color(.15f, .15f, .95f, intensityAllowedCells);
                     cell.DrawCellColored(c);
                 }
 
                 foreach (var cell in _notAllowedCells)
                 {
-                    Color c = new Color(0.952f, 0.286f, 0.286f, 0.75f);
+                    Color c = new Color(0.952f, 0.286f, 0.286f, intensityAllowedCells);
                     cell.DrawCellColored(c);
                 }
             }
