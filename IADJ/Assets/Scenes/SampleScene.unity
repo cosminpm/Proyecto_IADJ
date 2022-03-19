@@ -220,7 +220,7 @@ MonoBehaviour:
   drawCenterGm: 0
   drawAllowedCells: 1
   drawCellClicked: 1
-  intensityAllowedCells: 0.25
+  intensityAllowedCells: 0.55
   modeOfTerrain: 0
   nameFloor: Floor(Clone)
   nameParent: Plane

@@ -79,8 +79,7 @@ public class Cell
             
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
-           
-           
+            
            if (CheckVector3InsideBox(hits))
             {
                 return true;
@@ -89,7 +88,6 @@ public class Cell
             {
                 return false;  
             }
-               
         }
         else
             return false;
@@ -130,6 +128,16 @@ public class Cell
         Gizmos.color = color;
         Gizmos.DrawCube(_center, new Vector3(_sizeX, 0,_sizeZ));
     }
+
+    public void DrawCellNumber(int sizeOfTextGrid)
+    {
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.black;
+        style.fontSize = sizeOfTextGrid;
+        Vector3 pos = new Vector3(_center.x - _sizeX/2, _center.y, _center.z - _sizeZ/2);
+        Handles.Label(pos,_coorX + ", " + _coorZ,style);
+    }
+    
     public void CreateBoxCollider(GameObject parent)
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);

@@ -27,12 +27,10 @@ public abstract class FormationManager : MonoBehaviour
 
     protected void inicializarSlots()
     {
-        Debug.Log("YES");
         // añadimos un caracter
         foreach ( var agente in listaAgents){
            addCharacter(agente);
         }
-        Debug.Log("NO");
     }
 
     void Start(){

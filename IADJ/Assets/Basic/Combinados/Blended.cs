@@ -19,13 +19,9 @@ public class Blended : SteeringBehaviour {
             if (steer is Seek )
             {
                 (Seek)steer.Target = t;
-
-                Debug.Log ("DASDAD");
             }
-           
         }
         */
-
     }
 
 
