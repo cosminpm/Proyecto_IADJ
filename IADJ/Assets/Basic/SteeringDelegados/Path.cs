@@ -61,17 +61,7 @@ public class Path : MonoBehaviour
         }
 
         // Ahora tenemos que calcular si nos vamos al nodo siguiente o no..
-
-        Debug.Log(radioNodo);
-       
-
-        //  // En otro caso nos seguimos dirigienso hacia el mismo nodo
-        // if  ((Vector3.Distance(agentePosicion,nodos[nodoActual+1].transform.position)) > radioNodo)
-        // {
-        //     Debug.Log("ZZZZZZZZZZZZZZZ");
-        //     Debug.Log("Distancia ess "+(Vector3.Distance(agentePosicion,nodos[nodoActual+1].transform.position)));
-        //     return nodoActual;
-        // }
+        
 
         return nodoActual;
     }

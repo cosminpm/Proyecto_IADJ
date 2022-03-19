@@ -31,7 +31,7 @@ namespace Pathfinding
         // Methods GET and SET
         public Cell GetCell()
         {
-            return new Cell(_cell);
+            return _cell;
         }
 
         public int GetGCost()
@@ -51,7 +51,7 @@ namespace Pathfinding
 
         public Node GetPreviousNode()
         {
-            return new Node(_previousNode);
+            return _previousNode;
         }
 
         public void SetCell(Cell cell)
@@ -77,6 +77,11 @@ namespace Pathfinding
         public void SetPreviousNode(Node node)
         {
             _previousNode = node;
+        }
+
+        public override string ToString()
+        {
+            return _cell.ToString();
         }
     }
 }

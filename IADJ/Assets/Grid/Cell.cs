@@ -162,6 +162,11 @@ public class Cell
         _collider = cube;
     }
 
+    public override String ToString()
+    {
+        return  _coorX + ", " + _coorZ;
+    }
+    
     public bool CheckCollision()
     {
         Collider[] colls = Physics.OverlapBox(_center, new Vector3(_sizeX, 1, _sizeZ) / 2);
