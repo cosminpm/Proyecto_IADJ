@@ -8,14 +8,17 @@ namespace Pathfinding
         private int _fCost;
         private Node _previousNode;
 
-        public Node(Cell cell)
+        public Node(Cell cell, int hCost, int gCost, Node previousNode)
         {
-            _cell = cell;
+            _cell = new Cell(cell);
+            _hCost = hCost;
+            _gCost = gCost;
+            _previousNode = previousNode;
         }
 
         public Node(Node n)
         {
-            _cell = n.GetCell();
+            _cell = new Cell(n.GetCell());
             _hCost = n.GetHCost();
             _gCost = n.GetGCost();
             _fCost = n.GetFCost();

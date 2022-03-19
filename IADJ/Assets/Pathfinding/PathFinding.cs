@@ -12,7 +12,7 @@ namespace Pathfinding
         // Public variables
         public Color startColor = Color.cyan;
         public Color finishColor = Color.red;
-        public bool drawNumberPath, drawColorPath;
+        public bool drawNumberPath, drawColorPath, drawCosts;
         public int sizeOfTextPath = 10;
 
         private Node[,] _nodeMap;
@@ -26,7 +26,6 @@ namespace Pathfinding
         // Private variables
         private List<Node> _path;
 
-
         private void Start()
         {
             _path = new List<Node>();
@@ -37,9 +36,11 @@ namespace Pathfinding
         {
             Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
             Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-
+            
+            
             if (startCell != null && finishCell != null && startCell != finishCell)
             {
+                InitializeNodeMap();
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 ApplyAstar(startNode, finishNode);
@@ -50,6 +51,7 @@ namespace Pathfinding
         {
             if (startNode != null && finishNode != null && startNode != finishNode)
             {
+                _path.Clear();
                 _path = AStar(startNode, finishNode);
             }
         }
@@ -60,20 +62,14 @@ namespace Pathfinding
             List<Node> closedList = new List<Node>();
             List<Node> openList = new List<Node> {startNode};
 
-            SetCostsToStart();
+            InitializeNodeMap();
             startNode.SetGCost(0);
             startNode.SetHCost(CalculateMono(startNode, finalNode));
             startNode.CalculateFCost();
 
-            Node nodoDebug = null;
-
-
-            int contador = 0;
-
             while (openList.Count > 0)
             {
                 Node currentNode = GetLowestCostFNode(openList);
-                nodoDebug = currentNode;
 
                 if (currentNode.GetCell().GetCoorX() == finalNode.GetCell().GetCoorX() &&
                     currentNode.GetCell().GetCoorZ() == finalNode.GetCell().GetCoorZ())
@@ -91,7 +87,6 @@ namespace Pathfinding
 
                     if (tentativeGCost < neighbourNode.GetGCost())
                     {
-                        Debug.Log("ENTRE AL TENTATIVE COOOOOST");
                         neighbourNode.SetPreviousNode(currentNode);
                         neighbourNode.SetGCost(tentativeGCost);
                         neighbourNode.SetHCost(CalculateMono(neighbourNode, finalNode));
@@ -103,11 +98,8 @@ namespace Pathfinding
                         }
                     }
                 }
-
-                contador += 1;
             }
 
-            Debug.Log("FALLE");
             return null;
         }
 
@@ -132,12 +124,10 @@ namespace Pathfinding
         private List<Node> CalculatePath(Node finalNode)
         {
             List<Node> path = new List<Node>();
-            path.Add(finalNode);
             Node currentNode = finalNode;
 
             while (currentNode.GetPreviousNode() != null)
             {
-                Debug.Log("ENTRE TANTAS VECES");
                 path.Add(currentNode.GetPreviousNode());
                 currentNode = currentNode.GetPreviousNode();
             }
@@ -177,11 +167,8 @@ namespace Pathfinding
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    _nodeMap[i, j] = new Node(gridMap.GetCellMap()[i, j]);
-                    _nodeMap[i, j].SetGCost(Int32.MaxValue);
-                    _nodeMap[i, j].SetHCost(Int32.MaxValue);
-                    _nodeMap[i, j].CalculateFCost();
-                    _nodeMap[i, j].SetPreviousNode(null);
+                    _nodeMap[i, j] = new Node(gridMap.GetCellMap()[i, j], Int32.MaxValue, Int32.MaxValue, null);
+                    _nodeMap[i, j].SetFCost(Int32.MaxValue);
                 }
             }
         }
@@ -225,10 +212,32 @@ namespace Pathfinding
                     if (drawNumberPath)
                     {
                         GUIStyle style = new GUIStyle();
-                        style.normal.textColor = Color.black;
+                        style.normal.textColor = Color.red;
                         style.fontSize = sizeOfTextPath;
-                        Handles.Label(c.GetCell().GetCenter(), index.ToString(), style);
+
+                        Vector3 pos = new Vector3(c.GetCell().GetCenter().x - 0.1f, c.GetCell().GetCenter().y,
+                            c.GetCell().GetCenter().z - 0.1f);
+                        Handles.Label(pos, index.ToString(), style);
                     }
+                }
+            }
+        }
+
+        private void DrawCosts()
+        {
+            String cost = "∞";
+            if (drawCosts)
+            {
+                foreach (var node in _nodeMap)
+                {
+                    if (node.GetFCost() < Int32.MaxValue)
+                    {
+                        cost = node.GetFCost().ToString();
+                    }
+                    GUIStyle style = new GUIStyle();
+                    style.normal.textColor = Color.red;
+                    style.fontSize = sizeOfTextPath;
+                    Handles.Label(node.GetCell().GetCenter(), cost, style);
                 }
             }
         }
@@ -236,6 +245,7 @@ namespace Pathfinding
         private void OnDrawGizmos()
         {
             DrawPath();
+            DrawCosts();
         }
 
         // Debug Methods
