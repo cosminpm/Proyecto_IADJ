@@ -35,7 +35,8 @@ namespace Pathfinding
             Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
             Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
             HEURISTIC = 1;
-            ApplyAStar(startCell, finishCell, HEURISTIC);
+
+            ApplyLRTA(startCell, finishCell);
         }
 
         public int HeuristicApply( Node startNode, Node finishNode,int heuristic)
@@ -54,7 +55,124 @@ namespace Pathfinding
             }
         }
 
+        private List<Node> GetNeighboursList(Node nodo)
+        {
+            List<Cell> neighbours = GetComponent<GridMap>().GetAllNeighbours(nodo.GetCell()).ToList();
 
+            List<Node> result = new List<Node>();
+            foreach (var neighbour in neighbours)
+            {
+                result.Add(RecoverNodeFromCell(neighbour));
+            }
+
+            return result;
+        }
+
+        private Node RecoverNodeFromCell(Cell cell)
+        {
+            return _nodeMap[cell.GetCoorX(), cell.GetCoorZ()];
+        }
+
+        private List<Node> CalculatePath(Node finalNode)
+        {
+            List<Node> path = new List<Node>();
+            path.Add(finalNode);
+
+            Node currentNode = finalNode;
+
+            while (currentNode.GetPreviousNode() != null)
+            {
+                currentNode = currentNode.GetPreviousNode();
+                path.Add(currentNode);
+            }
+
+            path.Reverse();
+            return path;
+        }
+
+        private Node GetLowestCostFNode(List<Node> pathNodeList)
+        {
+            Node lowestFNodeCost = pathNodeList[0];
+            for (var index = 1; index < pathNodeList.Count; index++)
+            {
+                if (pathNodeList[index].GetFCost() < lowestFNodeCost.GetFCost())
+                    lowestFNodeCost = pathNodeList[index];
+            }
+            return lowestFNodeCost;
+        }
+
+        public void InitializeNodeMap()
+        {
+            GridMap gridMap = GetComponent<GridMap>();
+            _xSize = gridMap.GetXSize();
+            _zSize = gridMap.GetZSize();
+            _nodeMap = new Node[_xSize, _zSize];
+            SetCostsToStart();
+        }
+
+        public void SetCostsToStart()
+        {
+            GridMap gridMap = GetComponent<GridMap>();
+            for (int i = 0; i < _xSize; i++)
+            {
+                for (int j = 0; j < _zSize; j++)
+                {
+                    _nodeMap[i, j] = new Node(gridMap.GetCellMap()[i, j], Int32.MaxValue, Int32.MaxValue, null);
+                    _nodeMap[i, j].SetFCost(Int32.MaxValue);
+                }
+            }
+        }
+        
+        // Functions of Finding Path
+
+        
+        // LRTA Star
+        private List<Node> LRTAStar(Node startNode, Node finishNode)
+        {
+            Node currentNode = startNode;
+            _path = new List<Node>();
+
+            int contador = 0;
+            while (currentNode != finishNode)
+            {
+                
+                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 2);
+                currentNode = GetLowestCostFNode(localSpace);
+                _path.Add(currentNode);
+
+                Debug.Log(currentNode.ToString());
+                if (contador > 100)
+                {
+                    Debug.Log("PETE");
+                    return null;
+                }
+                contador += 1;
+
+            }
+            _path = CalculatePath(currentNode);
+            return _path;
+        }
+
+        public List<Node> GenerateLocalSpace(Node startNode, Node finshNode, int lookhead)
+        {
+            List<Node> localSpace =  GetNeighboursList(startNode);
+            return localSpace;
+        }
+        
+        public void ApplyLRTA(Cell startCell, Cell finishCell)
+        {
+            if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
+                finishCell.GetIsAllowedCell())
+            {
+                SetCostsToStart();
+                Node startNode = RecoverNodeFromCell(startCell);
+                Node finishNode = RecoverNodeFromCell(finishCell);
+                _path.Clear();
+                _path = LRTAStar(startNode, finishNode);
+            }
+        }
+        
+        // A STAR
         private void ApplyAStar(Cell startCell, Cell finishCell, int heuristic)
         {
             if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
@@ -110,76 +228,6 @@ namespace Pathfinding
             }
 
             return null;
-        }
-
-        private List<Node> GetNeighboursList(Node nodo)
-        {
-            List<Cell> neighbours = GetComponent<GridMap>().GetAllNeighbours(nodo.GetCell()).ToList();
-
-            List<Node> result = new List<Node>();
-            foreach (var neighbour in neighbours)
-            {
-                result.Add(RecoverNodeFromCell(neighbour));
-            }
-
-            return result;
-        }
-
-        private Node RecoverNodeFromCell(Cell cell)
-        {
-            return _nodeMap[cell.GetCoorX(), cell.GetCoorZ()];
-        }
-
-        private List<Node> CalculatePath(Node finalNode)
-        {
-            List<Node> path = new List<Node>();
-            path.Add(finalNode);
-
-            Node currentNode = finalNode;
-
-            while (currentNode.GetPreviousNode() != null)
-            {
-                currentNode = currentNode.GetPreviousNode();
-                path.Add(currentNode);
-            }
-
-            path.Reverse();
-            return path;
-        }
-
-
-        private Node GetLowestCostFNode(List<Node> pathNodeList)
-        {
-            Node lowestFNodeCost = pathNodeList[0];
-            for (var index = 1; index < pathNodeList.Count; index++)
-            {
-                if (pathNodeList[index].GetFCost() < lowestFNodeCost.GetFCost())
-                    lowestFNodeCost = pathNodeList[index];
-            }
-
-            return lowestFNodeCost;
-        }
-
-        public void InitializeNodeMap()
-        {
-            GridMap gridMap = GetComponent<GridMap>();
-            _xSize = gridMap.GetXSize();
-            _zSize = gridMap.GetZSize();
-            _nodeMap = new Node[_xSize, _zSize];
-            SetCostsToStart();
-        }
-
-        public void SetCostsToStart()
-        {
-            GridMap gridMap = GetComponent<GridMap>();
-            for (int i = 0; i < _xSize; i++)
-            {
-                for (int j = 0; j < _zSize; j++)
-                {
-                    _nodeMap[i, j] = new Node(gridMap.GetCellMap()[i, j], Int32.MaxValue, Int32.MaxValue, null);
-                    _nodeMap[i, j].SetFCost(Int32.MaxValue);
-                }
-            }
         }
 
         // Cost functions
