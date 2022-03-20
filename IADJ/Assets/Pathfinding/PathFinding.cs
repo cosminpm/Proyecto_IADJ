@@ -36,9 +36,13 @@ namespace Pathfinding
         {
             Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
             Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
+            ApplyAStar(startCell, finishCell);
+        }
 
-
-            if (startCell != null && finishCell != null && startCell != finishCell)
+        private void ApplyAStar(Cell startCell, Cell finishCell)
+        {
+            if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
+                finishCell.GetIsAllowedCell())
             {
                 SetCostsToStart();
                 Node startNode = RecoverNodeFromCell(startCell);
@@ -48,7 +52,8 @@ namespace Pathfinding
             }
         }
 
-        public List<Node> AStar(Node startNode, Node finalNode)
+
+        private List<Node> AStar(Node startNode, Node finalNode)
         {
             List<Node> closedList = new List<Node>();
             List<Node> openList = new List<Node> {startNode};
@@ -114,9 +119,9 @@ namespace Pathfinding
         {
             List<Node> path = new List<Node>();
             path.Add(finalNode);
-            
+
             Node currentNode = finalNode;
-            
+
             while (currentNode.GetPreviousNode() != null)
             {
                 currentNode = currentNode.GetPreviousNode();
