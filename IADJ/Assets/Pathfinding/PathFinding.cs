@@ -14,13 +14,10 @@ namespace Pathfinding
         public Color finishColor = Color.red;
         public bool drawNumberPath, drawColorPath, drawCosts;
         public int sizeOfTextPath = 10;
-
+        public int HEURISTIC;
         private Node[,] _nodeMap;
+
         private int _xSize, _zSize;
-
-
-        public int MOVE_STRAIGHT = 10;
-        public int MOVE_DIAGONAL = 14;
 
 
         // Private variables
@@ -34,12 +31,31 @@ namespace Pathfinding
 
         private void Update()
         {
+            
             Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
             Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-            ApplyAStar(startCell, finishCell);
+            HEURISTIC = 1;
+            ApplyAStar(startCell, finishCell, HEURISTIC);
         }
 
-        private void ApplyAStar(Cell startCell, Cell finishCell)
+        public int HeuristicApply( Node startNode, Node finishNode,int heuristic)
+        {
+            switch (heuristic)
+            {
+                case 0:
+                    return Manhattan(startNode, finishNode);
+                case 1:
+                    return Chebychev(startNode, finishNode);
+                case 2:
+                    return Euclidean(startNode, finishNode);
+
+                default:
+                    return Manhattan(startNode, finishNode);
+            }
+        }
+
+
+        private void ApplyAStar(Cell startCell, Cell finishCell, int heuristic)
         {
             if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
                 finishCell.GetIsAllowedCell())
@@ -48,18 +64,17 @@ namespace Pathfinding
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-                _path = AStar(startNode, finishNode);
+                _path = AStar(startNode, finishNode, heuristic);
             }
         }
 
-
-        private List<Node> AStar(Node startNode, Node finalNode)
+        private List<Node> AStar(Node startNode, Node finalNode, int heuristic)
         {
             List<Node> closedList = new List<Node>();
             List<Node> openList = new List<Node> {startNode};
 
             startNode.SetGCost(0);
-            startNode.SetHCost(CalculateMono(startNode, finalNode));
+            startNode.SetHCost(HeuristicApply(startNode, finalNode, heuristic));
             startNode.CalculateFCost();
 
             while (openList.Count > 0)
@@ -77,13 +92,13 @@ namespace Pathfinding
                 foreach (Node neighbourNode in GetNeighboursList(currentNode))
                 {
                     if (closedList.Contains(neighbourNode)) continue;
-                    int tentativeGCost = currentNode.GetGCost() + CalculateMono(currentNode, neighbourNode);
+                    int tentativeGCost = currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode,heuristic);
 
                     if (tentativeGCost < neighbourNode.GetGCost())
                     {
                         neighbourNode.SetPreviousNode(currentNode);
                         neighbourNode.SetGCost(tentativeGCost);
-                        neighbourNode.SetHCost(CalculateMono(neighbourNode, finalNode));
+                        neighbourNode.SetHCost(HeuristicApply(neighbourNode, finalNode,heuristic));
                         neighbourNode.CalculateFCost();
 
                         if (!openList.Contains(neighbourNode))
@@ -174,17 +189,20 @@ namespace Pathfinding
                    Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ());
         }
 
-        private int CalculateMono(Node start, Node finish)
+        private int Euclidean(Node start, Node finish)
         {
+            int moveStraight = 10;
+            int moveDiagonal = 14;
             int xDistance = Mathf.Abs(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX());
             int zDistance = Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ());
             int remaining = Mathf.Abs(xDistance - zDistance);
-            return MOVE_DIAGONAL * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT * remaining;
+            return moveDiagonal * Mathf.Min(xDistance, zDistance) + moveStraight * remaining;
         }
 
-        private int Chebychev(Cell start, Cell finish)
+        private int Chebychev(Node start, Node finish)
         {
-            return 0;
+            return Mathf.Max(Mathf.Abs(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX()),
+                Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ()));
         }
 
         // Draw Methods
@@ -244,7 +262,7 @@ namespace Pathfinding
         }
 
         // Debug Methods
-        private void PathToSTRING(List<Cell> lista)
+        private void PathToString(List<Cell> lista)
         {
             for (var index = 0; index < lista.Count; index++)
             {
