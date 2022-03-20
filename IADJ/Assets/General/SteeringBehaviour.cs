@@ -4,6 +4,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(AgentNPC))]
+
 public abstract class SteeringBehaviour : MonoBehaviour
 {
 

@@ -2,11 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blended : SteeringBehaviour {
-
-    // Lista con los steerings a combinar
-    [SerializeField] public List<SteeringBehaviour> listaBehaviours;
-
+public class Blended : ArbitroManager {
 
     // Otra duda, cuando creo la lista de steering, no me deja poner los scripts.. solo objetos..
     
@@ -26,6 +22,10 @@ public class Blended : SteeringBehaviour {
         }
         */
 
+    }
+
+    public void Start(){
+        this.Inicializar();
     }
 
 

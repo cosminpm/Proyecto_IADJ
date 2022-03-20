@@ -5,15 +5,25 @@ public class AgentNPC : Agent
 {
     // Este será el steering final que se aplique al personaje.
     public Steering steer;
+
+
+    // Lista de steering que tiene el personaje: TODO A LO MEJOR NO HACE FALTA..
     public List<SteeringBehaviour> listSteerings;
+
+
+    // Arbitro que tiene el personaje
+    public ArbitroManager arbitro;
 
     public override void Awake()
     {
+        // Inicializamos el steering del personaje
         steer = new Steering();
 
+        // Obtenemos el arbitro
+        arbitro = GetComponent<ArbitroManager>();
+    
         // Construye una lista con todos las componenen del tipo SteeringBehaviour.
-        // La llamaremos listSteerings
-        // Usa GetComponents<>()
+        GetComponents<SteeringBehaviour>(listSteerings);
     }
 
     // Use this for initialization
@@ -41,9 +51,15 @@ public class AgentNPC : Agent
     
     public virtual void LateUpdate()
     {
-        // Reseteamos el steering final.
-        steer = new Steering();
-        
+         // Reseteamos el steering final.
+     //   steer = new Steering();
+
+        // Si hay arbitro.
+        if ( arbitro != null){
+            steer = arbitro.GetSteering(this);
+            return;
+        }
+
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
                 GetSteering(behavior);
