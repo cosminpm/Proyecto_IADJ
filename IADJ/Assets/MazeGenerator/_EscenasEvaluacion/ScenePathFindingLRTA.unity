@@ -199,8 +199,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 113542814}
-  m_LocalRotation: {x: 0.5409524, y: -0.46092275, z: 0.516015, w: 0.47817287}
-  m_LocalPosition: {x: 10.956724, y: 59.406937, z: 21.106218}
+  m_LocalRotation: {x: 0.7071068, y: 0.000000059604645, z: -0.000000024214387, w: 0.7071068}
+  m_LocalPosition: {x: 17.937523, y: 59.405518, z: 27.194075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -338,7 +338,9 @@ MonoBehaviour:
   drawCenterGm: 0
   drawAllowedCells: 1
   drawCellClicked: 1
+  drawCellNumber: 0
   intensityAllowedCells: 0.35
+  sizeOfTextGrid: 10
   modeOfTerrain: 1
   nameFloor: Floor(Clone)
   nameParent: MazePathFinderLRTA
@@ -384,6 +386,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startColor: {r: 0.069517374, g: 1, b: 0, a: 1}
   finishColor: {r: 1, g: 0, b: 0.70647144, a: 1}
+  drawNumberPath: 1
+  drawColorPath: 1
+  drawCosts: 0
+  sizeOfTextPath: 12
+  MOVE_STRAIGHT: 10
+  MOVE_DIAGONAL: 14
 --- !u!1 &1624826355
 GameObject:
   m_ObjectHideFlags: 0

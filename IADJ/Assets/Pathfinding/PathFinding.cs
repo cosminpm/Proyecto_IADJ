@@ -36,24 +36,26 @@ namespace Pathfinding
         {
             Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
             Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-            
-            
+
+
             if (startCell != null && finishCell != null && startCell != finishCell)
             {
-                InitializeNodeMap();
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
+
                 ApplyAstar(startNode, finishNode);
             }
         }
 
+        public void LateUpdate()
+        {
+        }
+
         public void ApplyAstar(Node startNode, Node finishNode)
         {
-            if (startNode != null && finishNode != null && startNode != finishNode)
-            {
-                _path.Clear();
-                _path = AStar(startNode, finishNode);
-            }
+            _path.Clear();
+            _path = AStar(startNode, finishNode);
+            SetCostsToStart();
         }
 
 
@@ -62,7 +64,6 @@ namespace Pathfinding
             List<Node> closedList = new List<Node>();
             List<Node> openList = new List<Node> {startNode};
 
-            InitializeNodeMap();
             startNode.SetGCost(0);
             startNode.SetHCost(CalculateMono(startNode, finalNode));
             startNode.CalculateFCost();
@@ -75,7 +76,7 @@ namespace Pathfinding
                     currentNode.GetCell().GetCoorZ() == finalNode.GetCell().GetCoorZ())
                 {
                     finalNode.SetPreviousNode(currentNode);
-                    return CalculatePath(finalNode);
+                    return CalculatePath(finalNode, startNode);
                 }
 
                 openList.Remove(currentNode);
@@ -121,15 +122,27 @@ namespace Pathfinding
             return _nodeMap[cell.GetCoorX(), cell.GetCoorZ()];
         }
 
-        private List<Node> CalculatePath(Node finalNode)
+        private List<Node> CalculatePath(Node finalNode, Node startNode)
         {
             List<Node> path = new List<Node>();
             Node currentNode = finalNode;
+            path.Add(currentNode);
 
-            while (currentNode.GetPreviousNode() != null)
+            int contador = 0;
+
+            while (currentNode.GetPreviousNode().GetCell().GetCoorX() != startNode.GetCell().GetCoorX() &&
+                   currentNode.GetPreviousNode().GetCell().GetCoorZ() != startNode.GetCell().GetCoorZ())
             {
-                path.Add(currentNode.GetPreviousNode());
+                Debug.Log(currentNode.ToString());
                 currentNode = currentNode.GetPreviousNode();
+                path.Add(currentNode);
+
+                contador += 1;
+                if (contador >= 100)
+                {
+                    Debug.Log("PETE");
+                    return null;
+                }
             }
 
             Debug.Log("SIZE PATH: " + path.Count);
@@ -234,6 +247,7 @@ namespace Pathfinding
                     {
                         cost = node.GetFCost().ToString();
                     }
+
                     GUIStyle style = new GUIStyle();
                     style.normal.textColor = Color.red;
                     style.fontSize = sizeOfTextPath;
