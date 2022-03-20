@@ -7,7 +7,6 @@ public abstract class FormationManager : MonoBehaviour
     // Estructura para indicar el personaje y el numero de slot que tiene 
     // asociado cada slot.
 
-
     public struct SlotAssignment
     {
         private Agent character;
@@ -26,18 +25,16 @@ public abstract class FormationManager : MonoBehaviour
 
     [SerializeField] public List<Agent> listaAgents = new List<Agent>();
 
-
     protected void inicializarSlots()
     {
-        Debug.Log("YES");
         // añadimos un caracter
         foreach ( var agente in listaAgents){
            addCharacter(agente);
         }
-        Debug.Log("NO");
     }
 
     void Start(){
+        inicializarSlots();
         updateSlots();
     }
 

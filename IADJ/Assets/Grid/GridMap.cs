@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Color = UnityEngine.Color;
@@ -12,27 +13,32 @@ namespace Grid
 
         // Public variables
         private int _xSize, _zSize;
-        public bool drawWireGm, drawCenterGm, drawAllowedCells;
-
+        public bool drawWireGm, drawCenterGm, drawAllowedCells, drawCellClicked, drawCellNumber;
+        public float intensityAllowedCells = 0.5f;
+        public int sizeOfTextGrid = 10;
         public int modeOfTerrain;
 
         // Private variables
         private bool _initialized;
-        private Cell[,] _gridMap;
+        private Cell[,] _cellMap;
 
         private Cell _cellClicked;
         private List<Cell> _allowedCells;
         private List<Cell> _notAllowedCells;
 
-        private float _sizePlaneX, _sizePlaneZ;
+        private float _sizePlaneX, _sizePlaneZ, _heightTerrain;
 
         public String nameFloor = "Floor(Clone)";
         public String nameParent = "MazePathFinderLRTA";
-
+        public String tagFloor = "Floor";
+        
+        private List<Cell> _cellsAdyacent;
+        
         void Start()
         {
             _allowedCells = new List<Cell>();
             _notAllowedCells = new List<Cell>();
+            _cellsAdyacent = new List<Cell>();
 
             GetSizeXAndSizeZ();
             CreateGrid();
@@ -41,17 +47,11 @@ namespace Grid
             CreateAllBoxColliders();
         }
 
-        void Update()
-        {
-            CheckIfCellClicked();
-        }
-
         private void CreateGrid()
         {
-            _gridMap = new Cell[_xSize, _zSize];
+            _cellMap = new Cell[_xSize, _zSize];
 
             float[] sizeOfCell = GetSizeOfCell();
-            Debug.Log(sizeOfCell[0]);
 
             for (int i = 0; i < _xSize; i++)
             {
@@ -63,9 +63,9 @@ namespace Grid
                     z = j * sizeOfCell[1] + sizeOfCell[1] / 2;
                     x += primerVector3.x;
                     z += primerVector3.z;
-                    
-                    Vector3 center = new Vector3(x, 0, z);
-                    _gridMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center);
+
+                    Vector3 center = new Vector3(x, _heightTerrain, z);
+                    _cellMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j);
                 }
             }
         }
@@ -75,11 +75,10 @@ namespace Grid
             GameObject father = GameObject.Find(nameParent);
             if (modeOfTerrain != 0)
                 return CornerTopLeftMultiple(father);
-            
+
             else
                 return CornerOnePlane(father);
         }
-
 
         private Vector3 CornerTopLeftMultiple(GameObject father)
         {
@@ -90,10 +89,12 @@ namespace Grid
                 Transform child = father.transform.GetChild(i);
                 if (child.name.Equals(nameFloor))
                 {
-                    corner = child.GetComponent<Renderer>().bounds.center - child.GetComponent<Renderer>().bounds.extents;
+                    corner = child.GetComponent<Renderer>().bounds.center -
+                             child.GetComponent<Renderer>().bounds.extents;
                     break;
                 }
             }
+
             return corner;
         }
 
@@ -101,7 +102,7 @@ namespace Grid
         {
             return father.GetComponent<Renderer>().bounds.center - father.GetComponent<Renderer>().bounds.extents;
         }
-        
+
         private float GreatestCommonDivisor(float a, float b)
         {
             float res;
@@ -121,6 +122,7 @@ namespace Grid
             String nombreUnPlano = nameParent;
             float x = GameObject.Find(nombreUnPlano).GetComponent<Renderer>().bounds.size.x;
             float z = GameObject.Find(nombreUnPlano).GetComponent<Renderer>().bounds.size.z;
+            _heightTerrain = GameObject.Find(nombreUnPlano).transform.position.y;
             return new[] {x, z};
         }
 
@@ -139,6 +141,7 @@ namespace Grid
                 {
                     x += child.GetComponent<Renderer>().bounds.size.x;
                     z += child.GetComponent<Renderer>().bounds.size.z;
+                    _heightTerrain = child.transform.position.y;
                 }
             }
 
@@ -163,18 +166,19 @@ namespace Grid
             }
         }
 
-        private void CheckIfCellClicked()
+        public Cell CheckIfCellClicked(bool input)
         {
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    if (_gridMap[i, j].CheckIfCellClicked())
+                    if (_cellMap[i, j].CheckIfCellClicked(input))
                     {
-                        _cellClicked = _gridMap[i, j];
+                        _cellClicked = _cellMap[i, j];
                     }
                 }
             }
+            return _cellClicked;
         }
 
         private void AddAllowedCells()
@@ -184,15 +188,14 @@ namespace Grid
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    if (_gridMap[i, j].CheckCollision() && !_notAllowedCells.Contains(_gridMap[i, j]))
-                        _notAllowedCells.Add(_gridMap[i, j]);
+                    if (_cellMap[i, j].CheckCollision() && !_notAllowedCells.Contains(_cellMap[i, j]))
+                        _notAllowedCells.Add(_cellMap[i, j]);
 
-                    else if (!_gridMap[i, j].CheckCollision() && !_allowedCells.Contains(_gridMap[i, j]))
-                        _allowedCells.Add(_gridMap[i, j]);
+                    else if (!_cellMap[i, j].CheckCollision() && !_allowedCells.Contains(_cellMap[i, j]))
+                        _allowedCells.Add(_cellMap[i, j]);
                 }
             }
         }
-
 
         private void GetSizeXAndSizeZ()
         {
@@ -226,7 +229,78 @@ namespace Grid
             }
         }
 
+        // Methods for LRTA*
 
+        public Cell[] GetHorizontalCells(Cell c)
+        {
+            Cell top, bot, left, right;
+            top = bot = left = right = null;
+            if ((c.GetCoorX() + 1 < _xSize) && _cellMap[c.GetCoorX() + 1, c.GetCoorZ()].GetIsAllowedCell())
+                right = _cellMap[c.GetCoorX() + 1, c.GetCoorZ()];
+
+            if ((c.GetCoorZ() + 1 < _zSize) && _cellMap[c.GetCoorX(), c.GetCoorZ() + 1].GetIsAllowedCell())
+                bot = _cellMap[c.GetCoorX(), c.GetCoorZ() + 1];
+
+            if ((c.GetCoorX() - 1 >= 0) && _cellMap[c.GetCoorX() - 1, c.GetCoorZ()].GetIsAllowedCell())
+                left = _cellMap[c.GetCoorX() - 1, c.GetCoorZ()];
+
+            if ((c.GetCoorZ() - 1 >= 0) && _cellMap[c.GetCoorX(), c.GetCoorZ() - 1].GetIsAllowedCell())
+                top = _cellMap[c.GetCoorX(), c.GetCoorZ() - 1];
+            return new[] {right, left, top, bot};
+        }
+
+        public Cell[] GetDiagonalCells(Cell c)
+        {
+            Cell topLeft, topRight, botLeft, botRight;
+            topLeft = topRight = botLeft = botRight = null;
+            if ((c.GetCoorX() + 1 < _xSize) &&
+                (c.GetCoorZ() - 1 >= 0) &&
+                _cellMap[c.GetCoorX() + 1, c.GetCoorZ() - 1].GetIsAllowedCell())
+                topRight = _cellMap[c.GetCoorX() + 1, c.GetCoorZ() - 1];
+
+            if ((c.GetCoorX() + 1 < _xSize) &&
+                (c.GetCoorZ() + 1 < _zSize) &&
+                _cellMap[c.GetCoorX() + 1, c.GetCoorZ() + 1].GetIsAllowedCell())
+                botRight = _cellMap[c.GetCoorX() + 1, c.GetCoorZ() + 1];
+
+            if ((c.GetCoorX() - 1 >= 0) &&
+                (c.GetCoorZ() - 1 >= 0) &&
+                _cellMap[c.GetCoorX() - 1, c.GetCoorZ() - 1].GetIsAllowedCell())
+                topLeft = _cellMap[c.GetCoorX() - 1, c.GetCoorZ() - 1];
+
+            if ((c.GetCoorZ() + 1 < _zSize) &&
+                (c.GetCoorX() - 1 >= 0) &&
+                _cellMap[c.GetCoorX() - 1, c.GetCoorZ() + 1].GetIsAllowedCell())
+                botLeft = _cellMap[c.GetCoorX() - 1, c.GetCoorZ() + 1];
+            return new[] {topLeft, topRight, botLeft, botRight};
+        }
+
+        public Cell[] GetAllNeighbours(Cell c)
+        {
+            List<Cell> c1 = GetDiagonalCells(c).ToList();
+            List<Cell> c2 = GetHorizontalCells(c).ToList();
+            c1.AddRange(c2);
+            c1.RemoveAll(item => item == null);
+            return c1.ToArray();
+        }
+
+        // GET and SET Methods
+
+        public int GetXSize()
+        {
+            return _xSize;
+        }
+        
+        public int GetZSize()
+        {
+            return _zSize;
+        }
+
+        public Cell[,] GetCellMap()
+        {
+            return (Cell[,]) _cellMap.Clone();
+        }
+        
         // Draw Methods
         private void OnDrawGizmos()
         {
@@ -238,11 +312,26 @@ namespace Grid
             }
         }
 
+        private void DrawAdyacentCells(Cell c)
+        {
+            List<Cell> cells = GetDiagonalCells(c).ToList();
+            List<Cell> cells2 = GetHorizontalCells(c).ToList();
+            cells.AddRange(cells2);
+        
+            foreach (var i in cells)
+            {
+                if (i != null)
+                {
+                    i.DrawCellColored(Color.magenta);
+                }
+            }
+        }
+        
         private void DrawCellClicked()
         {
-            if (_cellClicked != null)
+            if (drawCellClicked && _cellClicked != null)
             {
-                _cellClicked.DrawCellColored(Color.blue);
+                _cellClicked.DrawCellColored(Color.black);
             }
         }
 
@@ -252,13 +341,13 @@ namespace Grid
             {
                 foreach (var cell in _allowedCells)
                 {
-                    Color c = new Color(.25f, .25f, .95f, 0.75f);
+                    Color c = new Color(.15f, .15f, .95f, intensityAllowedCells);
                     cell.DrawCellColored(c);
                 }
 
                 foreach (var cell in _notAllowedCells)
                 {
-                    Color c = new Color(0.952f, 0.286f, 0.286f, 0.75f);
+                    Color c = new Color(0.952f, 0.286f, 0.286f, intensityAllowedCells);
                     cell.DrawCellColored(c);
                 }
             }
@@ -272,10 +361,13 @@ namespace Grid
                 for (int j = 0; j < _zSize; j++)
                 {
                     if (drawCenterGm)
-                        _gridMap[i, j].DrawCenter();
+                        _cellMap[i, j].DrawCenter();
 
                     if (drawWireGm)
-                        _gridMap[i, j].DrawCell();
+                        _cellMap[i, j].DrawCell();
+                    if(drawCellNumber)
+                        _cellMap[i,j].DrawCellNumber(sizeOfTextGrid);
+                    
                 }
             }
         }
@@ -289,7 +381,7 @@ namespace Grid
                 Debug.Log("ROW " + i);
                 for (int j = 0; j < _zSize; j++)
                 {
-                    Debug.Log(_gridMap[i, j].GetCenter());
+                    Debug.Log(_cellMap[i, j].GetCenter());
                 }
             }
 

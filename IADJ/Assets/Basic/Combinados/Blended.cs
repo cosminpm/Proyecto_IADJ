@@ -15,13 +15,9 @@ public class Blended : ArbitroManager {
             if (steer is Seek )
             {
                 (Seek)steer.Target = t;
-
-                Debug.Log ("DASDAD");
             }
-           
         }
         */
-
     }
 
     public void Start(){

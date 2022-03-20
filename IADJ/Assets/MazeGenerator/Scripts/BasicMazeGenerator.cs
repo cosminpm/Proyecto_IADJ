@@ -35,7 +35,6 @@ public abstract class BasicMazeGenerator {
 		if (row >= 0 && column >= 0 && row < mMazeRows && column < mMazeColumns) {
 			return mMaze[row,column];
 		}else{
-			Debug.Log(row+" "+column);
 			throw new System.ArgumentOutOfRangeException();
 		}
 	}

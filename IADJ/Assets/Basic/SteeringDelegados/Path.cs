@@ -27,20 +27,17 @@ public class Path : MonoBehaviour
 
         // Devolvemos la posición actual si no hay camino.
         if (nodos.Count == 0){
-            Debug.Log("Posiciona actual es los nodos 0 ");
             return this.transform.position;
         
         }
 
         // Devolvemos el último nodo el camino, si hemos llegado la final
         if (nodoPosicion >= nodos.Count){
-            Debug.Log("nodo posicion mayor que nodo count");
             return nodos[nodos.Count - 1].transform.position;
         }
 
         // TODO:Por errores
         if (nodoPosicion < 0){
-            Debug.Log("Nodo posicion menor que nodo asda");
             return nodos[0].transform.position;
         }
 
@@ -64,17 +61,7 @@ public class Path : MonoBehaviour
         }
 
         // Ahora tenemos que calcular si nos vamos al nodo siguiente o no..
-
-        Debug.Log(radioNodo);
-       
-
-        //  // En otro caso nos seguimos dirigienso hacia el mismo nodo
-        // if  ((Vector3.Distance(agentePosicion,nodos[nodoActual+1].transform.position)) > radioNodo)
-        // {
-        //     Debug.Log("ZZZZZZZZZZZZZZZ");
-        //     Debug.Log("Distancia ess "+(Vector3.Distance(agentePosicion,nodos[nodoActual+1].transform.position)));
-        //     return nodoActual;
-        // }
+        
 
         return nodoActual;
     }

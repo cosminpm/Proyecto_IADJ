@@ -1,4 +1,5 @@
-﻿using Grid;
+﻿using System;
+using Grid;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,13 +8,29 @@ public class Cell
     private float _sizeX, _sizeZ;
     private Vector3 _center;
     private GameObject _collider;
+    private bool _allowedCell;
+    private int _coorX, _coorZ, _cost;
 
-    public Cell(float sizeX, float sizeZ, Vector3 center)
+    public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ)
     {
         _sizeX = sizeX;
         _sizeZ = sizeZ;
         _center = center;
+        _coorX = coorX;
+        _coorZ = coorZ;
+        _cost = int.MaxValue;
     }
+    
+    public Cell(Cell c)
+    {
+        _sizeX = c._sizeX;
+        _sizeZ = c._sizeZ;
+        _center = c._center;
+        _coorX = c._coorX;
+        _coorZ = c._coorZ;
+        _cost = int.MaxValue;
+    }
+    
 
     public float GetSizeX()
     {
@@ -25,20 +42,45 @@ public class Cell
         return _sizeZ;
     }
 
+    public int GetCost()
+    {
+        return _cost;
+    }
+
+    public void SetCost(int cost)
+    {
+        _cost = cost;
+    }
+
+    public bool GetIsAllowedCell()
+    {
+        return _allowedCell;
+    }
+
+    public int GetCoorX()
+    {
+        return _coorX;
+    }
+    
+    public int GetCoorZ()
+    {
+        return _coorZ;
+    }
+    
     public Vector3 GetCenter()
     {
         return _center;
     }
 
-    public bool CheckIfCellClicked()
+    public bool CheckIfCellClicked(bool input)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (input)
         {
             
-            RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
             
-            if (Physics.Raycast(ray, out hit) && CheckVector3InsideBox(hit.point) && hit.transform.CompareTag("Terrain"))
+           if (CheckVector3InsideBox(hits))
             {
                 return true;
             }
@@ -46,24 +88,28 @@ public class Cell
             {
                 return false;  
             }
-               
         }
         else
             return false;
     }
 
-    private bool CheckVector3InsideBox(Vector3 point)
+    private bool CheckVector3InsideBox(RaycastHit[] hits)
     {
-        float amplitudeX = _sizeX / 2;
-        float amplitudeZ = _sizeZ / 2;
+        foreach (var h in hits)
+        {
+            float amplitudeX = _sizeX / 2;
+            float amplitudeZ = _sizeZ / 2;
+            Vector3 point = h.point;
+            if (h.transform.CompareTag(GameObject.Find("Controlador").GetComponent<GridMap>().tagFloor) &&
+                point.x > (_center.x - amplitudeX) &&
+                point.x < (_center.x + amplitudeX) &&
+                point.z > (_center.z - amplitudeZ) &&
+                point.z < (_center.z + amplitudeZ)
+            )
+                return true;
+        }
 
-        if (point.x > (_center.x - amplitudeX) &&
-            point.x < (_center.x + amplitudeX) &&
-            point.z > (_center.z - amplitudeZ) &&
-            point.z < (_center.z + amplitudeZ))
-            return true;
-        else
-            return false;
+        return false;
     }
 
     public void DrawCell()
@@ -80,16 +126,25 @@ public class Cell
     public void DrawCellColored(Color color)
     {
         Gizmos.color = color;
-        Gizmos.DrawCube(_center, new Vector3(_sizeX, 0.1f,_sizeZ));
+        Gizmos.DrawCube(_center, new Vector3(_sizeX, 0,_sizeZ));
     }
+
+    public void DrawCellNumber(int sizeOfTextGrid)
+    {
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.black;
+        style.fontSize = sizeOfTextGrid;
+        Vector3 pos = new Vector3(_center.x - _sizeX/2, _center.y, _center.z - _sizeZ/2);
+        Handles.Label(pos,_coorX + ", " + _coorZ,style);
+    }
+    
     public void CreateBoxCollider(GameObject parent)
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.transform.position = _center;
         cube.transform.parent = parent.transform;
         cube.name = "CubeCollider";
-        cube.tag = "Terrain";
-        
+
         float sizeX = cube.GetComponent<Renderer>().bounds.size.x;
         float sizeZ = cube.GetComponent<Renderer>().bounds.size.z;
 
@@ -104,19 +159,27 @@ public class Cell
         cube.AddComponent<BoxCollider>();
         cube.GetComponent<Renderer>().enabled = false;
         cube.transform.localScale = localScale;
-
-        cube.AddComponent<Coll>();
         _collider = cube;
     }
 
+    public override String ToString()
+    {
+        return  _coorX + ", " + _coorZ;
+    }
+    
     public bool CheckCollision()
     {
         Collider[] colls = Physics.OverlapBox(_center, new Vector3(_sizeX, 1, _sizeZ) / 2);
         foreach (var c in colls)
         {
             if (c.transform.CompareTag("Untagged"))
+            {
+                _allowedCell = false;
                 return true;
+            }
+               
         }
+        _allowedCell = true;
         return false;
     }
 
