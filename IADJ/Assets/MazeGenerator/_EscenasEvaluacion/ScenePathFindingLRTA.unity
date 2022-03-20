@@ -338,7 +338,7 @@ MonoBehaviour:
   drawCenterGm: 0
   drawAllowedCells: 1
   drawCellClicked: 1
-  drawCellNumber: 0
+  drawCellNumber: 1
   intensityAllowedCells: 0.35
   sizeOfTextGrid: 10
   modeOfTerrain: 1

@@ -21,7 +21,7 @@ public class AgentNPC : Agent
 
         // Obtenemos el arbitro
         arbitro = GetComponent<ArbitroManager>();
-    
+
         // Construye una lista con todos las componenen del tipo SteeringBehaviour.
         GetComponents<SteeringBehaviour>(listSteerings);
     }
@@ -37,7 +37,7 @@ public class AgentNPC : Agent
     {
         ApplySteering();
     }
-    
+
     private void ApplySteering()
     {
         Velocity += steer.linear * Time.deltaTime;
@@ -48,23 +48,24 @@ public class AgentNPC : Agent
         transform.rotation = new Quaternion();
         transform.Rotate(Vector3.up, Orientation);
     }
-    
+
     public virtual void LateUpdate()
     {
-         // Reseteamos el steering final.
-     //   steer = new Steering();
+        // Reseteamos el steering final.
+        //   steer = new Steering();
 
         // Si hay arbitro.
-        if ( arbitro != null){
+        if (arbitro != null)
+        {
             steer = arbitro.GetSteering(this);
             return;
         }
 
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
-                GetSteering(behavior);
+            GetSteering(behavior);
     }
-    
+
     private void GetSteering(SteeringBehaviour behavior)
     {
         // Calcula el steeringbehaviour
@@ -77,7 +78,7 @@ public class AgentNPC : Agent
         // El resultado final se guarda para ser aplicado en el siguiente frame.
         steer = kinematicFinal;
     }
-    
+
     private float mapToRange(float rotation)
     {
         rotation %= 360;
@@ -89,6 +90,7 @@ public class AgentNPC : Agent
             else
                 rotation -= 360;
         }
+
         return rotation;
     }
 }

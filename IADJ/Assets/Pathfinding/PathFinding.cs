@@ -40,24 +40,13 @@ namespace Pathfinding
 
             if (startCell != null && finishCell != null && startCell != finishCell)
             {
+                SetCostsToStart();
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
-
-                ApplyAstar(startNode, finishNode);
+                _path.Clear();
+                _path = AStar(startNode, finishNode);
             }
         }
-
-        public void LateUpdate()
-        {
-        }
-
-        public void ApplyAstar(Node startNode, Node finishNode)
-        {
-            _path.Clear();
-            _path = AStar(startNode, finishNode);
-            SetCostsToStart();
-        }
-
 
         public List<Node> AStar(Node startNode, Node finalNode)
         {
@@ -75,8 +64,7 @@ namespace Pathfinding
                 if (currentNode.GetCell().GetCoorX() == finalNode.GetCell().GetCoorX() &&
                     currentNode.GetCell().GetCoorZ() == finalNode.GetCell().GetCoorZ())
                 {
-                    finalNode.SetPreviousNode(currentNode);
-                    return CalculatePath(finalNode, startNode);
+                    return CalculatePath(currentNode);
                 }
 
                 openList.Remove(currentNode);
@@ -122,30 +110,18 @@ namespace Pathfinding
             return _nodeMap[cell.GetCoorX(), cell.GetCoorZ()];
         }
 
-        private List<Node> CalculatePath(Node finalNode, Node startNode)
+        private List<Node> CalculatePath(Node finalNode)
         {
             List<Node> path = new List<Node>();
+            path.Add(finalNode);
+            
             Node currentNode = finalNode;
-            path.Add(currentNode);
-
-            int contador = 0;
-
-            while (currentNode.GetPreviousNode().GetCell().GetCoorX() != startNode.GetCell().GetCoorX() &&
-                   currentNode.GetPreviousNode().GetCell().GetCoorZ() != startNode.GetCell().GetCoorZ())
+            
+            while (currentNode.GetPreviousNode() != null)
             {
-                Debug.Log(currentNode.ToString());
                 currentNode = currentNode.GetPreviousNode();
                 path.Add(currentNode);
-
-                contador += 1;
-                if (contador >= 100)
-                {
-                    Debug.Log("PETE");
-                    return null;
-                }
             }
-
-            Debug.Log("SIZE PATH: " + path.Count);
 
             path.Reverse();
             return path;
