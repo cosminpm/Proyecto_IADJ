@@ -18,7 +18,7 @@ public class WallAvoidance : Seek
 
 
     // BORRAR
-    private float radioExteriorInvisible = 3f;
+    private float radioExteriorInvisible = 3.5f;
     private float radioInteriorInvisible = 1f;
 
     private AgentInvisible auxTarget;
