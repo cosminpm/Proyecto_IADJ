@@ -16,6 +16,15 @@ public class Evade : Flee
         Target = prediccionGO.GetComponent<AgentInvisible>();
     }
 
+
+    void Start(){
+
+        targetAux = Target;
+        prediccionGO = GameObject.Find("Controlador").GetComponent<SeleccionarObjetivos>().CreateInvisibleAgent(targetAux.Position);
+        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
+        Target = prediccionGO.GetComponent<AgentInvisible>();
+    }
+
     public override Steering GetSteering(Agent agent)
     {
         Steering steer = new Steering();

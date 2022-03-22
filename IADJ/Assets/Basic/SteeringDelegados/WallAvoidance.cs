@@ -17,41 +17,63 @@ public class WallAvoidance : Seek
     [SerializeField] private float anguloBigotes = 45f;
 
 
+    // BORRAR
+    private float radioExteriorInvisible = 3.5f;
+    private float radioInteriorInvisible = 1f;
+
+    private AgentInvisible auxTarget;
+
     public void Start(){
 
+        GameObject go = new GameObject("auxWallInvisible");
+        auxTarget = go.AddComponent<AgentInvisible>() as AgentInvisible;
+        auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
+        auxTarget.ArrivalRadius = radioExteriorInvisible;
+        auxTarget.InteriorRadius = radioInteriorInvisible;
 
     }
 
 
+
+
     public override Steering GetSteering(Agent agent){
-/*
+        
         // TODO: Lo hago de la primera FORMA1: No teniendo en cuenta la velocidad, 
 
-        Vector3 bigotes = this.Velocity.normalized * lookAhead;
-
         // Construimos los bigotes
-        Vector3 bigCentral = this.Velocity.normalized * lookAheadCentral;
-        Vector3 bigIzquierdo = Quaternion.Euler(0,-anguloBigotes,0) * lookAheadCentral;
-        Vector3 bigDerecho = Quaternion.Euler(0,anguloBigotes,0) *lookAheadCentral;
+        Vector3 bigCentral = agent.Velocity.normalized;
+        Vector3 bigIzquierdo = Quaternion.Euler(0,-anguloBigotes,0) * agent.Velocity.normalized;
+        Vector3 bigDerecho = Quaternion.Euler(0,anguloBigotes,0) * agent.Velocity.normalized;
 
-        Raycast hitCen,hitIzq,hitDer;
+        RaycastHit hitCent,hitIzq,hitDer;
 
         // Detectamos las posibles colisiones. Para la posible trampa de la esquina en una posible colisión, le damos prioridad al bigote central.
 
-        // Colisión frontal-
-        if (Physics.Raycast(agent.Position, bigCentral, out hitCen, lookAheadCentral))
+                                                                                          // Colisión frontal-
+        if (Physics.Raycast(agent.Position, bigCentral, out hitCent, lookAheadCentral))
         {
+         
+            auxTarget.Position = hitCent.point + hitCent.normal * avoidDistance;
+            this.target = auxTarget;
+            return base.GetSteering(agent);
             
-
         } else if (Physics.Raycast(agent.Position, bigIzquierdo, out hitIzq, lookAhead)) { // Colision bigote izquierdo
-          
+
+            auxTarget.Position = hitIzq.point + hitIzq.normal * avoidDistance;
+            this.target = auxTarget;
+            return base.GetSteering(agent);
+            
         } else if (Physics.Raycast(agent.Position, bigDerecho, out hitDer, lookAhead)) { // Colision bigote derecho
-       
+
+            auxTarget.Position = hitDer.point + hitDer.normal * avoidDistance;
+            this.target = auxTarget;
+            return base.GetSteering(agent);
+
         }
 
 
-        return base.GetSteering(agent);
-        */
+        //return base.GetSteering(agent);
+        
         return new Steering();
     }
 
