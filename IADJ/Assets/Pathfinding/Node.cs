@@ -5,10 +5,21 @@ namespace Pathfinding
     public class Node
     {
         private Cell _cell;
+        
+        // For all algorithms
         private int _hCost;
+        
+        // For A Star
         private int _gCost;
         private int _fCost;
         private Node _previousNode;
+        
+        // For LRTA
+        private int _tempCost;
+        private int _maxCost;
+        
+        
+
 
         public Node(Cell cell, int hCost, int gCost, Node previousNode)
         {
@@ -63,6 +74,27 @@ namespace Pathfinding
             return _previousNode;
         }
 
+        public int GetTempCost()
+        {
+            return _tempCost;
+        }
+
+        public int GetMaxCost()
+        {
+            return _maxCost;
+        }
+
+        public void SetMaxCost(int maxCost)
+        {
+            _maxCost = maxCost;
+        }
+
+        public void SetTempCost(int tempCost)
+        {
+            _tempCost = tempCost;
+        }
+        
+        
         public void SetCell(Cell cell)
         {
             _cell = cell;

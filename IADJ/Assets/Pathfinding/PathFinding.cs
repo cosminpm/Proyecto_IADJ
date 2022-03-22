@@ -5,6 +5,7 @@ using Grid;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 
 namespace Pathfinding
 {
@@ -127,34 +128,156 @@ namespace Pathfinding
         // Functions of Finding Path
 
 
-
         private void SetHeuristicOfEveryOne(Node finishNode)
         {
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    _nodeMap[i, j].SetHCost(Chebychev(_nodeMap[i, j],finishNode));
+                    _nodeMap[i, j].SetHCost(Chebychev(_nodeMap[i, j], finishNode));
                 }
             }
         }
 
-
+        // LRTA Star
         private List<Node> LRTAVariosPasos(Node startNode, Node finishNode)
         {
-            return null;
+            InitializeNodeMap();
+            SetHeuristicOfEveryOne(finishNode);
+            
+            Node currentNode = new Node(startNode);
+            List<Node> finalPath = new List<Node>{startNode};
+
+            int contador = 0;
+            while (!currentNode.Equals(finishNode))
+            {
+                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 2);
+                UpdateValuesLocalSpace(localSpace);
+                
+                int minCost = Int32.MaxValue;
+                List<Node> neigbours = GetNeighboursList(currentNode);
+                Node minNode = neigbours[0];
+                foreach (var neighbour in neigbours)
+                {
+                    if (neighbour.GetHCost() < minCost)
+                    {
+                        minCost = neighbour.GetHCost();
+                        minNode = neighbour;
+                    }
+                }
+                currentNode = minNode;
+                finalPath.Add(currentNode);
+
+
+                contador += 1;
+                if (contador > 300)
+                {
+                 Debug.Log("PETE");
+                 return finalPath;
+                }
+
+            }
+
+            return finalPath;
         }
 
 
-        // LRTA Star
+        private bool CheckIfInfinitInList(List<Node> list)
+        {
+            foreach (var node in list)
+            {
+                if (node.GetHCost() == Int32.MaxValue)
+                    return true;
+            }
+            return false;
+        }
+        
+        
+        private void UpdateValuesLocalSpace(List<Node> localSpace)
+        {
+            foreach (var node in localSpace)
+            {
+                node.SetTempCost(node.GetHCost());
+                node.SetMaxCost(Int32.MinValue);
+                node.SetHCost(Int32.MaxValue);
+            }
+
+
+            bool comprobador = false;
+            while (!comprobador)
+            {
+                foreach (var node in localSpace)
+                {
+                    if (node.GetHCost() == Int32.MaxValue)
+                    {
+                        int minCost = Int32.MaxValue;
+                        // We have min cost
+                        foreach (var neighBour in GetNeighboursList(node))
+                        {
+                            if (neighBour.GetHCost() + 1 < minCost)
+                            {
+                                minCost = neighBour.GetHCost() + 1;
+                            }
+                        }
+
+                        int maxCost = Mathf.Max(minCost, node.GetTempCost());
+                        node.SetMaxCost(maxCost); 
+                    }
+                }
+
+                Node maxNode = localSpace[0];
+                int maxValue = Int32.MinValue;
+                foreach (var node in localSpace)
+                {
+                    if (node.GetHCost() == Int32.MaxValue)
+                    {
+                        if (node.GetMaxCost() > maxValue)
+                        {
+                            maxValue = node.GetMaxCost();
+                            maxNode = node;
+                        }
+                    }
+                }
+
+                maxNode.SetHCost(maxNode.GetMaxCost());
+                comprobador = CheckIfInfinitInList(localSpace);
+
+            }
+            
+            
+        }
+
+        private List<Node> GenerateLocalSpace(Node startNode, Node finishNode, int radio)
+        {
+            List<Node> neighboursList = GetNeighboursList(startNode);
+            List<Node> localSpace = new List<Node>();
+            localSpace.AddRange(neighboursList);
+            int count = 1;
+
+            while (count < radio)
+            {
+                foreach (var neighbour in neighboursList)
+                {
+                    localSpace.AddRange(GenerateLocalSpace(neighbour, finishNode, radio - 1));
+                    localSpace = localSpace.Distinct().ToList();
+                }
+
+                count += 1;
+            }
+
+            localSpace.Remove(finishNode);
+            return localSpace;
+        }
+
+
         private List<Node> LRTAStarUnPaso(Node startNode, Node finishNode)
         {
             SetCostsToStart();
             SetHeuristicOfEveryOne(finishNode);
-            
+
             Node actualNode = new Node(startNode);
-            List<Node> actualPath = new List<Node>{actualNode};
-            
+            List<Node> actualPath = new List<Node> {actualNode};
+
             while (!actualNode.Equals(finishNode))
             {
                 List<Node> neighboursList = GetNeighboursList(actualNode);
@@ -168,11 +291,12 @@ namespace Pathfinding
                         minCost = 1 + neighbour.GetHCost();
                     }
                 }
+
                 actualNode.SetHCost(1 + min.GetHCost());
                 actualNode = min;
                 actualPath.Add(actualNode);
             }
-            
+
             return actualPath;
         }
 
@@ -185,7 +309,9 @@ namespace Pathfinding
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-                _path = LRTAStarUnPaso(startNode, finishNode);
+
+                //_path = LRTAStarUnPaso(startNode, finishNode);
+                _path = LRTAVariosPasos(startNode, finishNode);
             }
         }
 
@@ -212,6 +338,9 @@ namespace Pathfinding
             startNode.SetGCost(0);
             startNode.SetHCost(HeuristicApply(startNode, finalNode, heuristic));
             startNode.CalculateFCost();
+
+
+            int count = 0;
 
             while (openList.Count > 0)
             {
@@ -243,6 +372,8 @@ namespace Pathfinding
                         }
                     }
                 }
+
+                count += 1;
             }
 
             return null;
