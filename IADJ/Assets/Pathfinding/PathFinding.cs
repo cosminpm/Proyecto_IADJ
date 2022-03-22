@@ -135,33 +135,34 @@ namespace Pathfinding
             {
                 for (int j = 0; j < _zSize; j++)
                 {
+                    _nodeMap[i, j].SetHCost(Chebychev(_nodeMap[i, j], finishNode));
                     if (_nodeMap[i, j].Equals(finishNode))
                     {
                         _nodeMap[i, j].SetHCost(0f);
+                        Debug.Log(finishNode.GetHCost());
                     }
-
-                    _nodeMap[i, j].SetHCost(Chebychev(_nodeMap[i, j], finishNode));
                 }
             }
         }
 
         // LRTA Star
-        private List<Node> LRTAVariosPasos(Node startNode, Node finishNode)
+        private List<Node> LRTAVariosPasos(Node startNode, Node finalNode)
         {
-            InitializeNodeMap();
-            SetHeuristicOfEveryOne(finishNode);
+            SetHeuristicOfEveryOne(finalNode);
 
             Node currentNode = new Node(startNode);
             List<Node> finalPath = new List<Node> {startNode};
-
+            
+            Debug.Log("CAMBIE SOY UN CABRON:"+finalNode.GetHCost());
             int contador = 0;
-            while (!currentNode.Equals(finishNode))
+            while (!currentNode.Equals(finalNode))
             {
-                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 3);
+                List<Node> localSpace = GenerateLocalSpace(currentNode, finalNode, 2);
 
                 if (!localSpace.Contains(currentNode))
                 {
-                    UpdateValuesLocalSpace(localSpace);
+                    
+                    UpdateValuesLocalSpace(localSpace,finalNode);
                 }
 
                 float minCost = Mathf.Infinity;
@@ -178,13 +179,13 @@ namespace Pathfinding
 
                 currentNode = new Node(minNode);
                 finalPath.Add(currentNode);
-                
+
                 contador += 1;
-                if (contador > 100)
-                {
-                    Debug.Log("PETE");
-                    return finalPath;
-                }
+                // if (contador > 100)
+                // {
+                //     Debug.Log("PETE");
+                //     return finalPath;
+                // }
             }
 
             Debug.Log("ENCONTRE UNA SOLUCION");
@@ -204,12 +205,16 @@ namespace Pathfinding
         }
 
 
-        private void UpdateValuesLocalSpace(List<Node> localSpace)
+        private void UpdateValuesLocalSpace(List<Node> localSpace, Node finalNode)
         {
+            //Debug.Log("CAMBIE SOY UN CABRON:"+finalNode.GetHCost());
             List<Node> copia = new List<Node>();
             foreach (var node in localSpace)
                 copia.Add(new Node(node));
 
+            
+            //Debug.Log("LO CONTENGO:" +copia.Contains(finalNode));
+           
             foreach (var node in copia)
             {
                 node.SetTempCost(node.GetHCost());
@@ -217,36 +222,33 @@ namespace Pathfinding
                 node.SetHCost(Mathf.Infinity);
             }
 
+            
+            
+            
             while (copia.Count > 0)
             {
                 foreach (var node in copia)
                 {
-                    if (float.IsPositiveInfinity(node.GetHCost()))
+                    float minCost = Mathf.Infinity;
+                    // We have min cost
+                    foreach (var neighBour in GetNeighboursList(node))
                     {
-                        float minCost = Mathf.Infinity;
-                        // We have min cost
-                        foreach (var neighBour in GetNeighboursList(node))
-                        {
-                            if (neighBour.GetHCost() + 1 < minCost)
-                                minCost = neighBour.GetHCost() + 1;
-                        }
-
-                        float maxCost = Mathf.Max(minCost, node.GetTempCost());
-                        node.SetMaxCost(maxCost);
+                        if (neighBour.GetHCost() + 1 < minCost)
+                            minCost = neighBour.GetHCost() + 1;
                     }
+
+                    float maxCost = Mathf.Max(minCost, node.GetTempCost());
+                    node.SetMaxCost(maxCost);
                 }
 
                 Node maxNode = copia[0];
                 float maxValue = Mathf.NegativeInfinity;
                 foreach (var node in copia)
                 {
-                    if (float.IsPositiveInfinity(node.GetHCost()))
+                    if (node.GetMaxCost() > maxValue)
                     {
-                        if (node.GetMaxCost() > maxValue)
-                        {
-                            maxValue = node.GetMaxCost();
-                            maxNode = node;
-                        }
+                        maxValue = node.GetMaxCost();
+                        maxNode = node;
                     }
                 }
 
@@ -261,8 +263,6 @@ namespace Pathfinding
                 {
                     node.SetMaxCost(Mathf.Infinity);
                 }
-
-
                 copia.Remove(maxNode);
             }
         }
@@ -333,6 +333,7 @@ namespace Pathfinding
 
                 //_path = LRTAStarUnPaso(startNode, finishNode);
                 _path = LRTAVariosPasos(startNode, finishNode);
+                //_path = GenerateLocalSpace(startNode, finishNode, 2);
             }
         }
 
