@@ -1,3 +1,5 @@
+using System;
+
 namespace Pathfinding
 {
     public class Node
@@ -28,6 +30,10 @@ namespace Pathfinding
         public int CalculateFCost()
         {
             _fCost = _gCost + _hCost;
+            if (_fCost < 0)
+                _fCost = Int32.MaxValue;
+            
+            
             return _fCost;
         }
 
@@ -84,7 +90,14 @@ namespace Pathfinding
 
         public override string ToString()
         {
-            return _cell.ToString();
+            
+            return (_cell.ToString() + " CosteG:" + GetGCost() + "\nCosteH:" +GetHCost());
+        }
+
+
+        public bool Equals(Node n)
+        {
+            return _cell.Equals(n.GetCell());
         }
     }
 }

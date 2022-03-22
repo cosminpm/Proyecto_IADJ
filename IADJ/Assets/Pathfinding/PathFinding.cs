@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grid;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Pathfinding
@@ -31,15 +32,15 @@ namespace Pathfinding
 
         private void Update()
         {
-            
             Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
             Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-            HEURISTIC = 1;
+            HEURISTIC = 0;
 
+            //ApplyAStar(startCell,finishCell,HEURISTIC);
             ApplyLRTA(startCell, finishCell);
         }
 
-        public int HeuristicApply( Node startNode, Node finishNode,int heuristic)
+        public int HeuristicApply(Node startNode, Node finishNode, int heuristic)
         {
             switch (heuristic)
             {
@@ -49,7 +50,6 @@ namespace Pathfinding
                     return Chebychev(startNode, finishNode);
                 case 2:
                     return Euclidean(startNode, finishNode);
-
                 default:
                     return Manhattan(startNode, finishNode);
             }
@@ -98,6 +98,7 @@ namespace Pathfinding
                 if (pathNodeList[index].GetFCost() < lowestFNodeCost.GetFCost())
                     lowestFNodeCost = pathNodeList[index];
             }
+
             return lowestFNodeCost;
         }
 
@@ -122,43 +123,59 @@ namespace Pathfinding
                 }
             }
         }
-        
+
         // Functions of Finding Path
 
-        
-        // LRTA Star
-        private List<Node> LRTAStar(Node startNode, Node finishNode)
-        {
-            Node currentNode = startNode;
-            _path = new List<Node>();
 
-            int contador = 0;
-            while (currentNode != finishNode)
+
+        private void SetHeuristicOfEveryOne(Node finishNode)
+        {
+            for (int i = 0; i < _xSize; i++)
             {
-                
-                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 2);
-                currentNode = GetLowestCostFNode(localSpace);
-                _path.Add(currentNode);
-
-                Debug.Log(currentNode.ToString());
-                if (contador > 100)
+                for (int j = 0; j < _zSize; j++)
                 {
-                    Debug.Log("PETE");
-                    return null;
+                    _nodeMap[i, j].SetHCost(Chebychev(_nodeMap[i, j],finishNode));
                 }
-                contador += 1;
-
             }
-            _path = CalculatePath(currentNode);
-            return _path;
         }
 
-        public List<Node> GenerateLocalSpace(Node startNode, Node finshNode, int lookhead)
+
+        private List<Node> LRTAVariosPasos(Node startNode, Node finishNode)
         {
-            List<Node> localSpace =  GetNeighboursList(startNode);
-            return localSpace;
+            return null;
         }
-        
+
+
+        // LRTA Star
+        private List<Node> LRTAStarUnPaso(Node startNode, Node finishNode)
+        {
+            SetCostsToStart();
+            SetHeuristicOfEveryOne(finishNode);
+            
+            Node actualNode = new Node(startNode);
+            List<Node> actualPath = new List<Node>{actualNode};
+            
+            while (!actualNode.Equals(finishNode))
+            {
+                List<Node> neighboursList = GetNeighboursList(actualNode);
+                Node min = neighboursList[0];
+                int minCost = Int32.MaxValue;
+                foreach (var neighbour in neighboursList)
+                {
+                    if (1 + neighbour.GetHCost() < minCost)
+                    {
+                        min = neighbour;
+                        minCost = 1 + neighbour.GetHCost();
+                    }
+                }
+                actualNode.SetHCost(1 + min.GetHCost());
+                actualNode = min;
+                actualPath.Add(actualNode);
+            }
+            
+            return actualPath;
+        }
+
         public void ApplyLRTA(Cell startCell, Cell finishCell)
         {
             if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
@@ -168,10 +185,11 @@ namespace Pathfinding
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-                _path = LRTAStar(startNode, finishNode);
+                _path = LRTAStarUnPaso(startNode, finishNode);
             }
         }
-        
+
+
         // A STAR
         private void ApplyAStar(Cell startCell, Cell finishCell, int heuristic)
         {
@@ -210,13 +228,13 @@ namespace Pathfinding
                 foreach (Node neighbourNode in GetNeighboursList(currentNode))
                 {
                     if (closedList.Contains(neighbourNode)) continue;
-                    int tentativeGCost = currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode,heuristic);
+                    int tentativeGCost = currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
 
                     if (tentativeGCost < neighbourNode.GetGCost())
                     {
                         neighbourNode.SetPreviousNode(currentNode);
                         neighbourNode.SetGCost(tentativeGCost);
-                        neighbourNode.SetHCost(HeuristicApply(neighbourNode, finalNode,heuristic));
+                        neighbourNode.SetHCost(HeuristicApply(neighbourNode, finalNode, heuristic));
                         neighbourNode.CalculateFCost();
 
                         if (!openList.Contains(neighbourNode))
@@ -239,12 +257,10 @@ namespace Pathfinding
 
         private int Euclidean(Node start, Node finish)
         {
-            int moveStraight = 10;
-            int moveDiagonal = 14;
-            int xDistance = Mathf.Abs(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX());
-            int zDistance = Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ());
-            int remaining = Mathf.Abs(xDistance - zDistance);
-            return moveDiagonal * Mathf.Min(xDistance, zDistance) + moveStraight * remaining;
+            // Se omite la raiz cuadrada ya que es costoso a nivel de calculo
+            int x = Mathf.Abs((int) Mathf.Pow(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX(), 2));
+            int z = Mathf.Abs((int) Mathf.Pow(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ(), 2));
+            return x + z;
         }
 
         private int Chebychev(Node start, Node finish)
@@ -290,13 +306,14 @@ namespace Pathfinding
             {
                 foreach (var node in _nodeMap)
                 {
-                    if (node.GetFCost() < Int32.MaxValue)
+                    if (node.GetHCost() < Int32.MaxValue)
                     {
-                        cost = node.GetFCost().ToString();
+                        int coste = node.GetHCost();
+                        cost = coste.ToString();
                     }
 
                     GUIStyle style = new GUIStyle();
-                    style.normal.textColor = Color.red;
+                    style.normal.textColor = Color.blue;
                     style.fontSize = sizeOfTextPath;
                     Handles.Label(node.GetCell().GetCenter(), cost, style);
                 }

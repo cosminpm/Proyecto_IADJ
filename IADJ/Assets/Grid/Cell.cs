@@ -183,4 +183,8 @@ public class Cell
         return false;
     }
 
+    public bool Equals(Cell n)
+    {
+        return GetCoorX() == n.GetCoorX() && GetCoorZ() == n.GetCoorZ();
+    }
 }

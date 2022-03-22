@@ -37,6 +37,11 @@ public class SeleccionarObjetivos : MonoBehaviour
         SelectNPCs();
         SendOrder();
     }
+    
+    public List<GameObject> GetListNPCS()
+    {
+        return new List<GameObject>(listNPCs);
+    }
 
     private void SelectNPCs()
     {
@@ -64,6 +69,8 @@ public class SeleccionarObjetivos : MonoBehaviour
                 }
             }
         }
+
+        GetListNPCS();
     }
 
     private void SendOrder()

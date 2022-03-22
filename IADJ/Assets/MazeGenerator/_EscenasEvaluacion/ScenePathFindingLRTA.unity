@@ -338,7 +338,7 @@ MonoBehaviour:
   drawCenterGm: 0
   drawAllowedCells: 1
   drawCellClicked: 1
-  drawCellNumber: 1
+  drawCellNumber: 0
   intensityAllowedCells: 0.35
   sizeOfTextGrid: 10
   modeOfTerrain: 1
@@ -390,8 +390,7 @@ MonoBehaviour:
   drawColorPath: 1
   drawCosts: 0
   sizeOfTextPath: 12
-  MOVE_STRAIGHT: 10
-  MOVE_DIAGONAL: 14
+  HEURISTIC: 0
 --- !u!1 &1624826355
 GameObject:
   m_ObjectHideFlags: 0
