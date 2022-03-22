@@ -358,16 +358,14 @@ namespace Pathfinding
             startNode.SetGCost(0);
             startNode.SetHCost(HeuristicApply(startNode, finalNode, heuristic));
             startNode.CalculateFCost();
-
-
+            
             int count = 0;
 
             while (openList.Count > 0)
             {
                 Node currentNode = GetLowestCostFNode(openList);
 
-                if (currentNode.GetCell().GetCoorX() == finalNode.GetCell().GetCoorX() &&
-                    currentNode.GetCell().GetCoorZ() == finalNode.GetCell().GetCoorZ())
+                if (currentNode.Equals(finalNode))
                 {
                     return CalculatePath(currentNode);
                 }

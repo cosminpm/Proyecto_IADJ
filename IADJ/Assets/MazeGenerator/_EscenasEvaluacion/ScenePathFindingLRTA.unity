@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startColor: {r: 0.069517374, g: 1, b: 0, a: 1}
-  finishColor: {r: 1, g: 0, b: 0.043130875, a: 1}
+  finishColor: {r: 0, g: 0, b: 0, a: 1}
   drawNumberPath: 1
   drawColorPath: 1
   drawCosts: 0
