@@ -7,21 +7,21 @@ namespace Pathfinding
         private Cell _cell;
         
         // For all algorithms
-        private int _hCost;
+        private float _hCost;
         
         // For A Star
-        private int _gCost;
-        private int _fCost;
+        private float _gCost;
+        private float _fCost;
         private Node _previousNode;
         
         // For LRTA
-        private int _tempCost;
-        private int _maxCost;
+        private float _tempCost;
+        private float _maxCost;
         
         
 
 
-        public Node(Cell cell, int hCost, int gCost, Node previousNode)
+        public Node(Cell cell, float hCost, float gCost, Node previousNode)
         {
             _cell = new Cell(cell);
             _hCost = hCost;
@@ -38,13 +38,9 @@ namespace Pathfinding
             _previousNode = n.GetPreviousNode();
         }
 
-        public int CalculateFCost()
+        public float CalculateFCost()
         {
             _fCost = _gCost + _hCost;
-            if (_fCost < 0)
-                _fCost = Int32.MaxValue;
-            
-            
             return _fCost;
         }
 
@@ -54,17 +50,17 @@ namespace Pathfinding
             return _cell;
         }
 
-        public int GetGCost()
+        public float GetGCost()
         {
             return _gCost;
         }
 
-        public int GetHCost()
+        public float GetHCost()
         {
             return _hCost;
         }
 
-        public int GetFCost()
+        public float GetFCost()
         {
             return _fCost;
         }
@@ -74,22 +70,22 @@ namespace Pathfinding
             return _previousNode;
         }
 
-        public int GetTempCost()
+        public float GetTempCost()
         {
             return _tempCost;
         }
 
-        public int GetMaxCost()
+        public float GetMaxCost()
         {
             return _maxCost;
         }
 
-        public void SetMaxCost(int maxCost)
+        public void SetMaxCost(float maxCost)
         {
             _maxCost = maxCost;
         }
 
-        public void SetTempCost(int tempCost)
+        public void SetTempCost(float tempCost)
         {
             _tempCost = tempCost;
         }
@@ -100,17 +96,17 @@ namespace Pathfinding
             _cell = cell;
         }
 
-        public void SetHCost(int hCost)
+        public void SetHCost(float hCost)
         {
             _hCost = hCost;
         }
 
-        public void SetGCost(int gCost)
+        public void SetGCost(float gCost)
         {
             _gCost = gCost;
         }
 
-        public void SetFCost(int fCost)
+        public void SetFCost(float fCost)
         {
             _fCost = fCost;
         }

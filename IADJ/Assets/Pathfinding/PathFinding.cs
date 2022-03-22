@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Grid;
 using UnityEditor;
@@ -119,8 +120,8 @@ namespace Pathfinding
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    _nodeMap[i, j] = new Node(gridMap.GetCellMap()[i, j], Int32.MaxValue, Int32.MaxValue, null);
-                    _nodeMap[i, j].SetFCost(Int32.MaxValue);
+                    _nodeMap[i, j] = new Node(gridMap.GetCellMap()[i, j], Mathf.Infinity, Mathf.Infinity, null);
+                    _nodeMap[i, j].SetFCost(Mathf.Infinity);
                 }
             }
         }
@@ -151,14 +152,14 @@ namespace Pathfinding
             int contador = 0;
             while (!currentNode.Equals(finishNode))
             {
-                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 2);
+                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 1);
 
                 if (!localSpace.Contains(currentNode))
                 {
                     UpdateValuesLocalSpace(localSpace);
                 }
                 
-                int minCost = Int32.MaxValue;
+                float minCost =Mathf.Infinity;
                 List<Node> neigbours = GetNeighboursList(currentNode);
                 Node minNode = neigbours[0];
                 foreach (var neighbour in neigbours)
@@ -190,7 +191,7 @@ namespace Pathfinding
         {
             foreach (var node in list)
             {
-                if (node.GetHCost() == Int32.MaxValue)
+                if (float.IsPositiveInfinity(node.GetHCost()))
                     return true;
             }
             return false;
@@ -202,37 +203,36 @@ namespace Pathfinding
             foreach (var node in localSpace)
             {
                 node.SetTempCost(node.GetHCost());
-                node.SetMaxCost(Int32.MinValue);
-                node.SetHCost(Int32.MaxValue);
+                node.SetMaxCost(Mathf.NegativeInfinity);
+                node.SetHCost(Mathf.Infinity);
             }
             
             bool comprobador = false;
+            
             while (!comprobador)
             {
                 foreach (var node in localSpace)
                 {
-                    if (node.GetHCost() == Int32.MaxValue)
+                    if (float.IsPositiveInfinity(node.GetHCost()))
                     {
-                        int minCost = Int32.MaxValue;
+                        float minCost = Mathf.Infinity;
                         // We have min cost
                         foreach (var neighBour in GetNeighboursList(node))
                         {
                             if (neighBour.GetHCost() + 1 < minCost)
-                            {
                                 minCost = neighBour.GetHCost() + 1;
-                            }
                         }
 
-                        int maxCost = Mathf.Max(minCost, node.GetTempCost());
+                        float maxCost = Mathf.Max(minCost, node.GetTempCost());
                         node.SetMaxCost(maxCost); 
                     }
                 }
 
                 Node maxNode = localSpace[0];
-                int maxValue = Int32.MinValue;
+                float maxValue = Mathf.NegativeInfinity;
                 foreach (var node in localSpace)
                 {
-                    if (node.GetHCost() == Int32.MaxValue)
+                    if (float.IsPositiveInfinity(node.GetHCost()))
                     {
                         if (node.GetMaxCost() > maxValue)
                         {
@@ -245,9 +245,12 @@ namespace Pathfinding
                 maxNode.SetHCost(maxNode.GetMaxCost());
                 comprobador = CheckIfInfinitInList(localSpace);
 
+                foreach (var node in localSpace)
+                {
+                    node.SetTempCost(node.GetHCost());
+                    node.SetMaxCost(Mathf.Infinity);
+                }
             }
-            
-            
         }
 
         private List<Node> GenerateLocalSpace(Node startNode, Node finishNode, int radio)
@@ -286,7 +289,7 @@ namespace Pathfinding
             {
                 List<Node> neighboursList = GetNeighboursList(actualNode);
                 Node min = neighboursList[0];
-                int minCost = Int32.MaxValue;
+                float minCost = Mathf.Infinity;
                 foreach (var neighbour in neighboursList)
                 {
                     if (1 + neighbour.GetHCost() < minCost)
@@ -361,7 +364,7 @@ namespace Pathfinding
                 foreach (Node neighbourNode in GetNeighboursList(currentNode))
                 {
                     if (closedList.Contains(neighbourNode)) continue;
-                    int tentativeGCost = currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
+                    float tentativeGCost = currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
 
                     if (tentativeGCost < neighbourNode.GetGCost())
                     {
@@ -441,12 +444,11 @@ namespace Pathfinding
             {
                 foreach (var node in _nodeMap)
                 {
-                    if (node.GetHCost() < Int32.MaxValue)
+                    if (node.GetHCost() < Mathf.Infinity)
                     {
-                        int coste = node.GetHCost();
-                        cost = coste.ToString();
+                        float coste = node.GetHCost();
+                        cost = coste.ToString(CultureInfo.CurrentCulture);
                     }
-
                     GUIStyle style = new GUIStyle();
                     style.normal.textColor = Color.blue;
                     style.fontSize = sizeOfTextPath;
