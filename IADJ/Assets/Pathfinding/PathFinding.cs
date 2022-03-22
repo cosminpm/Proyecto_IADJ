@@ -135,6 +135,11 @@ namespace Pathfinding
             {
                 for (int j = 0; j < _zSize; j++)
                 {
+                    if (_nodeMap[i, j].Equals(finishNode))
+                    {
+                        _nodeMap[i, j].SetHCost(0f);
+                    }
+
                     _nodeMap[i, j].SetHCost(Chebychev(_nodeMap[i, j], finishNode));
                 }
             }
@@ -145,21 +150,21 @@ namespace Pathfinding
         {
             InitializeNodeMap();
             SetHeuristicOfEveryOne(finishNode);
-            
+
             Node currentNode = new Node(startNode);
-            List<Node> finalPath = new List<Node>{startNode};
+            List<Node> finalPath = new List<Node> {startNode};
 
             int contador = 0;
             while (!currentNode.Equals(finishNode))
             {
-                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 1);
+                List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 3);
 
                 if (!localSpace.Contains(currentNode))
                 {
                     UpdateValuesLocalSpace(localSpace);
                 }
-                
-                float minCost =Mathf.Infinity;
+
+                float minCost = Mathf.Infinity;
                 List<Node> neigbours = GetNeighboursList(currentNode);
                 Node minNode = neigbours[0];
                 foreach (var neighbour in neigbours)
@@ -170,19 +175,19 @@ namespace Pathfinding
                         minNode = neighbour;
                     }
                 }
-                currentNode = minNode;
+
+                currentNode = new Node(minNode);
                 finalPath.Add(currentNode);
-
-
+                
                 contador += 1;
-                if (contador > 300)
+                if (contador > 100)
                 {
-                 Debug.Log("PETE");
-                 return finalPath;
+                    Debug.Log("PETE");
+                    return finalPath;
                 }
-
             }
 
+            Debug.Log("ENCONTRE UNA SOLUCION");
             return finalPath;
         }
 
@@ -194,24 +199,27 @@ namespace Pathfinding
                 if (float.IsPositiveInfinity(node.GetHCost()))
                     return true;
             }
+
             return false;
         }
-        
-        
+
+
         private void UpdateValuesLocalSpace(List<Node> localSpace)
         {
+            List<Node> copia = new List<Node>();
             foreach (var node in localSpace)
+                copia.Add(new Node(node));
+
+            foreach (var node in copia)
             {
                 node.SetTempCost(node.GetHCost());
                 node.SetMaxCost(Mathf.NegativeInfinity);
                 node.SetHCost(Mathf.Infinity);
             }
-            
-            bool comprobador = false;
-            
-            while (!comprobador)
+
+            while (copia.Count > 0)
             {
-                foreach (var node in localSpace)
+                foreach (var node in copia)
                 {
                     if (float.IsPositiveInfinity(node.GetHCost()))
                     {
@@ -224,13 +232,13 @@ namespace Pathfinding
                         }
 
                         float maxCost = Mathf.Max(minCost, node.GetTempCost());
-                        node.SetMaxCost(maxCost); 
+                        node.SetMaxCost(maxCost);
                     }
                 }
 
-                Node maxNode = localSpace[0];
+                Node maxNode = copia[0];
                 float maxValue = Mathf.NegativeInfinity;
-                foreach (var node in localSpace)
+                foreach (var node in copia)
                 {
                     if (float.IsPositiveInfinity(node.GetHCost()))
                     {
@@ -241,35 +249,45 @@ namespace Pathfinding
                         }
                     }
                 }
+
+                RecoverNodeFromCell(maxNode.GetCell()).SetHCost(maxNode.GetMaxCost());
                 maxNode.SetHCost(maxNode.GetMaxCost());
                 foreach (var node in localSpace)
                 {
                     node.SetMaxCost(Mathf.Infinity);
                 }
-                comprobador = CheckIfInfinitInList(localSpace);
+
+                foreach (var node in copia)
+                {
+                    node.SetMaxCost(Mathf.Infinity);
+                }
+
+
+                copia.Remove(maxNode);
             }
         }
+
 
         private List<Node> GenerateLocalSpace(Node startNode, Node finishNode, int radio)
         {
             List<Node> neighboursList = GetNeighboursList(startNode);
             List<Node> localSpace = new List<Node>();
             localSpace.AddRange(neighboursList);
-            int count = 1;
 
+            int count = 1;
             while (count < radio)
             {
                 foreach (var neighbour in neighboursList)
                 {
                     localSpace.AddRange(GenerateLocalSpace(neighbour, finishNode, radio - 1));
-                    localSpace = localSpace.Distinct().ToList();
                 }
 
                 count += 1;
             }
 
+            localSpace = localSpace.Distinct().ToList();
+
             localSpace.Remove(finishNode);
-            localSpace.Remove(startNode);
             return localSpace;
         }
 
@@ -278,10 +296,9 @@ namespace Pathfinding
         {
             SetCostsToStart();
             SetHeuristicOfEveryOne(finishNode);
-
             Node actualNode = new Node(startNode);
-            List<Node> actualPath = new List<Node> {actualNode};
 
+            List<Node> actualPath = new List<Node> {actualNode};
             while (!actualNode.Equals(finishNode))
             {
                 List<Node> neighboursList = GetNeighboursList(actualNode);
@@ -320,7 +337,7 @@ namespace Pathfinding
         }
 
 
-        // A STAR
+// A STAR
         private void ApplyAStar(Cell startCell, Cell finishCell, int heuristic)
         {
             if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
@@ -361,7 +378,8 @@ namespace Pathfinding
                 foreach (Node neighbourNode in GetNeighboursList(currentNode))
                 {
                     if (closedList.Contains(neighbourNode)) continue;
-                    float tentativeGCost = currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
+                    float tentativeGCost =
+                        currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
 
                     if (tentativeGCost < neighbourNode.GetGCost())
                     {
@@ -383,7 +401,7 @@ namespace Pathfinding
             return null;
         }
 
-        // Cost functions
+// Cost functions
         private int Manhattan(Node start, Node finish)
         {
             return Mathf.Abs(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX()) +
@@ -404,7 +422,7 @@ namespace Pathfinding
                 Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ()));
         }
 
-        // Draw Methods
+// Draw Methods
         private void DrawPath()
         {
             if (_path != null)
@@ -446,6 +464,7 @@ namespace Pathfinding
                         float coste = node.GetHCost();
                         cost = coste.ToString(CultureInfo.CurrentCulture);
                     }
+
                     GUIStyle style = new GUIStyle();
                     style.normal.textColor = Color.blue;
                     style.fontSize = sizeOfTextPath;
@@ -460,7 +479,7 @@ namespace Pathfinding
             DrawCosts();
         }
 
-        // Debug Methods
+// Debug Methods
         private void PathToString(List<Cell> lista)
         {
             for (var index = 0; index < lista.Count; index++)

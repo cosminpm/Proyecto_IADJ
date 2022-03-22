@@ -18,9 +18,6 @@ namespace Pathfinding
         private float _tempCost;
         private float _maxCost;
         
-        
-
-
         public Node(Cell cell, float hCost, float gCost, Node previousNode)
         {
             _cell = new Cell(cell);
@@ -36,6 +33,8 @@ namespace Pathfinding
             _gCost = n.GetGCost();
             _fCost = n.GetFCost();
             _previousNode = n.GetPreviousNode();
+            _tempCost = n.GetTempCost();
+            _maxCost = n.GetMaxCost();
         }
 
         public float CalculateFCost()

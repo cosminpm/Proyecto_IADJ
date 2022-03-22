@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba8c72d764e8be408ee1b64f11c94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LIMITER_CELLS: 100
+  LIMITER_CELLS: 70
   drawWireGm: 1
   drawCenterGm: 0
   drawAllowedCells: 1
