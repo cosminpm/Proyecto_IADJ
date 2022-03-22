@@ -42,7 +42,7 @@ namespace Pathfinding
             ApplyLRTA(startCell, finishCell);
         }
 
-        public int HeuristicApply(Node startNode, Node finishNode, int heuristic)
+        public float HeuristicApply(Node startNode, Node finishNode, int heuristic)
         {
             switch (heuristic)
             {
@@ -135,7 +135,7 @@ namespace Pathfinding
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    _nodeMap[i, j].SetHCost(Chebychev(_nodeMap[i, j], finishNode));
+                    _nodeMap[i, j].SetHCost(Euclidean(_nodeMap[i, j], finishNode));
                     if (_nodeMap[i, j].Equals(finishNode))
                     {
                         _nodeMap[i, j].SetHCost(0f);
@@ -221,9 +221,6 @@ namespace Pathfinding
                 node.SetMaxCost(Mathf.NegativeInfinity);
                 node.SetHCost(Mathf.Infinity);
             }
-
-            
-            
             
             while (copia.Count > 0)
             {
@@ -233,8 +230,9 @@ namespace Pathfinding
                     // We have min cost
                     foreach (var neighBour in GetNeighboursList(node))
                     {
-                        if (neighBour.GetHCost() + 1 < minCost)
-                            minCost = neighBour.GetHCost() + 1;
+                        float hCost = neighBour.GetHCost() + Euclidean(neighBour, node);
+                        if (hCost < minCost)
+                            minCost = hCost;
                     }
 
                     float maxCost = Mathf.Max(minCost, node.GetTempCost());
@@ -403,21 +401,21 @@ namespace Pathfinding
         }
 
 // Cost functions
-        private int Manhattan(Node start, Node finish)
+        private float Manhattan(Node start, Node finish)
         {
             return Mathf.Abs(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX()) +
                    Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ());
         }
 
-        private int Euclidean(Node start, Node finish)
+        private float Euclidean(Node start, Node finish)
         {
             // Se omite la raiz cuadrada ya que es costoso a nivel de calculo
             int x = Mathf.Abs((int) Mathf.Pow(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX(), 2));
             int z = Mathf.Abs((int) Mathf.Pow(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ(), 2));
-            return x + z;
+            return Mathf.Sqrt(x + z);
         }
 
-        private int Chebychev(Node start, Node finish)
+        private float Chebychev(Node start, Node finish)
         {
             return Mathf.Max(Mathf.Abs(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX()),
                 Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ()));
