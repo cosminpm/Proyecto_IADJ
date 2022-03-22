@@ -152,7 +152,11 @@ namespace Pathfinding
             while (!currentNode.Equals(finishNode))
             {
                 List<Node> localSpace = GenerateLocalSpace(currentNode, finishNode, 2);
-                UpdateValuesLocalSpace(localSpace);
+
+                if (!localSpace.Contains(currentNode))
+                {
+                    UpdateValuesLocalSpace(localSpace);
+                }
                 
                 int minCost = Int32.MaxValue;
                 List<Node> neigbours = GetNeighboursList(currentNode);
@@ -201,8 +205,7 @@ namespace Pathfinding
                 node.SetMaxCost(Int32.MinValue);
                 node.SetHCost(Int32.MaxValue);
             }
-
-
+            
             bool comprobador = false;
             while (!comprobador)
             {
@@ -266,6 +269,7 @@ namespace Pathfinding
             }
 
             localSpace.Remove(finishNode);
+            localSpace.Remove(startNode);
             return localSpace;
         }
 
