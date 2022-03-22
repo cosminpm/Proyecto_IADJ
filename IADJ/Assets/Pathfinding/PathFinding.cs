@@ -241,15 +241,12 @@ namespace Pathfinding
                         }
                     }
                 }
-
                 maxNode.SetHCost(maxNode.GetMaxCost());
-                comprobador = CheckIfInfinitInList(localSpace);
-
                 foreach (var node in localSpace)
                 {
-                    node.SetTempCost(node.GetHCost());
                     node.SetMaxCost(Mathf.Infinity);
                 }
+                comprobador = CheckIfInfinitInList(localSpace);
             }
         }
 
