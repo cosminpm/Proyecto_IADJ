@@ -19,28 +19,30 @@ using UnityEngine;
 
 public class SeleccionarObjetivos : MonoBehaviour
 {
-    private List<GameObject> listNPCs = new List<GameObject>();
-    private Material matRojo, matBlanco;
+    private List<GameObject> _listNpCs = new List<GameObject>();
+    private Material _matRojo, _matBlanco;
     [SerializeField] private GameObject personajeInvisible;
+
     private void Start()
     {
-        matRojo = new Material(Shader.Find("Standard"));
-        matRojo.color = Color.red;
+        _matRojo = new Material(Shader.Find("Standard"));
+        _matRojo.color = Color.red;
 
-        matBlanco = new Material(Shader.Find("Standard"));
-        matBlanco.color = Color.white;
+        _matBlanco = new Material(Shader.Find("Standard"));
+        _matBlanco.color = Color.white;
     }
 
     // Update is called once per frame
     void Update()
     {
         SelectNPCs();
+        SelectAllUnits();
         SendOrder();
     }
-    
+
     public List<GameObject> GetListNPCS()
     {
-        return new List<GameObject>(listNPCs);
+        return new List<GameObject>(_listNpCs);
     }
 
     private void SelectNPCs()
@@ -55,22 +57,20 @@ public class SeleccionarObjetivos : MonoBehaviour
                 if (hitInfo.collider != null && hitInfo.collider.CompareTag("NPC"))
                 {
                     GameObject npc = GameObject.Find(hitInfo.collider.gameObject.name);
-                    if (listNPCs.Contains(npc))
+                    if (_listNpCs.Contains(npc))
                     {
                         SendNewTarget(npc, null);
-                        listNPCs.Remove(npc);
-                        npc.GetComponent<MeshRenderer>().material = matBlanco;
+                        _listNpCs.Remove(npc);
+                        npc.GetComponent<MeshRenderer>().material = _matBlanco;
                     }
                     else
                     {
-                        listNPCs.Add(npc);
-                        npc.GetComponent<MeshRenderer>().material = matRojo;
+                        _listNpCs.Add(npc);
+                        npc.GetComponent<MeshRenderer>().material = _matRojo;
                     }
                 }
             }
         }
-
-        GetListNPCS();
     }
 
     private void SendOrder()
@@ -93,23 +93,22 @@ public class SeleccionarObjetivos : MonoBehaviour
                         GameObject ai = CreateInvisibleAgent(position);
                         agent = ai.GetComponent<Agent>();
                     }
-                  
+
                     else if (hitInfo.collider.CompareTag("Prota") || hitInfo.collider.CompareTag("NPC"))
                     {
                         agent = hitInfo.transform.gameObject.GetComponent<Agent>();
                     }
-                    
+
                     // En caso de que no se esté clickando nada, el método termina
                     else
                     {
                         return;
                     }
 
-                    foreach (var npc in listNPCs)
+                    foreach (var npc in _listNpCs)
                     {
                         SendNewTarget(npc, agent);
                     }
-                    
                 }
             }
         }
@@ -121,42 +120,65 @@ public class SeleccionarObjetivos : MonoBehaviour
             // Steerings Basicos
             if (npc.GetComponent<Seek>())
                 npc.GetComponent<Seek>().NewTarget(agent);
-                        
+
             if (npc.GetComponent<Flee>())
                 npc.GetComponent<Flee>().NewTarget(agent);
-                        
+
             if (npc.GetComponent<VelocityMatching>())
                 npc.GetComponent<VelocityMatching>().NewTarget(agent);
-                        
+
             if (npc.GetComponent<Arrive>())
                 npc.GetComponent<Arrive>().NewTarget(agent);
-                        
+
             if (npc.GetComponent<Align>())
                 npc.GetComponent<Align>().NewTarget(agent);
-            
+
             // Steerings Delegados
             if (npc.GetComponent<Pursue>())
                 npc.GetComponent<Pursue>().NewTarget(agent);
-            
+
             if (npc.GetComponent<Evade>())
                 npc.GetComponent<Evade>().NewTarget(agent);
-            
+
             if (npc.GetComponent<Face>())
                 npc.GetComponent<Face>().NewTarget(agent);
 
             if (npc.GetComponent<PathFollowing>())
                 npc.GetComponent<PathFollowing>().NewTarget(agent);
 
-         //   if (npc.GetComponent<WallAvoidance>())
-           //     npc.GetComponent<WallAvoidance>().NewTarget(agent);
-            
+            //   if (npc.GetComponent<WallAvoidance>())
+            //     npc.GetComponent<WallAvoidance>().NewTarget(agent);
+
             // Steering Combinados
             if (npc.GetComponent<Blended>())
                 npc.GetComponent<Blended>().NewTarget(agent);
-            
-        } 
+        }
     }
-    
+
+
+    private void SelectAllUnits()
+    {
+        if (Input.GetKeyUp(KeyCode.P))
+        {
+            _listNpCs = new List<GameObject>(GameObject.FindGameObjectsWithTag("NPC"));
+            foreach (var npc in _listNpCs)
+            {
+                npc.GetComponent<MeshRenderer>().material = _matRojo;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.O))
+        {
+            foreach (var npc in _listNpCs)
+            {
+                SendNewTarget(npc, null);
+                npc.GetComponent<MeshRenderer>().material = _matBlanco;
+            }
+
+            _listNpCs = new List<GameObject>();
+        }
+    }
+
 
     public virtual GameObject CreateInvisibleAgent(Vector3 positionSpawn)
     {
