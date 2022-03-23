@@ -68,4 +68,9 @@ public class Arrive : SteeringBehaviour
         
         return steer;
     }
+
+
+    public Agent getTarget(){
+        return target;
+    }
 }

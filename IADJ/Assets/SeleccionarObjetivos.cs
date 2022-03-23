@@ -40,10 +40,12 @@ public class SeleccionarObjetivos : MonoBehaviour
         SendOrder();
     }
 
-    public List<GameObject> GetListNPCS()
+    public List<GameObject> getListNPCs()
     {
         return new List<GameObject>(_listNpCs);
     }
+
+    
 
     private void SelectNPCs()
     {
@@ -150,8 +152,8 @@ public class SeleccionarObjetivos : MonoBehaviour
             //     npc.GetComponent<WallAvoidance>().NewTarget(agent);
 
             // Steering Combinados
-            if (npc.GetComponent<Blended>())
-                npc.GetComponent<Blended>().NewTarget(agent);
+            if (npc.GetComponent<ArbitroPonderado>())
+                npc.GetComponent<ArbitroPonderado>().NewTarget(agent);
         }
     }
 

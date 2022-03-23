@@ -48,7 +48,7 @@ public class Cohesion: Align
         }
             
         centerOfMass /= count;
-        this.Target.Position = centerOfMass;
+       // this.Target.Position = centerOfMass;
 
         return base.GetSteering(agent);
     }
