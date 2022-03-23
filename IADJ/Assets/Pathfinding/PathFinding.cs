@@ -4,9 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Grid;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 namespace Pathfinding
 {
@@ -17,13 +15,14 @@ namespace Pathfinding
         public Color finishColor = Color.red;
         public bool drawNumberPath, drawColorPath, drawCosts;
         public int sizeOfTextPath = 10;
-        public int HEURISTIC;
-        private Node[,] _nodeMap;
-
-        private int _xSize, _zSize;
-
-
+        public int heuristic = 2;
+        public int radio = 3;
+        public int maxCounterLRTA = 1000;
+        
         // Private variables
+        private int localSpaceMode = 0;
+        private Node[,] _nodeMap;
+        private int _xSize, _zSize;
         private List<Node> _path;
 
         private void Start()
@@ -36,15 +35,13 @@ namespace Pathfinding
         {
             Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
             Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-            HEURISTIC = 0;
-
-            //ApplyAStar(startCell,finishCell,HEURISTIC);
+            
             ApplyLRTA(startCell, finishCell);
         }
 
-        public float HeuristicApply(Node startNode, Node finishNode, int heuristic)
+        private float HeuristicApply(Node startNode, Node finishNode, int heuristicApply)
         {
-            switch (heuristic)
+            switch (heuristicApply)
             {
                 case 0:
                     return Manhattan(startNode, finishNode);
@@ -57,9 +54,9 @@ namespace Pathfinding
             }
         }
 
-        private List<Node> GetNeighboursList(Node nodo)
+        private List<Node> GetNeighboursList(Node node, int heuristicApply)
         {
-            List<Cell> neighbours = GetComponent<GridMap>().GetAllNeighbours(nodo.GetCell()).ToList();
+            List<Cell> neighbours = GetComponent<GridMap>().GetAllNeighbours(node.GetCell(), heuristicApply).ToList();
 
             List<Node> result = new List<Node>();
             foreach (var neighbour in neighbours)
@@ -69,6 +66,12 @@ namespace Pathfinding
 
             return result;
         }
+
+        private List<Node> GetNeighboursList(Node node)
+        {
+            return GetNeighboursList(node, 999);
+        }
+
 
         private Node RecoverNodeFromCell(Cell cell)
         {
@@ -97,14 +100,15 @@ namespace Pathfinding
             Node lowestFNodeCost = pathNodeList[0];
             for (var index = 1; index < pathNodeList.Count; index++)
             {
-                if (pathNodeList[index].GetFCost() < lowestFNodeCost.GetFCost())
+                if (pathNodeList[index].GetFCost() + pathNodeList[index].GetGCost() <
+                    lowestFNodeCost.GetFCost() + lowestFNodeCost.GetGCost())
                     lowestFNodeCost = pathNodeList[index];
             }
 
             return lowestFNodeCost;
         }
 
-        public void InitializeNodeMap()
+        private void InitializeNodeMap()
         {
             GridMap gridMap = GetComponent<GridMap>();
             _xSize = gridMap.GetXSize();
@@ -113,7 +117,7 @@ namespace Pathfinding
             SetCostsToStart();
         }
 
-        public void SetCostsToStart()
+        private void SetCostsToStart()
         {
             GridMap gridMap = GetComponent<GridMap>();
             for (int i = 0; i < _xSize; i++)
@@ -127,15 +131,13 @@ namespace Pathfinding
         }
 
         // Functions of Finding Path
-
-
-        private void SetHeuristicOfEveryOne(Node finishNode)
+        private void SetHeuristicOfEveryOne(Node finishNode, int heuristicCost)
         {
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    _nodeMap[i, j].SetHCost(Euclidean(_nodeMap[i, j], finishNode));
+                    _nodeMap[i, j].SetHCost(HeuristicApply(_nodeMap[i, j], finishNode, heuristicCost));
                     if (_nodeMap[i, j].Equals(finishNode))
                     {
                         _nodeMap[i, j].SetHCost(0f);
@@ -146,29 +148,25 @@ namespace Pathfinding
         }
 
         // LRTA Star
-        private List<Node> LRTAVariosPasos(Node startNode, Node finalNode)
+        private List<Node> LRTAVariosPasos(Node startNode, Node finalNode, int heuristicApply)
         {
-            SetHeuristicOfEveryOne(finalNode);
-
+            SetHeuristicOfEveryOne(finalNode, heuristicApply);
             Node currentNode = new Node(startNode);
             List<Node> finalPath = new List<Node> {startNode};
-            
-            Debug.Log("CAMBIE SOY UN CABRON:"+finalNode.GetHCost());
+
             int contador = 0;
+
             while (!currentNode.Equals(finalNode))
             {
-                List<Node> localSpace = GenerateLocalSpace(currentNode, finalNode, 2);
+                List<Node> localSpace = GetLocalSpace(currentNode, finalNode);
 
                 if (!localSpace.Contains(currentNode))
-                {
-                    
-                    UpdateValuesLocalSpace(localSpace,finalNode);
-                }
+                    UpdateValuesLocalSpace(localSpace, heuristicApply);
 
                 float minCost = Mathf.Infinity;
-                List<Node> neigbours = GetNeighboursList(currentNode);
-                Node minNode = neigbours[0];
-                foreach (var neighbour in neigbours)
+                List<Node> neighbours = GetNeighboursList(currentNode, heuristicApply);
+                Node minNode = neighbours[0];
+                foreach (var neighbour in neighbours)
                 {
                     if (neighbour.GetHCost() < minCost)
                     {
@@ -181,56 +179,36 @@ namespace Pathfinding
                 finalPath.Add(currentNode);
 
                 contador += 1;
-                // if (contador > 100)
-                // {
-                //     Debug.Log("PETE");
-                //     return finalPath;
-                // }
+                if (contador > maxCounterLRTA)
+                {
+                    return finalPath;
+                }
             }
-
-            Debug.Log("ENCONTRE UNA SOLUCION");
             return finalPath;
         }
 
-
-        private bool CheckIfInfinitInList(List<Node> list)
+        private void UpdateValuesLocalSpace(List<Node> localSpace, int costHeuristic)
         {
-            foreach (var node in list)
-            {
-                if (float.IsPositiveInfinity(node.GetHCost()))
-                    return true;
-            }
-
-            return false;
-        }
-
-
-        private void UpdateValuesLocalSpace(List<Node> localSpace, Node finalNode)
-        {
-            //Debug.Log("CAMBIE SOY UN CABRON:"+finalNode.GetHCost());
-            List<Node> copia = new List<Node>();
+            List<Node> copyLocalSpace = new List<Node>();
             foreach (var node in localSpace)
-                copia.Add(new Node(node));
+                copyLocalSpace.Add(new Node(node));
 
-            
-            //Debug.Log("LO CONTENGO:" +copia.Contains(finalNode));
-           
-            foreach (var node in copia)
+            foreach (var node in copyLocalSpace)
             {
                 node.SetTempCost(node.GetHCost());
                 node.SetMaxCost(Mathf.NegativeInfinity);
                 node.SetHCost(Mathf.Infinity);
             }
-            
-            while (copia.Count > 0)
+
+            // While Infinit values exists in the HCost
+            while (copyLocalSpace.Count > 0)
             {
-                foreach (var node in copia)
+                foreach (var node in copyLocalSpace)
                 {
                     float minCost = Mathf.Infinity;
-                    // We have min cost
-                    foreach (var neighBour in GetNeighboursList(node))
+                    foreach (var neighbour in GetNeighboursList(node))
                     {
-                        float hCost = neighBour.GetHCost() + Euclidean(neighBour, node);
+                        float hCost = neighbour.GetHCost() + HeuristicApply(neighbour, node, costHeuristic);
                         if (hCost < minCost)
                             minCost = hCost;
                     }
@@ -239,9 +217,9 @@ namespace Pathfinding
                     node.SetMaxCost(maxCost);
                 }
 
-                Node maxNode = copia[0];
+                Node maxNode = copyLocalSpace[0];
                 float maxValue = Mathf.NegativeInfinity;
-                foreach (var node in copia)
+                foreach (var node in copyLocalSpace)
                 {
                     if (node.GetMaxCost() > maxValue)
                     {
@@ -250,50 +228,74 @@ namespace Pathfinding
                     }
                 }
 
+                // Recover node from not the copy and set it cost
                 RecoverNodeFromCell(maxNode.GetCell()).SetHCost(maxNode.GetMaxCost());
                 maxNode.SetHCost(maxNode.GetMaxCost());
+                // Set the cost in the local space
                 foreach (var node in localSpace)
-                {
                     node.SetMaxCost(Mathf.Infinity);
-                }
+                foreach (var node in copyLocalSpace)
+                    node.SetMaxCost(Mathf.Infinity);
 
-                foreach (var node in copia)
-                {
-                    node.SetMaxCost(Mathf.Infinity);
-                }
-                copia.Remove(maxNode);
+                copyLocalSpace.Remove(maxNode);
+            }
+        }
+
+        private List<Node> GetLocalSpace(Node startNode, Node finishNode)
+        {
+            switch (localSpaceMode)
+            {
+                case 0:
+                    return GetLocalSpaceRadio(startNode, finishNode);
+
+                // No se ha podido implementar
+                // case 1:
+                //     return GetLocalSpaceAStar(startNode, finishNode);
+
+                default:
+                    return GetLocalSpaceRadio(startNode, finishNode);
             }
         }
 
 
-        private List<Node> GenerateLocalSpace(Node startNode, Node finishNode, int radio)
+        private List<Node> GetLocalSpaceAStar(Node startNode, Node finishNode)
+        {
+            List<Node> localSpace = AStar(startNode, finishNode);
+            return localSpace;
+        }
+
+
+        private List<Node> GetLocalSpaceRadio(Node startNode, Node finishNode)
+        {
+            List<Node> localSpace = GetLSRadioRecursive(startNode, radio);
+            localSpace = localSpace.Distinct().ToList();
+            localSpace.Remove(finishNode);
+            return localSpace;
+        }
+
+
+        private List<Node> GetLSRadioRecursive(Node startNode, int radioNeighbours)
         {
             List<Node> neighboursList = GetNeighboursList(startNode);
             List<Node> localSpace = new List<Node>();
             localSpace.AddRange(neighboursList);
 
             int count = 1;
-            while (count < radio)
+            while (count < radioNeighbours)
             {
                 foreach (var neighbour in neighboursList)
-                {
-                    localSpace.AddRange(GenerateLocalSpace(neighbour, finishNode, radio - 1));
-                }
-
+                    localSpace.AddRange(GetLSRadioRecursive(neighbour, radioNeighbours - 1));
                 count += 1;
             }
 
-            localSpace = localSpace.Distinct().ToList();
-
-            localSpace.Remove(finishNode);
             return localSpace;
         }
 
 
-        private List<Node> LRTAStarUnPaso(Node startNode, Node finishNode)
+        private List<Node> LRTAStarUnPaso(Node startNode, Node finishNode, int heuristicApply)
         {
             SetCostsToStart();
-            SetHeuristicOfEveryOne(finishNode);
+            SetHeuristicOfEveryOne(finishNode, heuristicApply);
             Node actualNode = new Node(startNode);
 
             List<Node> actualPath = new List<Node> {actualNode};
@@ -319,7 +321,7 @@ namespace Pathfinding
             return actualPath;
         }
 
-        public void ApplyLRTA(Cell startCell, Cell finishCell)
+        private void ApplyLRTA(Cell startCell, Cell finishCell)
         {
             if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
                 finishCell.GetIsAllowedCell())
@@ -328,29 +330,26 @@ namespace Pathfinding
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-
-                //_path = LRTAStarUnPaso(startNode, finishNode);
-                _path = LRTAVariosPasos(startNode, finishNode);
-                //_path = GenerateLocalSpace(startNode, finishNode, 2);
+                
+                _path = LRTAVariosPasos(startNode, finishNode, heuristic);
             }
         }
 
 
-// A STAR
-        private void ApplyAStar(Cell startCell, Cell finishCell, int heuristic)
+        // A STAR
+        private void ApplyAStar(Cell startCell, Cell finishCell, int heuristicCost)
         {
             if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
                 finishCell.GetIsAllowedCell())
             {
-                SetCostsToStart();
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-                _path = AStar(startNode, finishNode, heuristic);
+                _path = AStar(startNode, finishNode);
             }
         }
 
-        private List<Node> AStar(Node startNode, Node finalNode, int heuristic)
+        private List<Node> AStar(Node startNode, Node finalNode)
         {
             List<Node> closedList = new List<Node>();
             List<Node> openList = new List<Node> {startNode};
@@ -398,7 +397,7 @@ namespace Pathfinding
             return null;
         }
 
-// Cost functions
+        // Cost functions
         private float Manhattan(Node start, Node finish)
         {
             return Mathf.Abs(start.GetCell().GetCoorX() - finish.GetCell().GetCoorX()) +

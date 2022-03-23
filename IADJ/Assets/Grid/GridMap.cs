@@ -31,9 +31,9 @@ namespace Grid
         public String nameFloor = "Floor(Clone)";
         public String nameParent = "MazePathFinderLRTA";
         public String tagFloor = "Floor";
-        
+
         private List<Cell> _cellsAdyacent;
-        
+
         void Start()
         {
             _allowedCells = new List<Cell>();
@@ -139,6 +139,7 @@ namespace Grid
                 Transform child = terrain.transform.GetChild(i);
                 if (child.name.Equals(nameFloor))
                 {
+                    Debug.Log(child.transform.localScale.x);
                     x += child.GetComponent<Renderer>().bounds.size.x;
                     z += child.GetComponent<Renderer>().bounds.size.z;
                     _heightTerrain = child.transform.position.y;
@@ -178,6 +179,7 @@ namespace Grid
                     }
                 }
             }
+
             return _cellClicked;
         }
 
@@ -207,8 +209,8 @@ namespace Grid
             else
             {
                 sizes = GetSizeOfMultiplePlains();
-                sizes[0] /= 10;
-                sizes[1] /= 10;
+                sizes[0] /= 10f;
+                sizes[1] /= 10f;
             }
 
 
@@ -277,12 +279,20 @@ namespace Grid
 
         public Cell[] GetAllNeighbours(Cell c)
         {
-            List<Cell> c1 = GetDiagonalCells(c).ToList();
+            return GetAllNeighbours(c, 999);
+        }
+
+        public Cell[] GetAllNeighbours(Cell c, int heuristicApply)
+        {
+            List<Cell> c1 = new List<Cell>();
+            if (heuristicApply != 0)
+                c1 = GetDiagonalCells(c).ToList();
             List<Cell> c2 = GetHorizontalCells(c).ToList();
             c1.AddRange(c2);
             c1.RemoveAll(item => item == null);
             return c1.ToArray();
         }
+
 
         // GET and SET Methods
 
@@ -290,7 +300,7 @@ namespace Grid
         {
             return _xSize;
         }
-        
+
         public int GetZSize()
         {
             return _zSize;
@@ -300,7 +310,7 @@ namespace Grid
         {
             return (Cell[,]) _cellMap.Clone();
         }
-        
+
         // Draw Methods
         private void OnDrawGizmos()
         {
@@ -317,7 +327,7 @@ namespace Grid
             List<Cell> cells = GetDiagonalCells(c).ToList();
             List<Cell> cells2 = GetHorizontalCells(c).ToList();
             cells.AddRange(cells2);
-        
+
             foreach (var i in cells)
             {
                 if (i != null)
@@ -326,7 +336,7 @@ namespace Grid
                 }
             }
         }
-        
+
         private void DrawCellClicked()
         {
             if (drawCellClicked && _cellClicked != null)
@@ -365,9 +375,8 @@ namespace Grid
 
                     if (drawWireGm)
                         _cellMap[i, j].DrawCell();
-                    if(drawCellNumber)
-                        _cellMap[i,j].DrawCellNumber(sizeOfTextGrid);
-                    
+                    if (drawCellNumber)
+                        _cellMap[i, j].DrawCellNumber(sizeOfTextGrid);
                 }
             }
         }

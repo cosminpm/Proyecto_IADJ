@@ -32,6 +32,7 @@ namespace Pathfinding
             _hCost = n.GetHCost();
             _gCost = n.GetGCost();
             _fCost = n.GetFCost();
+
             _previousNode = n.GetPreviousNode();
             _tempCost = n.GetTempCost();
             _maxCost = n.GetMaxCost();
@@ -39,8 +40,7 @@ namespace Pathfinding
 
         public float CalculateFCost()
         {
-            _fCost = _gCost + _hCost;
-            return _fCost;
+            return _gCost + _fCost;
         }
 
         // Methods GET and SET

@@ -26,7 +26,8 @@ public class Wander : Face
     {
         
     }
-
+    
+    
     public override Steering GetSteering(Agent agent)
     {
         // Declaramos la variable aleatoria.
