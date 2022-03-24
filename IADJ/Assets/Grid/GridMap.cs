@@ -34,7 +34,7 @@ namespace Grid
 
         private List<Cell> _cellsAdyacent;
 
-        void Start()
+        void Awake()
         {
             _allowedCells = new List<Cell>();
             _notAllowedCells = new List<Cell>();
@@ -49,7 +49,6 @@ namespace Grid
 
         private void CreateGrid()
         {
-            Debug.Log(_xSize+ " " +_zSize);
             _cellMap = new Cell[_xSize, _zSize];
 
             float[] sizeOfCell = GetSizeOfCell();
@@ -309,7 +308,7 @@ namespace Grid
 
         public Cell[,] GetCellMap()
         {
-            return (Cell[,]) _cellMap.Clone();
+            return _cellMap;
         }
 
         // Draw Methods

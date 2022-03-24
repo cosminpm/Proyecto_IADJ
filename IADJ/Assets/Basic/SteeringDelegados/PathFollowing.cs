@@ -13,39 +13,47 @@ public class PathFollowing : Seek
 
     // Posicion del target.
     protected int targetParam;
-  
+
     protected int pathDir;
 
-    void Start(){
+    void Start()
+    {
         currentPos = 0;
         pathDir = 1;
+        
+        GameObject go = new GameObject("auxWallInvisible");
+        Agent auxTarget = go.AddComponent<AgentInvisible>();
+        auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
+        Target = auxTarget;
     }
 
     public override void NewTarget(Agent t)
     {
-       Target = t;
+        Target = t;
     }
 
     public override Steering GetSteering(Agent agent)
     {
-
-
-        if (path.condArrive(agent.Position, currentPos)) {
-
-            currentPos = currentPos + pathDir;
-            if (currentPos >= path.length() || currentPos < 0) {
-                pathDir *= -1;
-                currentPos += pathDir;
-            }
-            targetParam = currentPos;
-        } else {
-            targetParam = currentPos;
+        if (path == null)
+        {
+            return new Steering();
         }
 
+        if (path.CondArrive(agent.Position, currentPos))
+        {
+            currentPos = currentPos + pathDir;
+            if (currentPos >= path.Length() || currentPos < 0)
+            {
+                currentPos += pathDir;
+                //currentPos = path.Length() - 1;
+            }
+            targetParam = currentPos;
+        }
+        else
+            targetParam = currentPos;
         
-      // La posicion del target a la que tiene que ir el agente
+        // La posicion del target a la que tiene que ir el agente
         Target.Position = path.GetPosition(targetParam);
         return base.GetSteering(agent);
     }
-   
 }
