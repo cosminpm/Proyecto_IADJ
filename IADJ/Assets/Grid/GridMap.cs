@@ -49,6 +49,7 @@ namespace Grid
 
         private void CreateGrid()
         {
+            Debug.Log(_xSize+ " " +_zSize);
             _cellMap = new Cell[_xSize, _zSize];
 
             float[] sizeOfCell = GetSizeOfCell();
