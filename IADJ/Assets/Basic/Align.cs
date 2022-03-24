@@ -13,6 +13,11 @@ public class Align : SteeringBehaviour
     private float targetRotation;
 
     
+    protected Agent Target
+    {
+        get => target;
+        set => target = value;
+    }
 
     // Obtenemos el target.
     public void NewTarget(Agent t)
@@ -28,73 +33,54 @@ public class Align : SteeringBehaviour
 
     public override Steering GetSteering(Agent agent)
     {
-        
+
         // Inicializamos las variables.
         maxAngularAcceleration = agent.MaxAngularAcceleartion;
         maxRotation = agent.MaxRotation;
 
         // Creamos el steering.
         Steering steer = new Steering();
-        
 
         // Obtenemos la direccion del giro.
-        float rotation = target.Orientation - agent.Orientation;
+        int rotation = (int)(target.Orientation - agent.Orientation);
 
-        Debug.Log("Agente hijoputas "+ agent.Orientation);
-
-        
         // Mapeamos el resultado a un intervalo de (-180, 180) grados.
-        rotation = mapToRange(rotation);
-        Debug.Log("Agente hijoputas2 "+ agent.Orientation);
-        float rotationSize = Mathf.Abs(rotation);
-        Debug.Log("Agente hijoputas3 "+ agent.Orientation);
+        rotation = (int)mapToRange(rotation);
+        int rotationSize = Mathf.Abs(rotation);
+
         // Si ya estamos en el objetivo, devolvemos un steering vacío.
-        
         if (rotationSize < target.InteriorAngle)
         {
-            // if (Mathf.Abs(agent.Rotation) < 0.1 )
+            if (Mathf.Abs(agent.Rotation) < 0.1 )
                 return steer;
         }
-        Debug.Log("Agente hijoputas4 "+ agent.Orientation);
-        
-        // // Si estamos fuera del radio exterior, entonces usamos la máxima rotación.
-        // if (rotationSize > target.ExteriorAngle){
-        //     targetRotation = maxRotation;
-        //     Debug.Log("Agente hijoputas5 "+ targetRotation);
-        // }
-        // // En otro caso calculamos una rotación escalada.
-        // else{
-        //     Debug.Log("maxRotation es "+maxRotation);
-        //     Debug.Log("rotation size es "+rotationSize);
-        //     Debug.Log("Exterior angle  es "+target.ExteriorAngle);
 
-        //     targetRotation = maxRotation * rotationSize / target.ExteriorAngle;
-        // }
+        // Si estamos fuera del radio exterior, entonces usamos la máxima rotación.
+        if (rotationSize > target.ExteriorAngle){
+            targetRotation = maxRotation;
+        }
+        // En otro caso calculamos una rotación escalada.
+        else{
+
+            targetRotation = maxRotation * rotationSize / target.ExteriorAngle;
+        }
         // La rotación objetivo final combina la velocidad y la dirección.
-       
-        targetRotation = maxRotation;
-        targetRotation *= rotation / rotationSize;
-        Debug.Log("Agente hijoputas66 "+ targetRotation);
 
+        if (rotationSize > 0)
+            targetRotation *= rotation / rotationSize;
 
-        // La aceleración trata de de alcanzar la rotación objetivo.
-        steer.angular = targetRotation - agent.Rotation; 
-        Debug.Log("Agente hijoputas77 "+ steer.angular);
-        Debug.Log("Agente hijoputas99 "+ timeToTarget);
-        steer.angular /= timeToTarget;
-        Debug.Log("Agente hijoputas88 "+ steer.angular);
+        // La aceleración trata de alcanzar la rotación objetivo.
+        steer.angular = (int)(targetRotation - agent.Rotation);
 
-        
         // Comprobamos si la aceleración es demasiado grande.
         float angularAcceleration = Mathf.Abs(steer.angular);
 
+        if (angularAcceleration > maxAngularAcceleration)
+        {
+           steer.angular /= angularAcceleration;
+           steer.angular *= maxAngularAcceleration;
+        }
 
-        // if (angularAcceleration > maxAngularAcceleration)
-        // {
-        //     steer.angular /= angularAcceleration;
-        //     steer.angular *= maxAngularAcceleration;
-        // }
-        
         steer.linear = Vector3.zero;
         return steer;
     }
@@ -110,7 +96,6 @@ public class Align : SteeringBehaviour
             else
                 rotation -= 360;
         }
-
         return rotation;
     }
 }

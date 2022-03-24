@@ -5,11 +5,15 @@ public class AntiAlign : SteeringBehaviour
     // Declaramos las variables que vamos a necesitar. 
     [SerializeField] protected Agent target;
 
-    [SerializeField] private float timeToTarget;
+    [SerializeField] private float timeToTarget = 1f;
+
+    private float maxRotation;
+    private float maxAngularAcceleration;
 
     private float targetRotation;
 
-    private Agent Target
+
+    protected Agent Target
     {
         get => target;
         set => target = value;
@@ -24,48 +28,62 @@ public class AntiAlign : SteeringBehaviour
     void Start()
     {
         nameSteering = "Align Steering";
+        timeToTarget = 0.1f;
     }
 
     public override Steering GetSteering(Agent agent)
     {
+
+        // Inicializamos las variables.
+        maxAngularAcceleration = agent.MaxAngularAcceleartion;
+        maxRotation = agent.MaxRotation;
+
         // Creamos el steering.
         Steering steer = new Steering();
-        if (target == null)
-        {
-            steer.linear = Vector3.zero;
-            return steer;
-        }
 
-        // Obtenemos la direccion de giro.
-        float rotation = target.Orientation - agent.Orientation;
+        // Obtenemos la direccion del giro.
+        int rotation = (int)(target.Orientation - agent.Orientation);
 
         // Mapeamos el resultado a un intervalo de (-180, 180) grados.
-        rotation = mapToRange(rotation);
-        float rotationSize = Mathf.Abs(rotation);
+        rotation = (int)mapToRange(rotation);
+        int rotationSize = Mathf.Abs(rotation);
 
-        if (rotationSize <= target.InteriorAngle)
+        // Si ya estamos en el objetivo, devolvemos un steering vacío.
+        if (rotationSize < target.InteriorAngle)
         {
             if (Mathf.Abs(agent.Rotation) < 0.1)
                 return steer;
         }
 
-        else if (rotationSize > target.ExteriorAngle)
-            targetRotation = target.MaxRotation;
+        // Si estamos fuera del radio exterior, entonces usamos la máxima rotación.
+        if (rotationSize > target.ExteriorAngle)
+        {
+            targetRotation = maxRotation;
+        }
+        // En otro caso calculamos una rotación escalada.
         else
-            targetRotation = target.MaxRotation * rotationSize / target.ExteriorAngle;
+        {
 
-        // Multiplicacion por +-1
-        targetRotation *= rotation / rotationSize;
-        steer.angular = targetRotation - agent.Rotation;
-        steer.angular /= timeToTarget;
+            targetRotation = maxRotation * rotationSize / target.ExteriorAngle;
+        }
+        // La rotación objetivo final combina la velocidad y la dirección.
+
+        if (rotationSize > 0)
+            targetRotation *= rotation / rotationSize;
+
+        // La aceleración trata de alcanzar la rotación objetivo.
+        steer.angular = (int)(targetRotation - agent.Rotation);
+
+        // Comprobamos si la aceleración es demasiado grande.
         float angularAcceleration = Mathf.Abs(steer.angular);
 
-        if (angularAcceleration > target.MaxAcceleration)
+        if (angularAcceleration > maxAngularAcceleration)
         {
             steer.angular /= angularAcceleration;
-            steer.angular *= target.MaxAcceleration;
+            steer.angular *= maxAngularAcceleration;
         }
-        steer.angular = -rotation;
+
+        steer.angular *= -1;
         steer.linear = Vector3.zero;
         return steer;
     }
