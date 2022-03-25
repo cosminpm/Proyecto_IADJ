@@ -51,7 +51,7 @@ public class Align : SteeringBehaviour
         // Si ya estamos en el objetivo, devolvemos un steering vacío.
         if (rotationSize < target.InteriorAngle)
         {
-            if (Mathf.Abs(agent.Rotation) < 0.1 )
+            if (Mathf.Abs(agent.Rotation) < 0.1f )
                 return steer;
         }
 

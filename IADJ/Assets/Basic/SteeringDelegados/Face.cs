@@ -5,7 +5,10 @@ public class Face : Align
 {
     void Start()
     {
-        nameSteering = "Face Steering";
+        GameObject go = new GameObject("auxFace");
+        Agent auxTarget = go.AddComponent<AgentInvisible>();
+        auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
+        Target = auxTarget;
     }
 
     public override Steering GetSteering(Agent agent)

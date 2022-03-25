@@ -140,6 +140,6 @@ public class Body : MonoBehaviour
     
     public Vector3 OrientationToVector()
     {
-        return new Vector3(Mathf.Sin(_orientation) * Mathf.Rad2Deg, 0, Mathf.Cos(_orientation) * Mathf.Rad2Deg);
+        return new Vector3(Mathf.Cos(_orientation), 0, Mathf.Sin(_orientation) * Mathf.Rad2Deg);
     }
 }
