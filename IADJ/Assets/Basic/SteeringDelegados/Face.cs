@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Face : Align
 {
-    
     void Start()
     {
         nameSteering = "Face Steering";
@@ -11,8 +10,6 @@ public class Face : Align
 
     public override Steering GetSteering(Agent agent)
     {
-
-/*
         if (Target == null)
             return new Steering();
 
@@ -33,9 +30,5 @@ public class Face : Align
 
         // Delegamos el resultado a Align. 
         return base.GetSteering(agent);
-        */
-
-        return base.GetSteering(agent); 
     }
-    
 }

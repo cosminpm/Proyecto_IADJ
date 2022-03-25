@@ -272,75 +272,6 @@ Transform:
   m_Father: {fileID: 1558357690}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &89069553
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 47.377743
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 47.377743
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 47.377743
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 172.41757
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.6000366
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 32.800407
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.000002221265
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -6.1232475e-17
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 6.1232475e-17
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
-      propertyPath: m_Name
-      value: Soldado1 (1)
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
 --- !u!1 &92832154
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,7 +315,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &92832157
 MonoBehaviour:
@@ -979,7 +910,7 @@ Transform:
   m_LocalScale: {x: 80, y: 78.187256, z: 80}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -1072,7 +1003,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &769125582
 GameObject:
@@ -1511,7 +1442,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1054009350
 GameObject:
@@ -2207,7 +2138,7 @@ Transform:
   m_Children:
   - {fileID: 31104081}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1654979453 stripped
 GameObject:
@@ -2221,7 +2152,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654979453}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81e6733aeed8bfd4a98f3aefbf898901, type: 3}
   m_Name: 
@@ -2233,10 +2164,10 @@ MonoBehaviour:
   _maxAngularAcc: 1
   _maxForce: 1
   _orientation: 0
-  _interiorRadius: 1
-  _arrivalRadius: 3
+  _interiorRadius: 3
+  _arrivalRadius: 5
   _interiorAngle: 3
-  _exteriorAngle: 8
+  _exteriorAngle: 30
   _drawGizmos: 0
   _anchuraCirculo: 3
   _anchuraLinea: 1.5
@@ -2344,7 +2275,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_LocalScale.x
@@ -2404,7 +2335,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 899fd1a846b79064c9700f4e28adf37a, type: 2}
     - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_Name
-      value: Soldado1
+      value: Prota
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
+      propertyPath: m_TagString
+      value: Prota
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
@@ -2768,20 +2703,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cd75888121a08674f86e77f56dc74cbc, type: 3}
   m_PrefabInstance: {fileID: 1968521295}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1968521298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1968521297}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weight: 0
-  target: {fileID: 0}
 --- !u!114 &1968521299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2840,8 +2761,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.6696
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.7479997
+      value: 7.33606
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.6696
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2849,7 +2778,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.06999999
+      value: 1.23
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2886,6 +2815,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_Name
       value: Soldado1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
+      propertyPath: m_TagString
+      value: NPC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
@@ -2973,11 +2906,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2042957563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 782e9838fc559c14fa476c2750662550, type: 3}
+  m_Script: {fileID: 11500000, guid: 8afe35e16ae88444c955fed426d19a25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
-  target: {fileID: 0}
+  target: {fileID: 1654979454}
+  timeToTarget: 1
 --- !u!114 &2042957565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2991,15 +2925,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 9.8
-  _maxRotation: 1
-  _maxAcceleration: 1
-  _maxAngularAcc: 1
+  _maxSpeed: 335.11
+  _maxRotation: 180
+  _maxAcceleration: 98.1
+  _maxAngularAcc: 60
   _maxForce: 1
   _orientation: 0
-  _interiorRadius: 1
-  _arrivalRadius: 5.63
-  _interiorAngle: 5.96
+  _interiorRadius: 3
+  _arrivalRadius: 5
+  _interiorAngle: 3
   _exteriorAngle: 8
   _drawGizmos: 1
   _anchuraCirculo: 3
@@ -3008,7 +2942,7 @@ MonoBehaviour:
     angular: 0
     linear: {x: 0, y: 0, z: 0}
   listSteerings:
-  - {fileID: 0}
+  - {fileID: 2042957564}
   arbitro: {fileID: 0}
 --- !u!64 &2042957566
 MeshCollider:
@@ -3024,32 +2958,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -462981019419857548, guid: 2d512bb7f14a34c42ad05b3c071622e5, type: 3}
---- !u!114 &2042957569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2042957563}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81e6733aeed8bfd4a98f3aefbf898901, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mass: 1
-  _maxSpeed: 1
-  _maxRotation: 1
-  _maxAcceleration: 1
-  _maxAngularAcc: 1
-  _maxForce: 1
-  _orientation: 0
-  _interiorRadius: 1
-  _arrivalRadius: 3
-  _interiorAngle: 3
-  _exteriorAngle: 8
-  _drawGizmos: 0
-  _anchuraCirculo: 3
-  _anchuraLinea: 1.5
 --- !u!1 &2065704353
 GameObject:
   m_ObjectHideFlags: 0

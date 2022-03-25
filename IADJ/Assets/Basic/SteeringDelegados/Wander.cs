@@ -21,31 +21,45 @@ public class Wander : Face
     // Orientacion del target de wander.
     private int wanderOrientation;
 
+    // Target de wander.
+    private AgentInvisible invisible;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameObject ob = new GameObject();
+
+        ob = Instantiate(ob, Vector3.zero, Quaternion.identity);
+        ob.AddComponent<AgentInvisible>();
+        ob.GetComponent<AgentInvisible>().DrawGizmos = true;
+        ob.name = "Target Wander";
+        invisible = ob.GetComponent<AgentInvisible>();
+
     }
-    
-    
+
     public override Steering GetSteering(Agent agent)
     {
         // Declaramos la variable aleatoria.
         var rand = new System.Random();
 
         // Escribimos el movimiento que puede tener el target de wander. 
-        // Mas concretamente, el target de wander solo podra moverse en un rango +-wonderRate.
-        wanderOrientation += rand.Next(-1, 1) * wanderRate;
+        // Mas concretamente, el target de wander solo podra moverse en un rango +-wanderRate.
+        wanderOrientation += rand.Next(-wanderRate, wanderRate);
 
-        target.Orientation = wanderOrientation + agent.Orientation;
+
+        float targetOrientation = wanderOrientation + agent.Orientation;
+        invisible.Orientation = targetOrientation;
+        Debug.Log("ORIENTACION_INVISIBLE: " + wanderOrientation);
 
         // Calculamos el centro del target de wander.
-        target.Position = agent.Position + wanderOffset * agent.OrientationToVector();
+        Vector3 targetPosition = agent.Position + wanderOffset * agent.OrientationToVector();
 
         // Calculamos la posicion objetivo.
-        target.Position += wanderRadius * target.OrientationToVector();
+        targetPosition += wanderRadius * invisible.OrientationToVector();
 
         // Delegamos a Face para que el personaje mire al target de wander.
+        invisible.Position = targetPosition;
+        NewTarget(invisible);
         Steering steering = base.GetSteering(agent);
 
         // Sobreescribimos el movimiento lineal para que el personaje se dirija
