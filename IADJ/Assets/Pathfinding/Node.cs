@@ -28,7 +28,7 @@ namespace Pathfinding
 
         public Node(Node n)
         {
-            _cell = new Cell(n.GetCell());
+            _cell = n.GetCell();
             _hCost = n.GetHCost();
             _gCost = n.GetGCost();
             _fCost = n.GetFCost();

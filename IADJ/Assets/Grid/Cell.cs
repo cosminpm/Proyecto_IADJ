@@ -1,5 +1,6 @@
 ﻿using System;
 using Grid;
+using Pathfinding;
 using UnityEditor;
 using UnityEngine;
 
@@ -76,11 +77,10 @@ public class Cell
     {
         if (input)
         {
-            
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
             
-           if (CheckVector3InsideBox(hits))
+           if (CheckIfHitsInsideBox(hits))
             {
                 return true;
             }
@@ -93,7 +93,7 @@ public class Cell
             return false;
     }
 
-    private bool CheckVector3InsideBox(RaycastHit[] hits)
+    private bool CheckIfHitsInsideBox(RaycastHit[] hits)
     {
         foreach (var h in hits)
         {
@@ -108,10 +108,25 @@ public class Cell
             )
                 return true;
         }
-
         return false;
     }
 
+    public bool CheckIfVector3InsideBox(Vector3 entrante)
+    {
+        float amplitudeX = _sizeX / 2;
+        float amplitudeZ = _sizeZ / 2;
+        Vector3 point = entrante;
+        if (
+            point.x > (_center.x - amplitudeX) &&
+            point.x < (_center.x + amplitudeX) &&
+            point.z > (_center.z - amplitudeZ) &&
+            point.z < (_center.z + amplitudeZ)
+        )
+            return true;
+        return false;
+    }
+    
+    
     public void DrawCell()
     {
         Handles.DrawWireCube(_center, new Vector3(_sizeX, 0,_sizeZ));

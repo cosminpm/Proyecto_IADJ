@@ -33,10 +33,11 @@ namespace Pathfinding
 
         private void Update()
         {
-            Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
-            Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-            
-            ApplyLRTA(startCell, finishCell);
+            // Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
+            // Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
+            //
+            // List<Node> finalPath = new List<Node>(); 
+            // ApplyLRTA(startCell, finishCell, ref finalPath);
         }
 
         private float HeuristicApply(Node startNode, Node finishNode, int heuristicApply)
@@ -56,7 +57,7 @@ namespace Pathfinding
 
         private List<Node> GetNeighboursList(Node node, int heuristicApply)
         {
-            List<Cell> neighbours = GetComponent<GridMap>().GetAllNeighbours(node.GetCell(), heuristicApply).ToList();
+            List<Cell> neighbours = GameObject.Find("Controlador").GetComponent<GridMap>().GetAllNeighbours(node.GetCell(), heuristicApply).ToList();
 
             List<Node> result = new List<Node>();
             foreach (var neighbour in neighbours)
@@ -73,7 +74,7 @@ namespace Pathfinding
         }
 
 
-        private Node RecoverNodeFromCell(Cell cell)
+        public Node RecoverNodeFromCell(Cell cell)
         {
             return _nodeMap[cell.GetCoorX(), cell.GetCoorZ()];
         }
@@ -90,7 +91,6 @@ namespace Pathfinding
                 currentNode = currentNode.GetPreviousNode();
                 path.Add(currentNode);
             }
-
             path.Reverse();
             return path;
         }
@@ -110,7 +110,7 @@ namespace Pathfinding
 
         private void InitializeNodeMap()
         {
-            GridMap gridMap = GetComponent<GridMap>();
+            GridMap gridMap = GameObject.Find("Controlador").GetComponent<GridMap>();
             _xSize = gridMap.GetXSize();
             _zSize = gridMap.GetZSize();
             _nodeMap = new Node[_xSize, _zSize];
@@ -119,7 +119,7 @@ namespace Pathfinding
 
         private void SetCostsToStart()
         {
-            GridMap gridMap = GetComponent<GridMap>();
+            GridMap gridMap = GameObject.Find("Controlador").GetComponent<GridMap>();
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
@@ -141,18 +141,17 @@ namespace Pathfinding
                     if (_nodeMap[i, j].Equals(finishNode))
                     {
                         _nodeMap[i, j].SetHCost(0f);
-                        Debug.Log(finishNode.GetHCost());
                     }
                 }
             }
         }
 
         // LRTA Star
-        private List<Node> LRTAVariosPasos(Node startNode, Node finalNode, int heuristicApply)
+        private List<Node> LRTAVariosPasos(Node startNode, Node finalNode, int heuristicApply, ref List<Node> finalPath)
         {
             SetHeuristicOfEveryOne(finalNode, heuristicApply);
             Node currentNode = new Node(startNode);
-            List<Node> finalPath = new List<Node> {startNode};
+            finalPath.Add(startNode);
 
             int contador = 0;
 
@@ -321,20 +320,23 @@ namespace Pathfinding
             return actualPath;
         }
 
-        private void ApplyLRTA(Cell startCell, Cell finishCell)
+        public void ApplyLRTA(Cell startCell, Cell finishCell, ref List<Node> finalPath)
         {
-            if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
-                finishCell.GetIsAllowedCell())
+            if (CellIsGood(startCell) && CellIsGood(finishCell) && !startCell.Equals(finishCell))
             {
                 SetCostsToStart();
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-                
-                _path = LRTAVariosPasos(startNode, finishNode, heuristic);
+                _path = LRTAVariosPasos(startNode, finishNode, heuristic, ref finalPath);
             }
         }
 
+
+        private bool CellIsGood(Cell node)
+        {
+            return node != null && node.GetIsAllowedCell();
+        }
 
         // A STAR
         private void ApplyAStar(Cell startCell, Cell finishCell, int heuristicCost)
@@ -418,7 +420,7 @@ namespace Pathfinding
                 Mathf.Abs(start.GetCell().GetCoorZ() - finish.GetCell().GetCoorZ()));
         }
 
-// Draw Methods
+        // Draw Methods
         private void DrawPath()
         {
             if (_path != null)
