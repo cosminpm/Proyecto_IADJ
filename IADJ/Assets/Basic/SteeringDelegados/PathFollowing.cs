@@ -48,6 +48,7 @@ public class PathFollowing : Seek
             {
                 currentPos = pathDir;
                 path.nodos = new List<Node>();
+                return new Steering();
                 //currentPos = path.Length() - 1;
             }
             targetParam = currentPos;
