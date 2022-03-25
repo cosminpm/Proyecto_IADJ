@@ -63,11 +63,11 @@ public class Path : MonoBehaviour
 
     public bool CondArrive(Vector3 agentePosicion, int nodoActual)
     {
-        Debug.Log(nodos.Count);
-        
-        return nodos[nodoActual].GetCell().CheckIfVector3InsideBox(agentePosicion);
-        
+        Debug.Log("NODO ACTUAL:"+nodoActual);
+        Debug.Log("SIZE NODOS:"+nodos.Count);
 
+        if (nodos.Count > 0)
+            return nodos[nodoActual].GetCell().CheckIfVector3InsideBox(agentePosicion);
         return false;
     }
 }

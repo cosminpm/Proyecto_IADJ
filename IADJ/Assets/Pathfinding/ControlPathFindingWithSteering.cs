@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using Grid;
 using UnityEditor;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Pathfinding
 {
-    public class ControlPathFindingWithSteering:MonoBehaviour
+    public class ControlPathFindingWithSteering : MonoBehaviour
     {
         private Path _path;
         private PathFollowing _pathFollowing;
         private PathFinding _pathFinding;
         GridMap gridMap;
-        
+
         public Color startColor = Color.cyan;
         public Color finishColor = Color.red;
-        public bool drawColorPath,drawNumberPath;
+        public bool drawColorPath, drawNumberPath;
         public int sizeOfTextPath = 10;
+
         public void Start()
         {
             _pathFinding = gameObject.AddComponent<PathFinding>();
@@ -29,18 +32,21 @@ namespace Pathfinding
 
             _path.nodos = new List<Node>();
             gridMap = GameObject.Find("Controlador").GetComponent<GridMap>();
-
+            
             drawColorPath = true;
         }
 
-        public void  Update()
+        public void Update()
         {
-            Cell startCell = gridMap.CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
-            Cell finishCell = gridMap.CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-            
-            Debug.Log("AAAAA:" + startCell);
-            Debug.Log("vvvvv:" + finishCell);
-            _pathFinding.ApplyLRTA(startCell, finishCell, ref _path.nodos);
+            if (Input.GetKeyUp(KeyCode.Alpha2))
+            {
+                Cell startCell = WorldToMap(transform.position);
+                Cell finishCell = gridMap.CheckIfCellClicked(true);
+
+                _path.nodos = new List<Node>();
+                _pathFollowing.currentPos = 0;
+                _pathFinding.ApplyLRTA(startCell, finishCell, ref _path.nodos);
+            }
         }
 
 
@@ -78,7 +84,18 @@ namespace Pathfinding
                 }
             }
         }
-        
+
+        public Cell WorldToMap(Vector3 v)
+        {
+            foreach (var cell in gridMap.GetCellMap())
+            {
+                if (cell.CheckIfVector3InsideBox(v))
+                {
+                    return cell;
+                }
+            }
+            throw new Exception("The player is not in the grid");
+        }
         
     }
 }

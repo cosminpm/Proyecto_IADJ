@@ -74,7 +74,7 @@ namespace Pathfinding
         }
 
 
-        private Node RecoverNodeFromCell(Cell cell)
+        public Node RecoverNodeFromCell(Cell cell)
         {
             return _nodeMap[cell.GetCoorX(), cell.GetCoorZ()];
         }

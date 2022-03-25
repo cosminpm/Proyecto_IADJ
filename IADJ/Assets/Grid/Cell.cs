@@ -77,7 +77,6 @@ public class Cell
     {
         if (input)
         {
-            
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
             

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 
 public class PathFollowing : Seek
@@ -9,7 +11,7 @@ public class PathFollowing : Seek
     [SerializeField] public int currentParam;
 
     // Nodo actual en el camino
-    protected int currentPos;
+    public int currentPos;
 
     // Posicion del target.
     protected int targetParam;
@@ -44,7 +46,8 @@ public class PathFollowing : Seek
             currentPos = currentPos + pathDir;
             if (currentPos >= path.Length() || currentPos < 0)
             {
-                currentPos += pathDir;
+                currentPos = pathDir;
+                path.nodos = new List<Node>();
                 //currentPos = path.Length() - 1;
             }
             targetParam = currentPos;
