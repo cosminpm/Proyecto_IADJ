@@ -85,16 +85,9 @@ namespace Pathfinding
             }
         }
 
-        public Cell WorldToMap(Vector3 v)
+        private Cell WorldToMap(Vector3 v)
         {
-            foreach (var cell in gridMap.GetCellMap())
-            {
-                if (cell.CheckIfVector3InsideBox(v))
-                {
-                    return cell;
-                }
-            }
-            throw new Exception("The player is not in the grid");
+            return gridMap.WorldToMap(v);
         }
         
     }

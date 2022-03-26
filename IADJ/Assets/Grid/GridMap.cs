@@ -294,8 +294,20 @@ namespace Grid
         }
 
 
+        public Cell WorldToMap(Vector3 v)
+        {
+            foreach (var cell in _cellMap)
+            {
+                if (cell.CheckIfVector3InsideBox(v))
+                {
+                    return cell;
+                }
+            }
+            throw new Exception("The player is not in the grid");
+        }
+        
+        
         // GET and SET Methods
-
         public int GetXSize()
         {
             return _xSize;

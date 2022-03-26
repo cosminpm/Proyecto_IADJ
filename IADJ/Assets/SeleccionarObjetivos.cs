@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Grid;
 using UnityEngine;
 
 /*
@@ -88,7 +89,8 @@ public class SeleccionarObjetivos : MonoBehaviour
                     if (hitInfo.collider.CompareTag("Terrain"))
                     {
                         Vector3 position = hitInfo.point;
-                        GameObject ai = CreateInvisibleAgent(position);
+                        Vector3 center = GameObject.Find("Controlador").GetComponent<GridMap>().WorldToMap(position).GetCenter();
+                        GameObject ai = CreateInvisibleAgent(center);
                         agent = ai.GetComponent<Agent>();
                     }
 
