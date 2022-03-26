@@ -14,6 +14,13 @@ public class Arrive : SteeringBehaviour
     {
         target = a;
     }
+
+     public Agent Target
+    {
+        get => target;
+        set => target = value;
+    }
+
         
     void Start()
     {
