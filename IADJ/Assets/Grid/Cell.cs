@@ -10,7 +10,7 @@ public class Cell
     private Vector3 _center;
     private GameObject _collider;
     private bool _allowedCell;
-    private int _coorX, _coorZ, _cost;
+    private int _coorX, _coorZ;
 
     public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ)
     {
@@ -19,7 +19,6 @@ public class Cell
         _center = center;
         _coorX = coorX;
         _coorZ = coorZ;
-        _cost = int.MaxValue;
     }
     
     public Cell(Cell c)
@@ -29,7 +28,6 @@ public class Cell
         _center = c._center;
         _coorX = c._coorX;
         _coorZ = c._coorZ;
-        _cost = int.MaxValue;
     }
     
 
@@ -42,17 +40,7 @@ public class Cell
     {
         return _sizeZ;
     }
-
-    public int GetCost()
-    {
-        return _cost;
-    }
-
-    public void SetCost(int cost)
-    {
-        _cost = cost;
-    }
-
+    
     public bool GetIsAllowedCell()
     {
         return _allowedCell;
@@ -135,7 +123,7 @@ public class Cell
     public void DrawCenter()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(_center, 2);
+        Gizmos.DrawSphere(_center, 0.5f);
     }
 
     public void DrawCellColored(Color color)

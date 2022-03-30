@@ -36,6 +36,7 @@ public class PathFollowing : Seek
 
     public override Steering GetSteering(Agent agent)
     {
+        
         if (path == null)
         {
             return new Steering();
@@ -43,6 +44,7 @@ public class PathFollowing : Seek
 
         if (path.CondArrive(agent.Position, currentPos))
         {
+            Debug.Log(currentPos + "  :A:  " + pathDir);
             currentPos = currentPos + pathDir;
             if (currentPos >= path.Length() || currentPos < 0)
             {

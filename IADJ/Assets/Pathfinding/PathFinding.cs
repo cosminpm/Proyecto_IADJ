@@ -37,7 +37,7 @@ namespace Pathfinding
             // Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
             //
             // List<Node> finalPath = new List<Node>(); 
-            // ApplyLRTA(startCell, finishCell, ref finalPath);
+            // ApplyLRTA(startCell, finishCell,ref _path);
         }
 
         private float HeuristicApply(Node startNode, Node finishNode, int heuristicApply)
