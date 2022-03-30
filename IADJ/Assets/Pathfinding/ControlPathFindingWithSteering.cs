@@ -25,6 +25,9 @@ namespace Pathfinding
         {
             _pathFinding = gameObject.AddComponent<PathFinding>();
             _pathFollowing = gameObject.AddComponent<PathFollowing>();
+            GetComponent<AgentNPC>().listSteerings.Add(_pathFollowing);
+
+
             _pathFollowing.weight = 1;
 
             _pathFollowing.path = gameObject.AddComponent<Path>();
@@ -32,7 +35,7 @@ namespace Pathfinding
 
             _path.nodos = new List<Node>();
             gridMap = GameObject.Find("Controlador").GetComponent<GridMap>();
-            
+            GetComponent<ArbitroPonderado>().Inicializar();
             drawColorPath = true;
         }
 
@@ -89,6 +92,5 @@ namespace Pathfinding
         {
             return gridMap.WorldToMap(v);
         }
-        
     }
 }

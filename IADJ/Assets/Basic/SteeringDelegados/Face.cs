@@ -3,23 +3,33 @@ using UnityEngine;
 
 public class Face : Align
 {
+    Agent explicitTarget;
+    protected Agent prota { get; set; }
+
     void Start()
     {
-        GameObject go = new GameObject("auxFace");
-        Agent auxTarget = go.AddComponent<AgentInvisible>();
-        auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
-        Target = auxTarget;
+        nameSteering = "Face Steering";
+        prota = Target;
     }
 
     public override Steering GetSteering(Agent agent)
     {
-        if (Target == null)
+        if (explicitTarget == null)
+        {
+            GameObject go = new GameObject("FaceTarget");
+            Agent auxTarget = go.AddComponent<AgentInvisible>();
+            auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
+            explicitTarget = auxTarget;
+        }
+
+        if (prota == null && GameObject.Find("AgenteInvisible"))
+            prota = GameObject.Find("AgenteInvisible").GetComponent<Agent>();
+ 
+        if (prota == null)
             return new Steering();
 
-        Agent explicitTarget = Target;
-
         // Calculamos la dirección al objetivo.
-        Vector3 direction = explicitTarget.Position - agent.Position;
+        Vector3 direction = prota.Position - agent.Position;
 
         // Comprobamos que la longitud de la dirección no es cero. Si lo es, no hacemos nada.
         if (direction.magnitude == 0)
@@ -29,7 +39,9 @@ public class Face : Align
 
         // Juntamos los objetivos.
         Target = explicitTarget;
-        Target.Orientation = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+
+        float targetOrientation = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        Target.Orientation = targetOrientation;
 
         // Delegamos el resultado a Align. 
         return base.GetSteering(agent);

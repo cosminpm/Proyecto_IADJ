@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public abstract class FormationManager : MonoBehaviour
 {
     // Estructura para indicar el personaje y el numero de slot que tiene 
@@ -40,30 +41,46 @@ public abstract class FormationManager : MonoBehaviour
     public List<Agent> listaAgents = new List<Agent>();
     protected DriftOffset driftoffset;
 
-    // Variable para controlar el tiempo que falta
+    // Variable para controlar el tiempo que falta (en frames)
     // hasta que el líder cambie su steering a wander.
-    protected int timeWander = 120; //3600;
+    protected int timeWander = 3600;
+
+    // Variable que usaremos para, cuando el líder esté
+    // en Wander, controlar el tiempo restante hasta que tenga 
+    // que parar.
+    protected int timeToStop = 3600;
 
     void Start()
     {
         inicializarSlots();
-        updateSlots();
+        updatesSlotsLider();
     }
 
     // Una vez inicializada la lista de agentes asignamos, si se puede, un slot a cada agente.
     protected void inicializarSlots()
     {
+        // Obtenemos la lista de NPCs seleccionados.
         SeleccionarObjetivos so = GameObject.Find("Controlador").GetComponent<SeleccionarObjetivos>();
 
+        // Para cada personaje en la lista...
         foreach (var ag in so.getListNPCs())
         {
+            // Si el personaje seleccionado no estaba en la lista
+            // de NPCs de la formación, lo añadimos.
             if (!listaAgents.Contains(ag.GetComponent<Agent>()))
             {
                 listaAgents.Add(ag.GetComponent<Agent>());
+
+                // Además, le asignamos un slot de la formación
+                // a dicho personaje.
                 addCharacter(ag.GetComponent<Agent>());
             }
         }
 
+        // Si la lista de seleccionados tiene menos elementos
+        // que la lista de personajes que componen la formación,
+        // entonces comprobamos cuál es el personaje de diferencia
+        // y lo eliminamos de la lista de NPCs de la formación.
         if (so.getListNPCs().Count < listaAgents.Count)
         {
             List<Agent> listaAux = new List<Agent>();
@@ -93,27 +110,22 @@ public abstract class FormationManager : MonoBehaviour
     // agentes ya asignados más uno.
     protected bool addCharacter(Agent agent){
 
-        // Obtenemos el número de slots ocupados
+        // Obtenemos el número de slots ocupados.
         int slotsOcupados = listaSlotsOcupados.Count;
 
-        // Si la formación soporta un npc más, se crea un slot, se le asigna 
+        // Si la formación soporta un NPC más, se crea un slot, se le asigna 
         // un número de slot y el agente. Se añade este slot a la lista de slots
         // ocupados. Y por último se devuelve True.
         if ( soportaSlots(slotsOcupados + 1) ){
             SlotAssignment slot = new SlotAssignment();
             slot.SetSlotNumber(slotsOcupados);
             slot.SetCharacter(agent);
-            Debug.Log("INSERTANDO PERSONAJE: " + slot.GetCharacter().name);
-
-
             listaSlotsOcupados.Add(slot);
-            Debug.Log("EL PERSONAJE \"" + slot.GetCharacter().name + "\" HA SIDO ASIGNADO");
-            Debug.Log("LA LISTA AHORA TIENE TAMAÑO: " + listaSlotsOcupados.Count);
 
             return true;
         }
 
-        // En caso contrario devolvemos false.
+        // En caso contrario devolvemos False.
         return false;
     }
 
@@ -131,9 +143,8 @@ public abstract class FormationManager : MonoBehaviour
     }
 
     // Recorremos la lista de slots ocupados en busca del agente
-    // que se pasa como parametro. Si se encuentra se elimina
+    // que se pasa como parámetro. Si se encuentra, se elimina
     // la asignación que tenga dicho agente en la lista de slots.
-
     protected void removeCharacter(Agent agente){
         bool encontrado = false;
         int index = 0;    
@@ -161,13 +172,15 @@ public abstract class FormationManager : MonoBehaviour
 
     }
 
+    // función para obtener el personaje que esté asignado al primer 
+    // slot de la formación. Es decir, el líder.
     protected Agent getLeader(){
         return listaSlotsOcupados[0].GetCharacter();
     }
 
     protected abstract Agent getAgentSlotLocation(int numberSlot);
     protected abstract bool soportaSlots(int numberSlot);
-    protected abstract void updateSlots();
+    protected abstract void updatesSlotsLider();
     protected abstract DriftOffset getDriftOffset(List<SlotAssignment> s);
 
 }

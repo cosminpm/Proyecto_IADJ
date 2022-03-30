@@ -41,7 +41,7 @@ public class AgentNPC : Agent
     private void ApplySteering()
     {
         Velocity = steer.linear * Time.deltaTime;
-        Position += Velocity * Time.deltaTime;
+        Position += Velocity;
         Rotation = steer.angular;
 
         Orientation += Rotation * Time.deltaTime;
@@ -56,6 +56,8 @@ public class AgentNPC : Agent
         // Reseteamos el steering final.
         //   steer = new Steering();
 
+        
+       
         // Si hay arbitro.
         if (arbitro != null)
         {
@@ -65,7 +67,8 @@ public class AgentNPC : Agent
 
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
-            GetSteering(behavior);
+            if (behavior.enabled)
+                GetSteering(behavior);
     }
 
     private void GetSteering(SteeringBehaviour behavior)

@@ -14,14 +14,15 @@ public class Arrive : SteeringBehaviour
     {
         target = a;
     }
-
-     public Agent Target
+        
+    
+    public Agent Target
     {
         get => target;
         set => target = value;
     }
-
-        
+    
+    
     void Start()
     {
         nameSteering = "Arrive Steering";
@@ -34,7 +35,7 @@ public class Arrive : SteeringBehaviour
 
         if (target == null)
         {
-            steer.linear = Vector3.zero;
+            steer.linear = Vector3.zero; 
             return steer;
         }
         
