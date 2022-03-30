@@ -25,6 +25,9 @@ public class PathFollowing : Seek
         
         GameObject go = new GameObject("auxWallInvisible");
         Agent auxTarget = go.AddComponent<AgentInvisible>();
+        auxTarget.ArrivalRadius = 1;
+        auxTarget.InteriorRadius = 1f;
+        
         auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
         Target = auxTarget;
     }
@@ -44,7 +47,6 @@ public class PathFollowing : Seek
 
         if (path.CondArrive(agent.Position, currentPos))
         {
-            Debug.Log(currentPos + "  :A:  " + pathDir);
             currentPos = currentPos + pathDir;
             if (currentPos >= path.Length() || currentPos < 0)
             {
@@ -53,10 +55,8 @@ public class PathFollowing : Seek
                 return new Steering();
                 //currentPos = path.Length() - 1;
             }
-            targetParam = currentPos;
         }
-        else
-            targetParam = currentPos;
+        targetParam = currentPos;
         
         // La posicion del target a la que tiene que ir el agente
         Target.Position = path.GetPosition(targetParam);

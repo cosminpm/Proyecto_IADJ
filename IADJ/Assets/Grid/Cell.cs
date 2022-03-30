@@ -104,6 +104,7 @@ public class Cell
         float amplitudeX = _sizeX / 2;
         float amplitudeZ = _sizeZ / 2;
         Vector3 point = entrante;
+
         if (
             point.x > (_center.x - amplitudeX) &&
             point.x < (_center.x + amplitudeX) &&

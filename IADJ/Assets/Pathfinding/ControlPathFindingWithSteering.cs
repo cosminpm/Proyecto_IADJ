@@ -88,7 +88,7 @@ namespace Pathfinding
             }
         }
 
-        private Cell WorldToMap(Vector3 v)
+        public Cell WorldToMap(Vector3 v)
         {
             return gridMap.WorldToMap(v);
         }
