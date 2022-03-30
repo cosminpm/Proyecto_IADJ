@@ -3,8 +3,8 @@ using UnityEngine;
 public class Body : MonoBehaviour
 {
     [SerializeField] protected float _mass = 1;
-    [SerializeField] protected float _maxSpeed = 1;
-    [SerializeField] protected float _maxRotation = 1;
+    [SerializeField] protected float _maxSpeed = 3;
+    [SerializeField] protected float _maxRotation = 180;
     [SerializeField] protected float _maxAcceleration = 1;
     [SerializeField] protected float _maxAngularAcc = 1;
     [SerializeField] protected float _maxForce = 1;

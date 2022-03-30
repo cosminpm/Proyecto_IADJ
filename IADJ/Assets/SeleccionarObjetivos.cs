@@ -61,6 +61,7 @@ public class SeleccionarObjetivos : MonoBehaviour
                         SendNewTarget(npc, null);
                         _listNpCs.Remove(npc);
                         npc.GetComponent<MeshRenderer>().material = _matBlanco;
+                        Debug.Log("aaaa");
                     }
                     else
                     {
@@ -78,13 +79,15 @@ public class SeleccionarObjetivos : MonoBehaviour
         {
             // Comprobamos si el ratón golpea a algo en el escenario.
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+            
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo))
             {
+                
                 // Si se esta chocando algo...
                 if (hitInfo.collider != null)
                 {
+                   
                     Agent agent;
                     if (hitInfo.collider.CompareTag("Terrain"))
                     {

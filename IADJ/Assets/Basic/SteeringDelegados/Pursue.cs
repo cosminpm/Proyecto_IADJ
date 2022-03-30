@@ -9,11 +9,13 @@ public class Pursue : Seek
     
     public override void NewTarget(Agent t)
     {
-        base.NewTarget(t);
+        //base.NewTarget(t);
         targetAux = Target;
-        prediccionGO = GameObject.Find("Controlador").GetComponent<SeleccionarObjetivos>().CreateInvisibleAgent(targetAux.Position);
+        prediccionGO = new GameObject("AuxPursue");
+        targetAux = prediccionGO.AddComponent<AgentInvisible>();
         prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
         Target = prediccionGO.GetComponent<AgentInvisible>();
+        Target = targetAux;
     }
 
     public override Steering GetSteering(Agent agent)
