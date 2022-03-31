@@ -3,33 +3,34 @@ using UnityEngine;
 
 public class Face : Align
 {
-    Agent explicitTarget;
-    protected Agent prota { get; set; }
+    private Agent targetAux;
 
     void Start()
     {
-        nameSteering = "Face Steering";
-        prota = Target;
+        targetAux = Target;
+        GameObject prediccionGO = new GameObject("AuxFace");
+        AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
+        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
+        Target = invisible;
+
+        group = 2;
     }
+
 
     public override Steering GetSteering(Agent agent)
     {
-        if (explicitTarget == null)
+        if ( targetAux == null && Target == null)
         {
-            GameObject go = new GameObject("FaceTarget");
-            Agent auxTarget = go.AddComponent<AgentInvisible>();
-            auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
-            explicitTarget = auxTarget;
+            Debug.Log("JAJAJAJA");
+            return new Steering();
         }
 
-        if (prota == null && GameObject.Find("AgenteInvisible"))
-            prota = GameObject.Find("AgenteInvisible").GetComponent<Agent>();
- 
-        if (prota == null)
-            return new Steering();
+        targetAux = Target;
+
+        Debug.Log(agent.name);
 
         // Calculamos la dirección al objetivo.
-        Vector3 direction = prota.Position - agent.Position;
+        Vector3 direction = targetAux.Position - agent.Position;
 
         // Comprobamos que la longitud de la dirección no es cero. Si lo es, no hacemos nada.
         if (direction.magnitude == 0)
@@ -37,12 +38,9 @@ public class Face : Align
             return new Steering();
         }
 
-        // Juntamos los objetivos.
-        Target = explicitTarget;
+        Target.Orientation =  Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
 
-        float targetOrientation = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        Target.Orientation = targetOrientation;
-
+        Debug.Log(" Target Orientation "+Target.Orientation);
         // Delegamos el resultado a Align. 
         return base.GetSteering(agent);
     }

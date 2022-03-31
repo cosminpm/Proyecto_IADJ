@@ -4,18 +4,17 @@ public class Pursue : Seek
 {
     [SerializeField] public float maxPrediccion;
 
-    private GameObject prediccionGO;
     private Agent targetAux;
-    
+    private GameObject prediccionGO;
     public override void NewTarget(Agent t)
     {
         //base.NewTarget(t);
         targetAux = Target;
 
-        prediccionGO = new GameObject("AuxPursue");
-        AgentInvisible arg = prediccionGO.AddComponent<AgentInvisible>();
+        GameObject prediccionGO = new GameObject("AuxPursue");
+        AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
         prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
-        Target = arg;
+        Target = invisible;
     }
 
     void Start(){

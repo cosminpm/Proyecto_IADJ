@@ -88,7 +88,7 @@ public class Body : MonoBehaviour
         get { return _orientation; }
         set
         {
-            _orientation = value;
+            _orientation = mapToRange(value);
         }
     }
     public float MaxAngularAcceleartion
@@ -134,8 +134,22 @@ public class Body : MonoBehaviour
         return _velocity;
     }
     
-    public Vector3 OrientationToVector()
+    public Vector3 OrientationToVector(float _orientation)
     {
-        return new Vector3(Mathf.Cos(_orientation * Mathf.Deg2Rad), 0, Mathf.Sin(_orientation * Mathf.Deg2Rad));
+        return new Vector3(Mathf.Cos(_orientation * Mathf.Deg2Rad)*Mathf.Rad2Deg, 0, Mathf.Sin(_orientation * Mathf.Deg2Rad)*Mathf.Rad2Deg);
+    }
+
+    public float mapToRange(float rotation)
+    {
+        rotation %= 360;
+
+        if (Mathf.Abs(rotation) >= 180)
+        {
+            if (rotation < 0.0f)
+                rotation += 360;
+            else
+                rotation -= 360;
+        }
+        return rotation;
     }
 }

@@ -97,18 +97,4 @@ public class AgentNPC : Agent
         steer = kinematicFinal;
     }
 
-    private float mapToRange(float rotation)
-    {
-        rotation %= 360;
-
-        if (Mathf.Abs(rotation) > 180)
-        {
-            if (rotation < 0.0f)
-                rotation += 360;
-            else
-                rotation -= 360;
-        }
-
-        return rotation;
-    }
 }
