@@ -14,12 +14,25 @@ public abstract class FormationManager : MonoBehaviour
         private int slotNumber;
 
         // Creamos los getters y los setters.
-        public void SetCharacter(Agent agent) { character = agent; }
-        public Agent GetCharacter() { return character; }
+        public void SetCharacter(Agent agent)
+        {
+            character = agent;
+        }
 
-        public void SetSlotNumber(int slot) { slotNumber = slot; }
-        public int GetSlotNumber() { return slotNumber; }
+        public Agent GetCharacter()
+        {
+            return character;
+        }
 
+        public void SetSlotNumber(int slot)
+        {
+            slotNumber = slot;
+        }
+
+        public int GetSlotNumber()
+        {
+            return slotNumber;
+        }
     }
 
     // Estructura en la que almacenaremos la posición y la orientación 
@@ -30,30 +43,54 @@ public abstract class FormationManager : MonoBehaviour
         float orientation;
 
         // Creamos los getters y los setters.
-        public void SetPosition(Vector3 pos) { position = pos; }
-        public Vector3 GetPosition() { return position; }
+        public void SetPosition(Vector3 pos)
+        {
+            position = pos;
+        }
 
-        public void SetOrientation(float ori) { orientation = ori; }
-        public float GetOrientation() { return orientation; }
+        public Vector3 GetPosition()
+        {
+            return position;
+        }
+
+        public void SetOrientation(float ori)
+        {
+            orientation = ori;
+        }
+
+        public float GetOrientation()
+        {
+            return orientation;
+        }
     }
 
-    protected List<SlotAssignment> listaSlotsOcupados = new List<SlotAssignment>();
-    public List<Agent> listaAgents = new List<Agent>();
-    protected DriftOffset driftoffset;
 
-    // Variable para controlar el tiempo que falta (en frames)
-    // hasta que el líder cambie su steering a wander.
+    protected List<SlotAssignment> listaSlotsOcupados = new List<SlotAssignment>();
+    protected DriftOffset driftoffset;
     protected int timeWander = 3600;
 
     // Variable que usaremos para, cuando el líder esté
     // en Wander, controlar el tiempo restante hasta que tenga 
     // que parar.
     protected int timeToStop = 3600;
+    
+    public List<Agent> listaAgents = new List<Agent>();
+    // Variable para controlar el tiempo que falta (en frames)
+    // hasta que el líder cambie su steering a wander.
+
+    public int ModoFormacion = 0;
 
     void Start()
     {
         inicializarSlots();
-        updatesSlotsLider();
+        
+        
+        if (ModoFormacion == 0)
+            UpdatesSlotsLider();
+        else if (ModoFormacion == 1)
+        {
+            UpdateSlotsLRTA();
+        }
     }
 
     // Una vez inicializada la lista de agentes asignamos, si se puede, un slot a cada agente.
@@ -102,21 +139,22 @@ public abstract class FormationManager : MonoBehaviour
             }
 
             if (c)
-                removeCharacter(AEliminar);   
+                removeCharacter(AEliminar);
         }
     }
 
     // Asigna un personaje a un slots. Si la formación soporta el número de 
     // agentes ya asignados más uno.
-    protected bool addCharacter(Agent agent){
-
+    protected bool addCharacter(Agent agent)
+    {
         // Obtenemos el número de slots ocupados.
         int slotsOcupados = listaSlotsOcupados.Count;
 
         // Si la formación soporta un NPC más, se crea un slot, se le asigna 
         // un número de slot y el agente. Se añade este slot a la lista de slots
         // ocupados. Y por último se devuelve True.
-        if ( soportaSlots(slotsOcupados + 1) ){
+        if (soportaSlots(slotsOcupados + 1))
+        {
             SlotAssignment slot = new SlotAssignment();
             slot.SetSlotNumber(slotsOcupados);
             slot.SetCharacter(agent);
@@ -132,9 +170,9 @@ public abstract class FormationManager : MonoBehaviour
     // Actualizamos las asignaciones de cada personaje en la lista
     // de slots. Esto lo hacemos para eliminar slots intermedios vacios en las
     // formaciones.
-    protected void updateSlotAssignments(){
-
-        for( int i = 1; i < listaSlotsOcupados.Count; i++)
+    protected void updateSlotAssignments()
+    {
+        for (int i = 1; i < listaSlotsOcupados.Count; i++)
         {
             listaSlotsOcupados[i].SetSlotNumber(i);
         }
@@ -145,18 +183,23 @@ public abstract class FormationManager : MonoBehaviour
     // Recorremos la lista de slots ocupados en busca del agente
     // que se pasa como parámetro. Si se encuentra, se elimina
     // la asignación que tenga dicho agente en la lista de slots.
-    protected void removeCharacter(Agent agente){
+    protected void removeCharacter(Agent agente)
+    {
         bool encontrado = false;
-        int index = 0;    
-        foreach ( var s in listaSlotsOcupados){
-
-            if (s.GetCharacter() == agente){
+        int index = 0;
+        foreach (var s in listaSlotsOcupados)
+        {
+            if (s.GetCharacter() == agente)
+            {
                 encontrado = true;
                 break;
             }
-            index++;      
+
+            index++;
         }
-        if (encontrado){
+
+        if (encontrado)
+        {
             listaSlotsOcupados.RemoveAt(index);
             listaAgents.RemoveAt(index);
             // Actualizamos la lista de slots.
@@ -166,21 +209,22 @@ public abstract class FormationManager : MonoBehaviour
 
 
     // Devuele el agenteNPC en la formación dado su slots.
-    protected Agent getCharacterBySlotNumber(int numberSlot){
-
-        return listaSlotsOcupados[numberSlot].GetCharacter(); 
-
+    protected Agent getCharacterBySlotNumber(int numberSlot)
+    {
+        return listaSlotsOcupados[numberSlot].GetCharacter();
     }
 
     // función para obtener el personaje que esté asignado al primer 
     // slot de la formación. Es decir, el líder.
-    protected Agent getLeader(){
+    protected Agent getLeader()
+    {
         return listaSlotsOcupados[0].GetCharacter();
     }
 
+
+    protected abstract void UpdateSlotsLRTA();
     protected abstract Agent getAgentSlotLocation(int numberSlot);
     protected abstract bool soportaSlots(int numberSlot);
-    protected abstract void updatesSlotsLider();
+    protected abstract void UpdatesSlotsLider();
     protected abstract DriftOffset getDriftOffset(List<SlotAssignment> s);
-
 }

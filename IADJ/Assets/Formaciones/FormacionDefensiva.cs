@@ -59,12 +59,12 @@ public class FormacionDefensiva : FormationManager
         // Si tenemos agentes seleccionados, actualizamos la posición de los 
         // slots.
         if (listaAgents.Count > 0)
-            updatesSlotsLider();
+            UpdatesSlotsLider();
     }
 
 
     // Esta función nos servirá para actualizar la posición de los slots.
-    protected override void updatesSlotsLider()
+    protected override void UpdatesSlotsLider()
     {
         // Obtenemos el lider de la formacion.
         Agent lider = getLeader();
@@ -220,5 +220,11 @@ public class FormacionDefensiva : FormationManager
         center.SetOrientation(center.GetOrientation() / s.Count);
 
         return center;
+    }
+
+
+    protected override void UpdateSlotsLRTA()
+    {
+        throw new System.NotImplementedException();
     }
 }

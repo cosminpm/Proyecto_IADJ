@@ -73,31 +73,43 @@ public class FormacionOfensiva : FormationManager
 
         // Si tenemos agentes seleccionados, actualizamos la posición de los 
         // slots.
-        // if (listaAgents.Count > 0)
-        //     updatesSlotsLider();
 
 
+        
         if (listaAgents.Count > 0)
         {
-            if (Input.GetKeyUp(KeyCode.Alpha6))
+            if (ModoFormacion == 0)
             {
-                
-                Cell finishCell = GameObject.Find("Controlador").GetComponent<GridMap>().CheckIfCellClicked(true);
-                UpdateSlotsLrta( finishCell);
+                if (listaAgents.Count > 0)
+                    UpdatesSlotsLider();
+            }
+            else if (ModoFormacion == 1)
+            {
+                if (Input.GetKeyUp(KeyCode.Alpha6))
+                {
+                    
+                    UpdateSlotsLRTA();
+                }
             }
         }
     }
-
-    private void UpdateSlotsLrta( Cell finishCell)
+    
+    protected override void UpdateSlotsLRTA()
     {
+        Cell finishCell = GameObject.Find("Controlador").GetComponent<GridMap>().CheckIfCellClicked(true);
         for (int i = 0; i < listaSlotsOcupados.Count; i++)
         {
+            Debug.Log("CAFAWFAWFAWF");
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = false;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = false;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = true;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = true;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = true;
+            
             UpdateSlotFullLRTA(i, finishCell);
             Cell startCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().WorldToMap(listaSlotsOcupados[i].GetCharacter().transform.position);
             listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().nodos = new List<Node>();
             listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().currentPos = 0;
-
-
             Cell relativeCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>()
                 .WorldToMap(agentesInvisibles[i].Position);
             listaSlotsOcupados[i].GetCharacter().GetComponent<PathFinding>().ApplyLRTA(startCell, relativeCell, ref listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().nodos);
@@ -162,6 +174,13 @@ public class FormacionOfensiva : FormationManager
 
     private void UpdateSlotFull(int i, Agent lider)
     {
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = false;
+        
+        
         LocalizacionSlot slotLocation = GetSlotLocation(i);
         float orientacion = -lider.Orientation * Mathf.PI / 180;
 
@@ -189,11 +208,16 @@ public class FormacionOfensiva : FormationManager
 
     private void UpdateSlotNotFull(int i, Agent lider)
     {
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = false;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(lider.GetComponent<Arrive>().getTarget());
     }
 
     // Esta función nos servirá para actualizar la posición de los slots.
-    protected override void updatesSlotsLider()
+    protected override void UpdatesSlotsLider()
     {
         // Obtenemos el lider de la formaci�n
         Agent lider = getLeader();
@@ -247,6 +271,8 @@ public class FormacionOfensiva : FormationManager
     }
 
     // Devuelve la posici�n de un slot concreto dentro de la formaci�n. 
+
+
     protected override Agent getAgentSlotLocation(int slotNumber)
     {
         if (listaSlotsOcupados.Count >= slotNumber)
