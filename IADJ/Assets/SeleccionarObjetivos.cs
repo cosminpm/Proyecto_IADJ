@@ -148,13 +148,6 @@ public class SeleccionarObjetivos : MonoBehaviour
 
             if (npc.GetComponent<PathFollowing>())
                 npc.GetComponent<PathFollowing>().NewTarget(agent);
-
-            //   if (npc.GetComponent<WallAvoidance>())
-            //     npc.GetComponent<WallAvoidance>().NewTarget(agent);
-
-            // Steering Combinados
-            if (npc.GetComponent<ArbitroPonderado>())
-                npc.GetComponent<ArbitroPonderado>().NewTarget(agent);
         }
     }
 

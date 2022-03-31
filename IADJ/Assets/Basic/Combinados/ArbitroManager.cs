@@ -12,7 +12,10 @@ public abstract class ArbitroManager : MonoBehaviour {
     public void Inicializar(){
         listaBehaviours = GetComponents<SteeringBehaviour>().ToList();
     }
-    
+
+    public void UpdateList(List<SteeringBehaviour> list){
+        listaBehaviours = new List<SteeringBehaviour>(list);
+    }
     
     public abstract Steering GetSteering(Agent agent);
 }
