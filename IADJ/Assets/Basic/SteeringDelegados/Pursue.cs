@@ -11,12 +11,25 @@ public class Pursue : Seek
     {
         //base.NewTarget(t);
         targetAux = Target;
+
         prediccionGO = new GameObject("AuxPursue");
-        targetAux = prediccionGO.AddComponent<AgentInvisible>();
+        AgentInvisible arg = prediccionGO.AddComponent<AgentInvisible>();
         prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
-        Target = prediccionGO.GetComponent<AgentInvisible>();
-        Target = targetAux;
+        Target = arg;
     }
+
+    void Start(){
+        group = 2;
+
+
+        targetAux = Target;
+
+        prediccionGO = new GameObject("AuxPursue");
+        AgentInvisible arg = prediccionGO.AddComponent<AgentInvisible>();
+        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
+        Target = arg;
+    }
+
 
     public override Steering GetSteering(Agent agent)
     {

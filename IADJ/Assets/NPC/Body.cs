@@ -8,11 +8,13 @@ public class Body : MonoBehaviour
     [SerializeField] protected float _maxAcceleration = 1;
     [SerializeField] protected float _maxAngularAcc = 1;
     [SerializeField] protected float _maxForce = 1;
+    [SerializeField] protected float _speed = 5; // velocidad escalar
+    [SerializeField] Vector3 _acceleration; // aceleración lineal
+    [SerializeField] protected float _rotation;
 
-    protected Vector3 _acceleration; // aceleración lineal
     private Vector3 _velocity; // velocidad lineal
-    protected float _rotation; // velocidad angular
-    protected float _speed; // velocidad escalar
+
+    
 
     // Vamos a guardar la orientacion como angulos de 0 a 360
     [SerializeField] protected float _orientation; // 'posición' angular
@@ -57,13 +59,7 @@ public class Body : MonoBehaviour
     public float Rotation
     {
         get { return _rotation; }
-        set
-        {
-            if (Mathf.Abs(value) < 0.1)
-            {
-                _rotation = 0;
-            }
-            _rotation = value;
+        set { _rotation = value;
         }
     }
 
@@ -107,7 +103,7 @@ public class Body : MonoBehaviour
 
     public float Speed
     {
-        get { return _speed; }
+        get { return Velocity.magnitude; }
         set { _speed = value; }
     }
 

@@ -13,6 +13,16 @@ public abstract class SteeringBehaviour : MonoBehaviour
     // El peso asociado a cada steering.
     public float weight;
 
+    // El grupo al que pertenece el steering
+    public int group;
+
+    public int Group
+    {
+        set { group = value; }
+        get { return group; }
+
+    }
+
     public string NameSteering
     {
         set { nameSteering = value; }

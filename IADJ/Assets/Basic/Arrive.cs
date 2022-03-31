@@ -58,6 +58,7 @@ public class Arrive : SteeringBehaviour
         if (distance <= target.ArrivalRadius)
         {
             speedToTarget = agent.MaxSpeed * distance / target.ArrivalRadius;
+
         }
         else
         {
@@ -65,15 +66,26 @@ public class Arrive : SteeringBehaviour
             speedToTarget = agent.MaxSpeed;
         }
 
-        Vector3 velocityToTarget = Vector3.Normalize(direction) * speedToTarget;
-        steer.linear = (velocityToTarget - agent.Velocity) / timeToTarget;
+        Vector3 targetVelocity = direction;
+        targetVelocity.Normalize();
 
-        if (steer.linear.magnitude > agent.MaxSpeed)
+        targetVelocity *= speedToTarget;
+
+
+        steer.linear = targetVelocity - agent.Velocity;
+        steer.linear /= timeToTarget;
+
+
+        // Vector3 velocityToTarget = Vector3.Normalize(direction) * speedToTarget;
+        // steer.linear = (velocityToTarget - agent.Velocity) / timeToTarget;
+
+        if (steer.linear.magnitude > agent.MaxAcceleration)
         {
             steer.linear.Normalize();
-            steer.linear *= agent.MaxSpeed;
+            steer.linear *= agent.MaxAcceleration;
         }
         
+        steer.angular = 0;
         return steer;
     }
 

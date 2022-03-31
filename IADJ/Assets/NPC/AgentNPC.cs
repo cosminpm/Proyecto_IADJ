@@ -29,7 +29,7 @@ public class AgentNPC : Agent
     // Use this for initialization
     void Start()
     {
-        Velocity = Vector3.zero;
+      //  Velocity = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -40,12 +40,25 @@ public class AgentNPC : Agent
 
     private void ApplySteering()
     {
-        Velocity = steer.linear * Time.deltaTime;
-        Position += Velocity;
-        Rotation = steer.angular;
+        
 
-        Orientation += Rotation * Time.deltaTime;
-        Orientation = mapToRange(Orientation);
+        //  Velocity += steer.linear * Time.deltaTime;
+        //  Debug.Log("LA VELOCIDAAAAAAAAAAAAAAAAAAAAAD ES "+ Velocity);
+        //  Position += Velocity  * Time.deltaTime;
+        //  Rotation = steer.angular;
+
+        //  Orientation += Rotation * Time.deltaTime;
+        //  Orientation = mapToRange(Orientation);
+
+
+         
+         Position += Velocity * Time.deltaTime;
+
+         Orientation += Rotation * Time.deltaTime;
+
+         Velocity += steer.linear * Time.deltaTime;
+
+         Rotation += steer.angular * Time.deltaTime;
 
         transform.rotation = new Quaternion();
         transform.Rotate(Vector3.up, Orientation);
@@ -54,7 +67,7 @@ public class AgentNPC : Agent
     public virtual void LateUpdate()
     {
         // Reseteamos el steering final.
-        //   steer = new Steering();
+        steer = new Steering();
 
         
        
