@@ -153,7 +153,7 @@ public abstract class FormationManager : MonoBehaviour
         // Si la formación soporta un NPC más, se crea un slot, se le asigna 
         // un número de slot y el agente. Se añade este slot a la lista de slots
         // ocupados. Y por último se devuelve True.
-        if (soportaSlots(slotsOcupados + 1))
+        if (AllowsSlots(slotsOcupados + 1))
         {
             SlotAssignment slot = new SlotAssignment();
             slot.SetSlotNumber(slotsOcupados);
@@ -224,7 +224,9 @@ public abstract class FormationManager : MonoBehaviour
 
     protected abstract void UpdateSlotsLRTA();
     protected abstract Agent getAgentSlotLocation(int numberSlot);
-    protected abstract bool soportaSlots(int numberSlot);
+    
+    // TODO: Comentarlo en la memoria
+    protected abstract bool AllowsSlots(int numberSlot);
     protected abstract void UpdatesSlotsLider();
     protected abstract DriftOffset getDriftOffset(List<SlotAssignment> s);
 }

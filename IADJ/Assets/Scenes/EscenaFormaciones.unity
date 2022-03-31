@@ -3261,7 +3261,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1149223861}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 999b44ae425cf0f469df2dec694049c6, type: 3}
   m_Name: 
@@ -3278,14 +3278,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1149223861}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 836316fb81869aa4d8bbe4314a0f5c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   listaAgents: []
-  ModoFormacion: 0
-  distanciaSeparacion: 2
+  ModoFormacion: 1
+  distanciaSeparacion: 8
   radioExteriorInvisible: 8
   radioInteriorInvisible: 4
 --- !u!4 &1149223864

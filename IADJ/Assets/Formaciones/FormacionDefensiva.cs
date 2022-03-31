@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Grid;
+using Pathfinding;
 using UnityEngine;
 
 public class FormacionDefensiva : FormationManager
@@ -51,6 +53,7 @@ public class FormacionDefensiva : FormationManager
 
     void Update()
     {
+        
         // Volvemos a asignar los personajes a los slots en cada frame.
         // Esto lo hacemos por si se seleecionan nuevos personajes
         // en tiempo de ejecución.
@@ -59,16 +62,25 @@ public class FormacionDefensiva : FormationManager
         // Si tenemos agentes seleccionados, actualizamos la posición de los 
         // slots.
         if (listaAgents.Count > 0)
-            UpdatesSlotsLider();
+        {
+            if (ModoFormacion == 0)
+            {
+                if (listaAgents.Count > 0)
+                    UpdatesSlotsLider();
+            }
+            else if (ModoFormacion == 1)
+            {
+                if (Input.GetKeyUp(KeyCode.Alpha6))
+                {
+                    UpdateSlotsLRTA();
+                }
+            }
+        }
     }
 
-
-    // Esta función nos servirá para actualizar la posición de los slots.
-    protected override void UpdatesSlotsLider()
+    
+    private void CheckAndUpdateToWander(Agent lider)
     {
-        // Obtenemos el lider de la formacion.
-        Agent lider = getLeader();
-
         // Si el líder está quieto, descontamos frames para que
         // pase a estado Wander.
         if (lider.Velocity.magnitude < 1)
@@ -76,7 +88,7 @@ public class FormacionDefensiva : FormationManager
 
         // Si el líder está en estado Wander, restamos un 
         // frame para que se detenga.
-        if (lider.GetComponent<Wander>().enabled == true && timeWander <= 0)
+        if (lider.GetComponent<Wander>().enabled && timeWander <= 0)
             timeToStop--;
 
         // Si hemos llegado a 0 y hay un target activo, eliminamos el 
@@ -102,6 +114,7 @@ public class FormacionDefensiva : FormationManager
             {
                 lider.GetComponent<Arrive>().enabled = true;
                 lider.GetComponent<Face>().enabled = true;
+
                 timeWander = 3600;
             }
 
@@ -110,37 +123,66 @@ public class FormacionDefensiva : FormationManager
 
             timeToStop = 3600;
         }
+    }
 
-        // Si todos los slots están ocupados...
-        if (listaAgents.Count == maxSlots)
+    
+    private void UpdateSlotNotFull(int i, Agent lider)
+    {
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(lider.GetComponent<Arrive>().getTarget());
+    }
+    
+    
+    private void UpdateSlotFull(int i, Agent lider)
+    {
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = false;
+        
+        LocalizacionSlot aux = GetSlotLocation(i);
+        float orientacion = lider.Orientation * Mathf.PI / 180;
+        Vector3 position = new Vector3((-Mathf.Sin(orientacion) * aux.GetPosicion().z - Mathf.Cos(orientacion) * aux.GetPosicion().x), 0,
+            (Mathf.Sin(orientacion) * aux.GetPosicion().x - Mathf.Cos(orientacion) * aux.GetPosicion().z));
+        agentesInvisibles[i].Orientation = lider.Orientation + aux.GetOrientacion() - driftoffset.GetOrientation();
+        // Arrive to relative position.
+        agentesInvisibles[i].Position = position + lider.Position - driftoffset.GetPosition();
+
+        listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(agentesInvisibles[i]);
+
+        // Si el NPC no está en movimiento, se alinea con la orientación de su slot.
+                
+        if (listaSlotsOcupados[i].GetCharacter().Velocity.magnitude == 0)
+        {
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().NewTarget(agentesInvisibles[i]);
+        }
+
+        // Si lo está, se alineará con la orientación del líder.
+        else
+        {
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().NewTarget(lider);
+        }
+    }
+    
+    
+    protected override void UpdatesSlotsLider()
+    {
+        // Obtenemos el lider de la formaci�n
+        Agent lider = getLeader();
+        CheckAndUpdateToWander(lider);
+
+        // Si todos los slots estan asignados
+        if (listaSlotsOcupados.Count == maxSlots)
         {
             // Para cada slot, le asignamos su posición y orientación 
             // correspondientes en la formación.
             for (int i = 1; i < listaSlotsOcupados.Count; i++)
-            {
-                LocalizacionSlot aux = getSlotLocation(i);
-                float orientacion = lider.Orientation * Mathf.PI / 180;
-                Vector3 position = new Vector3((-Mathf.Sin(orientacion) * aux.GetPosicion().z - Mathf.Cos(orientacion) * aux.GetPosicion().x), 0,
-                                               (Mathf.Sin(orientacion) * aux.GetPosicion().x - Mathf.Cos(orientacion) * aux.GetPosicion().z));
-                agentesInvisibles[i].Orientation = lider.Orientation + aux.GetOrientacion() - driftoffset.GetOrientation();
-                // Arrive to relative position.
-                agentesInvisibles[i].Position = position + lider.Position - driftoffset.GetPosition();
-
-                listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(agentesInvisibles[i]);
-
-                // Si el NPC no está en movimiento, se alinea con la orientación de su slot.
-                
-                if (listaSlotsOcupados[i].GetCharacter().Velocity.magnitude == 0)
-                {
-                    listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().NewTarget(agentesInvisibles[i]);
-                }
-
-                // Si lo está, se alineará con la orientación del líder.
-                else
-                {
-                    listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().NewTarget(lider);
-                }
-            }
+                UpdateSlotFull(i, lider);
         }
 
         // Si todos los slots no están ocupados, hacemos que cada personaje de la formación
@@ -148,14 +190,81 @@ public class FormacionDefensiva : FormationManager
         else
         {
             for (int i = 1; i < listaSlotsOcupados.Count; i++)
-            {
-                listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(lider.GetComponent<Arrive>().getTarget());
-            }
+                UpdateSlotNotFull(i, lider);
         }
     }
 
+    // Devuelve la posici�n de un slot concreto dentro de la formaci�n. 
+    protected override Agent getAgentSlotLocation(int slotNumber)
+    {
+
+        if (listaSlotsOcupados.Count >= slotNumber)
+        {
+            Agent agente = getCharacterBySlotNumber(slotNumber);
+            return agente;
+        }
+
+        return null;
+    }
+
+    // Devuelve true si quedan slots libres en la formaci�n
+    protected override bool AllowsSlots(int slotNumber)
+    {
+        return maxSlots >= slotNumber;
+    }
+
+    // Devolvemos el DriftOffset de la formaci�n.
+    protected override DriftOffset getDriftOffset(List<SlotAssignment> s)
+    {
+        // Declaramos el centro de masa.
+        DriftOffset center = new DriftOffset();
+
+        // Recorremos cada asignaci�n y a�adimos su contribuci�n al centro.
+        foreach (SlotAssignment sa in s)
+        {
+            LocalizacionSlot ls = GetSlotLocation(sa.GetSlotNumber());
+            center.SetPosition(center.GetPosition() + ls.GetPosicion());
+            center.SetOrientation(center.GetOrientation() + ls.GetOrientacion());
+        }
+
+        // Dividimos entre el n�mero de asiganciones.
+        center.SetPosition(center.GetPosition() / s.Count);
+        center.SetOrientation(center.GetOrientation() / s.Count);
+
+        return center;
+    }
+
+
+    protected override void UpdateSlotsLRTA()
+    {
+        Cell finishCell = GameObject.Find("Controlador").GetComponent<GridMap>().CheckIfCellClicked(true);
+        for (int i = 0; i < listaSlotsOcupados.Count; i++)
+        {
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = false;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = false;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = true;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = true;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = true;
+            
+            UpdateSlotFullLRTA(i, finishCell);
+            Cell startCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().WorldToMap(listaSlotsOcupados[i].GetCharacter().transform.position);
+            listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().nodos = new List<Node>();
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().currentPos = 0;
+            Cell relativeCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>()
+                .WorldToMap(agentesInvisibles[i].Position);
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFinding>().ApplyLRTA(startCell, relativeCell, ref listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().nodos);
+        }
+    }
+    
+    private void UpdateSlotFullLRTA(int i, Cell cellTarget)
+    {
+        LocalizacionSlot slotLocation = GetSlotLocation(i);
+        agentesInvisibles[i].Orientation = slotLocation.GetOrientacion() - driftoffset.GetOrientation();
+        agentesInvisibles[i].Position = cellTarget.GetCenter() + slotLocation.GetPosicion() - driftoffset.GetPosition();
+    }
+    
     // Función para calcular la posición del slot de acuerdo a la formación.
-    public LocalizacionSlot getSlotLocation(int slotNumber)
+    public LocalizacionSlot GetSlotLocation(int slotNumber)
     {
         // Creamos una instancia de LocalizacionSlot (tupla posición-orientación).
         LocalizacionSlot ls = new LocalizacionSlot();
@@ -181,50 +290,5 @@ public class FormacionDefensiva : FormationManager
 
         return ls;
     }
-
-    // Devuelve la posici�n de un slot concreto dentro de la formaci�n. 
-    protected override Agent getAgentSlotLocation(int slotNumber)
-    {
-
-        if (listaSlotsOcupados.Count >= slotNumber)
-        {
-            Agent agente = getCharacterBySlotNumber(slotNumber);
-            return agente;
-        }
-
-        return null;
-    }
-
-    // Devuelve true si quedan slots libres en la formaci�n
-    protected override bool soportaSlots(int slotNumber)
-    {
-        return maxSlots >= slotNumber;
-    }
-
-    // Devolvemos el DriftOffset de la formaci�n.
-    protected override DriftOffset getDriftOffset(List<SlotAssignment> s)
-    {
-        // Declaramos el centro de masa.
-        DriftOffset center = new DriftOffset();
-
-        // Recorremos cada asignaci�n y a�adimos su contribuci�n al centro.
-        foreach (SlotAssignment sa in s)
-        {
-            LocalizacionSlot ls = getSlotLocation(sa.GetSlotNumber());
-            center.SetPosition(center.GetPosition() + ls.GetPosicion());
-            center.SetOrientation(center.GetOrientation() + ls.GetOrientacion());
-        }
-
-        // Dividimos entre el n�mero de asiganciones.
-        center.SetPosition(center.GetPosition() / s.Count);
-        center.SetOrientation(center.GetOrientation() / s.Count);
-
-        return center;
-    }
-
-
-    protected override void UpdateSlotsLRTA()
-    {
-        throw new System.NotImplementedException();
-    }
+    
 }

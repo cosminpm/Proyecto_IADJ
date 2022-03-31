@@ -73,9 +73,6 @@ public class FormacionOfensiva : FormationManager
 
         // Si tenemos agentes seleccionados, actualizamos la posición de los 
         // slots.
-
-
-        
         if (listaAgents.Count > 0)
         {
             if (ModoFormacion == 0)
@@ -87,7 +84,6 @@ public class FormacionOfensiva : FormationManager
             {
                 if (Input.GetKeyUp(KeyCode.Alpha6))
                 {
-                    
                     UpdateSlotsLRTA();
                 }
             }
@@ -99,7 +95,6 @@ public class FormacionOfensiva : FormationManager
         Cell finishCell = GameObject.Find("Controlador").GetComponent<GridMap>().CheckIfCellClicked(true);
         for (int i = 0; i < listaSlotsOcupados.Count; i++)
         {
-            Debug.Log("CAFAWFAWFAWF");
             listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = false;
             listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = false;
             listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = true;
@@ -285,7 +280,7 @@ public class FormacionOfensiva : FormationManager
     }
 
     // Devuelve true si quedan slots libres en la formaci�n
-    protected override bool soportaSlots(int slotNumber)
+    protected override bool AllowsSlots(int slotNumber)
     {
         return maxSlots >= slotNumber;
     }
