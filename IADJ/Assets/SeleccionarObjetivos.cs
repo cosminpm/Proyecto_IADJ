@@ -146,8 +146,8 @@ public class SeleccionarObjetivos : MonoBehaviour
             if (npc.GetComponent<Face>())
                 npc.GetComponent<Face>().NewTarget(agent);
 
-            if (npc.GetComponent<PathFollowing>())
-                npc.GetComponent<PathFollowing>().NewTarget(agent);
+            if (npc.GetComponent<PathFollowingCell>())
+                npc.GetComponent<PathFollowingCell>().NewTarget(agent);
         }
     }
 

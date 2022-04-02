@@ -98,16 +98,22 @@ public class FormacionOfensiva : FormationManager
             listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = false;
             listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = false;
             listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = true;
-            listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = true;
-            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = true;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().enabled = true;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().enabled = true;
             
             UpdateSlotFullLRTA(i, finishCell);
             Cell startCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().WorldToMap(listaSlotsOcupados[i].GetCharacter().transform.position);
-            listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().nodos = new List<Node>();
-            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().currentPos = 0;
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().nodos = new List<Node>();
+
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().currentPos = 0;
             Cell relativeCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>()
                 .WorldToMap(agentesInvisibles[i].Position);
-            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFinding>().ApplyLRTA(startCell, relativeCell, ref listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().nodos);
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFinding>().ApplyLRTA(startCell, relativeCell, ref listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().nodos);
+
+
+
+
+
         }
     }
 
@@ -172,8 +178,8 @@ public class FormacionOfensiva : FormationManager
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().enabled = false;
         
         
         LocalizacionSlot slotLocation = GetSlotLocation(i);
@@ -206,8 +212,8 @@ public class FormacionOfensiva : FormationManager
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<Path>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowing>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().enabled = false;
+        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().enabled = false;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(lider.GetComponent<Arrive>().getTarget());
     }
 

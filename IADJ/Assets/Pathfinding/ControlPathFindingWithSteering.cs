@@ -11,8 +11,8 @@ namespace Pathfinding
 {
     public class ControlPathFindingWithSteering : MonoBehaviour
     {
-        private Path _path;
-        private PathFollowing _pathFollowing;
+        private PathCell _path;
+        private PathFollowingCell _pathFollowing;
         private PathFinding _pathFinding;
         GridMap gridMap;
 
@@ -24,13 +24,13 @@ namespace Pathfinding
         public void Start()
         {
             _pathFinding = gameObject.AddComponent<PathFinding>();
-            _pathFollowing = gameObject.AddComponent<PathFollowing>();
+            _pathFollowing = gameObject.AddComponent<PathFollowingCell>();
             GetComponent<AgentNPC>().listSteerings.Add(_pathFollowing);
 
 
             _pathFollowing.weight = 1;
 
-            _pathFollowing.path = gameObject.AddComponent<Path>();
+            _pathFollowing.path = gameObject.AddComponent<PathCell>();
             _path = _pathFollowing.path;
 
             _path.nodos = new List<Node>();

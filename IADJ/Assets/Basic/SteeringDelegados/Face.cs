@@ -23,7 +23,8 @@ public class Face : Align
         {
             return new Steering();
         }
-      //  targetAux = Target;
+         
+        targetAux = Target;
 
         // Calculamos la dirección al objetivo.
         Vector3 direction = targetAux.Position - agent.Position;
