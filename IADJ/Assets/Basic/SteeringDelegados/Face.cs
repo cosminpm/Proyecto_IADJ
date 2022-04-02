@@ -19,13 +19,20 @@ public class Face : Align
 
     public override Steering GetSteering(Agent agent)
     {
+
+        if ( targetAux == null)
+        {
+           GameObject go = new GameObject("FaceTarget");
+           Agent auxTarget = go.AddComponent<AgentInvisible>();
+           auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
+           targetAux = auxTarget; 
+        }
+
         if ( targetAux == null && Target == null)
         {
             return new Steering();
         }
          
-        targetAux = Target;
-
         // Calculamos la dirección al objetivo.
         Vector3 direction = targetAux.Position - agent.Position;
 
