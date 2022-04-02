@@ -58,9 +58,9 @@ public class Flee : SteeringBehaviour
         }
         
         // Se normaliza y se multiplica por la maxima aceleracion del agente
-        Vector3 vVelocidad = Vector3.Normalize(direccion) * agent.MaxSpeed;
+        Vector3 Velocidad = Vector3.Normalize(direccion) * agent.MaxAcceleration;
 
-        steer.linear = vVelocidad;
+        steer.linear = Velocidad;
         steer.angular = 0;
 
         return steer;

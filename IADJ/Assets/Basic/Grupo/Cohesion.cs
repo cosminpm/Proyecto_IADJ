@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Vector3 = UnityEngine.Vector3;
 
-public class Cohesion: Align
+public class Cohesion: Arrive
 {
     
 
@@ -15,11 +15,16 @@ public class Cohesion: Align
     // Holds the threshold to take action
     [SerializeField] public float threshold = 0f;
 
-    // Por ahora esto funciona
-    public virtual void NewTarget(Agent t)
-    {
-        
+    private Agent targetAux;
+
+    void Start(){
+        targetAux = Target;
+        GameObject prediccionGO = new GameObject("AuxCohesion");
+        AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
+        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = false;
+        Target = invisible;
     }
+
 
     public override Steering GetSteering(Agent agent)
     {
@@ -27,28 +32,27 @@ public class Cohesion: Align
 
         int count = 0;
         Vector3 centerOfMass = Vector3.zero;
-        float distance;
-        Vector3 direction;
+        float distance = 0;
+        Vector3 direction = Vector3.zero;
 
-        foreach(var target in targets)
+        foreach(var t in targets)
         {
-            direction = target.Position - agent.Position;
+
+            direction = t.Position - agent.Position;
             distance = Mathf.Abs(direction.magnitude);
 
-            if ( distance > threshold) continue;
-
-            centerOfMass += target.Position;
-            count++;
+            if ( distance > threshold)
+            {
+                centerOfMass += t.Position;
+                count++;
+            }
         }
 
-        if ( count == 0)
-        {
-            Steering steering = new Steering();
-            return steering;
-        }
-            
+        if ( count == 0) 
+            return steer;
+         
         centerOfMass /= count;
-       // this.Target.Position = centerOfMass;
+        Target.Position = centerOfMass;
 
         return base.GetSteering(agent);
     }

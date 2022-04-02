@@ -34,7 +34,7 @@ public class ArbitroPrioritarioDinamico: ArbitroManager {
         // Recorro la lista de steerings del agente, añadiendolos a los grupos que pertenece
         foreach(var steer in listaBehaviours){
 
-            switch (steer.Group)
+            switch ((int) steer.group)
             {
             case 0:
                 colision.Add(steer);

@@ -11,13 +11,14 @@ public class WallAvoidance : Seek
     [SerializeField] public float avoidDistance = 8f; 
     [SerializeField] public float lookAhead = 5f;
     [SerializeField] public float lookAheadCentral = 8f;
-    [SerializeField] public int numBigotes = 1;
+    [SerializeField] public int numBigotes = 3;
 
     [Tooltip("Debug")] [SerializeField]  
     protected bool _drawGizmos;
     [SerializeField] private float _anchuraLinea = 1.5f;
     [SerializeField] private float anguloBigotes = 25f;
 
+    [SerializeField] public float AnguloLimiteBigotes = 180f;
 
     // lista de bigotes
     private List<Vector3> listaBigotes;
@@ -32,51 +33,11 @@ public class WallAvoidance : Seek
         auxTarget.ArrivalRadius = 1f;
         auxTarget.InteriorRadius = 1f;
         listaBigotes = new List<Vector3>();
+
+        group = 0;
     }
 
     public override Steering GetSteering (Agent agent){
-        
-
-
-        // Construimos los bigotes
-        Vector3 bigCentral = agent.Velocity.normalized;
-        Vector3 bigIzquierdo = Quaternion.Euler(0,-anguloBigotes,0) * agent.Velocity.normalized;
-        Vector3 bigDerecho = Quaternion.Euler(0,anguloBigotes,0) * agent.Velocity.normalized;
-
-        RaycastHit hitCent,hitIzq,hitDer;
-
-        // Detectamos las posibles colisiones. Para la posible trampa de la esquina en una posible colisión, le damos prioridad al bigote central.
-        
-        // Colisión frontal
-
-        if (Physics.Raycast(agent.Position, bigCentral, out hitCent, lookAheadCentral))
-        {
-         
-            auxTarget.Position = hitCent.point + hitCent.normal * avoidDistance;
-            this.target = auxTarget;
-            return base.GetSteering(agent);
-            
-        } else if (Physics.Raycast(agent.Position, bigIzquierdo, out hitIzq, lookAhead)) { // Colision bigote izquierdo
-
-            auxTarget.Position = hitIzq.point + hitIzq.normal * avoidDistance;
-            this.target = auxTarget;
-            return base.GetSteering(agent);
-            
-        } else if (Physics.Raycast(agent.Position, bigDerecho, out hitDer, lookAhead)) { // Colision bigote derecho
-
-            auxTarget.Position = hitDer.point + hitDer.normal * avoidDistance;
-            this.target = auxTarget;
-            return base.GetSteering(agent);
-
-        }
-
-
-        //return base.GetSteering(agent);
-        
-        return new Steering();
-    }
-
-    public  Steering GetSteeringss (Agent agent){
         
         listaBigotes.Clear();
         Steering steer = new Steering();
@@ -101,28 +62,39 @@ public class WallAvoidance : Seek
 
         Vector3 bigote;
         int aux = -1;
-       
+        int index = 0;
+
         if ( numBigotes == 1){
             bigote = agent.Velocity.normalized;
             listaBigotes.Add(bigote);
+
         } else {
             // Si es impar tiene el bigotecentral
             if ( numBigotes % 2 != 0) {
                 bigote = agent.Velocity.normalized;
                 listaBigotes.Add(bigote);
-            } else {
-                int contador = 0;
-                for ( int i = 0 ; i < numBigotes ; i++){
-                //    bigote = Quaternion.Euler(0,-anguloBigotes*aux,0) * agent.Velocity.normalized;
-                    bigote = Quaternion.AngleAxis(-anguloBigotes*aux, Vector3.up) * agent.Velocity.normalized;
-                    listaBigotes.Add(bigote);
-                    contador++;
 
-                    if ( contador == 2){
-                        aux *= 2;
-                        contador = 0;
-                    }
+                index++;
+            }
+            int contador = 0;
+            for ( int i = index ; i < numBigotes ; i++){
+                bigote = Quaternion.AngleAxis(-anguloBigotes*aux, Vector3.up) * agent.Velocity.normalized;
+                listaBigotes.Add(bigote);
+                contador++;
+                aux *= -1;
+
+                if ( contador == 2){
+                    aux *= 2;
+                    contador = 0;
                 }
+
+                if ( Mathf.Abs(anguloBigotes)*Mathf.Abs(aux) >= AnguloLimiteBigotes)
+                {
+                    numBigotes = listaBigotes.Count;
+                    break;
+                }
+                    
+                
             }
         }
     }
@@ -130,11 +102,16 @@ public class WallAvoidance : Seek
     private Steering DetectarColision(Agent agent)
     {
         RaycastHit hit;
+        Vector3 positionFinal = Vector3.zero;
+
         // Siempre daremos preferencia al bigote central.
         if (Physics.Raycast(agent.Position, listaBigotes[0], out hit, lookAheadCentral+lookAhead)) 
         {
-            auxTarget.Position = hit.point + hit.normal * avoidDistance;
-            this.target = auxTarget;
+            positionFinal =  hit.point + hit.normal * avoidDistance;
+            positionFinal.y = 0;
+
+            auxTarget.Position = positionFinal;
+            Target = auxTarget;
             return base.GetSteering(agent);
 
         } else {
@@ -143,8 +120,11 @@ public class WallAvoidance : Seek
             {
                 if (Physics.Raycast(agent.Position, listaBigotes[i], out hit, lookAhead))
                 {
-                    auxTarget.Position = hit.point + hit.normal * avoidDistance;
-                    this.target = auxTarget;
+                    positionFinal = hit.point + hit.normal * avoidDistance;
+                    positionFinal.y = 0;
+
+                    auxTarget.Position = positionFinal;
+                    Target = auxTarget;
                     return base.GetSteering(agent);
                 }
             }
@@ -179,25 +159,25 @@ public class WallAvoidance : Seek
 
     public void OnDrawGizmos()
     {
-        if (_drawGizmos) {
-            Vector3 position = transform.position;
-            Vector3 forward = transform.forward;
-            if (numBigotes == 1){
-                // Bigote Central
-                Handles.color = Color.red;
-                Handles.DrawLine(position, position + forward * lookAheadCentral,_anchuraLinea);
-            } else {
-                // Si es impar tiene el bigotecentral
-                if ( numBigotes % 2 != 0){
+            if (_drawGizmos) {
+                Vector3 position = transform.position;
+                Vector3 forward = transform.forward;
+                if (numBigotes == 1){
+                    // Bigote Central
                     Handles.color = Color.red;
                     Handles.DrawLine(position, position + forward * lookAheadCentral,_anchuraLinea);
-                    GizmosBigotes(numBigotes-1);
                 } else {
-                    GizmosBigotes(numBigotes);
+                    // Si es impar tiene el bigotecentral
+                    if ( numBigotes % 2 != 0){
+                        Handles.color = Color.red;
+                        Handles.DrawLine(position, position + forward * lookAheadCentral,_anchuraLinea);
+                        GizmosBigotes(numBigotes-1);
+                    } else {
+                        GizmosBigotes(numBigotes);
+                    }
+
                 }
 
             }
-
-        }
     }
 }

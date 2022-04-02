@@ -13,8 +13,9 @@ public class Interpose : Arrive {
         GameObject go = new GameObject("auxInterpose");
         Agent auxTarget = go.AddComponent<AgentInvisible>();
         auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
-
+        auxTarget.Position = Vector3.zero;
         // Refactoring: nombre del atributo target ?
+       
         Target = auxTarget;
     }
 
@@ -32,6 +33,8 @@ public class Interpose : Arrive {
         // Calculamos la mitad entre los dos agentes
         Vector3 midPoint = (agentA.Position + agentB.Position) / 2;
 
+        Debug.Log(midPoint);
+
         // Calculamos el tiempo que se tarda en ir al punto medio
         Vector3 direction = midPoint - agent.Position;
         float distance = direction.magnitude;
@@ -45,8 +48,11 @@ public class Interpose : Arrive {
         midPoint = ( aPos+bPos)/2;
 
         // Asignamos al allign su nuevo target.
+        
         Target.Position = midPoint;
 
+        Debug.Log("La posicion del target es "+ Target.Position);
+         
         return base.GetSteering(agent);
     }
 }

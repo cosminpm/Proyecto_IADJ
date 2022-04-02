@@ -65,8 +65,9 @@ public class Hide : Arrive {
         if ( minDist == offSetDistance ) // No se ha encontrado ningun sitio para esconderse
         {   
             // TODO: Aqui se suponde que debe hacer un FACE?
+            Evade steerFace = this.gameObject.GetComponent<Evade>();
             Debug.Log("No hay sitio donde esconderse");
-            return steer;
+            return steerFace.GetSteering(agent);
         }
         else {
             Target.Position = bestHidingSpot;

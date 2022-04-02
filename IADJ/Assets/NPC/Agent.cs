@@ -42,6 +42,11 @@ public abstract class Agent : Body
             return _exteriorAngle;
         }
 
+        set
+        {
+            _exteriorAngle = value;
+        }
+
     }
 
     public float InteriorAngle
@@ -53,6 +58,11 @@ public abstract class Agent : Body
             if (_interiorAngle > _exteriorAngle)
                 _exteriorAngle = _interiorAngle;
             return _interiorAngle;
+        }
+
+        set
+        {
+            _interiorAngle = value;
         }
 
     }

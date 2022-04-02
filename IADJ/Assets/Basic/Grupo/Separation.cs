@@ -19,34 +19,29 @@ public class Separation: SteeringBehaviour
     [SerializeField] public float coefficientK = 1f;
 
     // Holds the maximun acceleration of the character
-    [SerializeField] public float maxAcceleration;
  
-    // Por ahora esto funciona
-    public virtual void NewTarget(Agent t)
-    {
-        
-    }
 
     public override Steering GetSteering(Agent agent)
     {
         Steering steer = new Steering();
 
-        Vector3 direction;
-        float distance;
-        float strength;
+        Vector3 direction = Vector3.zero;
+        float distance = 0;
+        float strength = 0;
 
         // Loop through each target
         foreach(var target in targets){
 
                 // check if the target is close
-                direction = target.Position - agent.Position;
+                direction = agent.Position - target.Position;
                 distance = direction.magnitude;
 
                 if (distance < threshold)
                 {
                     // Calculate the strengh of repulsion
                     strength = Mathf.Min(coefficientK/(distance*distance), agent.MaxAcceleration);
-                    steer.linear += strength * direction.normalized;
+                    direction.Normalize();
+                    steer.linear += strength * direction;
                 }
         }
         return steer;

@@ -13,20 +13,15 @@ public class Pursue : Seek
 
         GameObject prediccionGO = new GameObject("AuxPursue");
         AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
-        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
         Target = invisible;
     }
 
     void Start(){
-        group = 2;
-
-
         targetAux = Target;
-
         prediccionGO = new GameObject("AuxPursue");
-        AgentInvisible arg = prediccionGO.AddComponent<AgentInvisible>();
+        AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
         prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
-        Target = arg;
+        Target = invisible;
     }
 
 
@@ -62,7 +57,6 @@ public class Pursue : Seek
         }
         Target.Position = targetAux.Position;
         Target.Position += targetAux.Velocity * prediccion;
-        prediccionGO.transform.position = Target.Position;
         
         return base.GetSteering(agent);
     }

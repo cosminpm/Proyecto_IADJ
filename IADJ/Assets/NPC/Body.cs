@@ -3,12 +3,12 @@ using UnityEngine;
 public class Body : MonoBehaviour
 {
     [SerializeField] protected float _mass = 1;
-    [SerializeField] protected float _maxSpeed = 3;
+    [SerializeField] protected float _maxSpeed = 15;
     [SerializeField] protected float _maxRotation = 180;
-    [SerializeField] protected float _maxAcceleration = 1;
-    [SerializeField] protected float _maxAngularAcc = 1;
+    [SerializeField] protected float _maxAcceleration = 10;
+    [SerializeField] protected float _maxAngularAcc = 25;
     [SerializeField] protected float _maxForce = 1;
-    [SerializeField] protected float _speed = 5; // velocidad escalar
+    [SerializeField] protected float _speed = 0; // velocidad escalar
     [SerializeField] Vector3 _acceleration; // aceleración lineal
     [SerializeField] protected float _rotation;
 

@@ -5,15 +5,15 @@ public class Face : Align
 {
     private Agent targetAux;
 
-    void Start()
+    void Awake()
     {
         targetAux = Target;
         GameObject prediccionGO = new GameObject("AuxFace");
         AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
-        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
+        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = false;
+        invisible.InteriorAngle = targetAux.InteriorAngle;
+        invisible.ExteriorAngle = targetAux.ExteriorAngle;
         Target = invisible;
-
-        group = 2;
     }
 
 
@@ -21,13 +21,9 @@ public class Face : Align
     {
         if ( targetAux == null && Target == null)
         {
-            Debug.Log("JAJAJAJA");
             return new Steering();
         }
-
-        targetAux = Target;
-
-        Debug.Log(agent.name);
+      //  targetAux = Target;
 
         // Calculamos la dirección al objetivo.
         Vector3 direction = targetAux.Position - agent.Position;
@@ -40,8 +36,9 @@ public class Face : Align
 
         Target.Orientation =  Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
 
-        Debug.Log(" Target Orientation "+Target.Orientation);
         // Delegamos el resultado a Align. 
         return base.GetSteering(agent);
     }
+
+    
 }

@@ -55,6 +55,8 @@ public class CollisionAvoidance : SteeringBehaviour {
         float distance = 0;
         float minSeparation = 0;
 
+        
+
         foreach (var target in targets)
         {
             // Calculamos el tiempo de colisión
@@ -62,7 +64,7 @@ public class CollisionAvoidance : SteeringBehaviour {
             relativeVel = target.Velocity - agent.Velocity;
             relativeSpeed = relativeVel.magnitude;
             dot = Vector3.Dot(relativePos,relativeVel);
-            timeToCollision = dot/Mathf.Pow(relativeVel.magnitude,2);
+            timeToCollision = -(dot/(relativeSpeed * relativeSpeed));
 
             distance = relativePos.magnitude;
 
@@ -70,12 +72,14 @@ public class CollisionAvoidance : SteeringBehaviour {
             minSeparation = distance-relativeSpeed*timeToCollision;
 
              // Comprobamos si el agente no va a colisonar
-            if (minSeparation > 2*radius) 
+            if (minSeparation > 2*radius) {
                  continue;
+
+            }
             
             // Comprobamos si el tiempo de colisión es inferior al tiempo de las demás colisiones
             if (timeToCollision > 0 && timeToCollision < shortestTime){
-                
+
                 shortestTime = timeToCollision;
                 firstTarget = target;
                 firstMinSeparation = minSeparation;
@@ -88,13 +92,17 @@ public class CollisionAvoidance : SteeringBehaviour {
         // Cálculo del steering
 
         // Comprobamos si no hay ninguna colision
-        if ( firstTarget == null) 
+        if ( firstTarget == null){
+            Debug.Log("No hay ninguna colisión ");
             return steering;
+        }
       
         // Si vamos a chocar o estamos colisionando
         if ( firstMinSeparation <= 0 || firstDistance < 2*radius){
-            relativePos = firstTarget.Position - agent.Position;
+            Debug.Log("Estamos cHOCANDO!! ");
+            relativePos = firstTarget.Position;
         } else {
+            Debug.Log("Vamos a colisionar maamahuevo ");
             relativePos = firstRelativePos + firstRelativeVel * shortestTime;
         }
 

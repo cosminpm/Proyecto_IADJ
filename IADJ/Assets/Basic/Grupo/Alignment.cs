@@ -5,19 +5,26 @@ using UnityEngine;
 
 using Vector3 = UnityEngine.Vector3;
 
-public class Alignment: Seek
+public class Alignment: Align
 {
     
     // Holds a list of potential targets
     [SerializeField] public List<Agent> targets;
  
     // Holds the threshold to take action
-    [SerializeField] public float threshold = 0f;
+    [SerializeField] public float threshold = 10f;
 
+    private Agent targetAux;
     // Por ahora esto funciona
-    public virtual void NewTarget(Agent t)
+    void Start()
     {
-        
+        targetAux = Target;
+        GameObject prediccionGO = new GameObject("AuxAlignment");
+        AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
+        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = false;
+        // invisible.InteriorAngle = targetAux.InteriorAngle;
+        // invisible.ExteriorAngle = targetAux.ExteriorAngle;
+        Target = invisible;
     }
 
     public override Steering GetSteering(Agent agent)
@@ -25,7 +32,7 @@ public class Alignment: Seek
         Steering steer = new Steering();
 
         int count = 0;
-        float heading = 0f;
+        float heading = 0;
         float distance;
         Vector3 direction;
 
@@ -40,13 +47,13 @@ public class Alignment: Seek
             count++;
         }
 
-        if ( count > 0)
-        {
-            heading /= count;
-          //  heading = heading - agent.Position;
-        }
+        if ( count == 0) return steer;
+        
 
-        this.Target.Orientation = heading;
+        heading /= count;
+        Target.Orientation = heading;
+
         return base.GetSteering(agent);
+
     }
 }

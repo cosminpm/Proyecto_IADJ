@@ -10,8 +10,6 @@ public class Align : SteeringBehaviour
     private float maxRotation;
     private float maxAngularAcceleration;
 
-
-
     protected Agent Target
     {
         get => target;
@@ -22,11 +20,6 @@ public class Align : SteeringBehaviour
     public void NewTarget(Agent t)
     {
         target = t;
-    }
-
-    public Agent GetTarget()
-    {
-        return Target;
     }
 
     void Start()
@@ -73,12 +66,8 @@ public class Align : SteeringBehaviour
         else
             targetRotation = maxRotation * rotationSize / target.ExteriorAngle;
 
-    
-        Debug.Log("Acelero "+targetRotation);
         // La rotación objetivo final combina la velocidad y la dirección.
-
         targetRotation *= rotation / rotationSize;
-
 
         // La aceleración trata de alcanzar la rotación objetivo.
         steer.angular = targetRotation - agent.Rotation;
@@ -100,7 +89,7 @@ public class Align : SteeringBehaviour
         return steer;
     }
 
-    private float mapToRange(float rotation)
+    public float mapToRange(float rotation)
     {
         rotation %= 360;
 

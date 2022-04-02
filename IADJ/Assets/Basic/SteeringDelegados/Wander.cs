@@ -26,19 +26,19 @@ public class Wander : Face
     private float auxOrientation = 1f;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Awake()
+    {   
         GameObject go = new GameObject("WanderTarget");
         Agent auxTarget = go.AddComponent<AgentInvisible>();
         auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
         Target = auxTarget;
 
 
-        GameObject faceGO = new GameObject("AuxFace");
-        AgentInvisible faceInvisible = faceGO.AddComponent<AgentInvisible>();
-        faceGO.GetComponent<AgentInvisible>().DrawGizmos = true;
+        // GameObject faceGO = new GameObject("AuxFace");
+        // AgentInvisible faceInvisible = faceGO.AddComponent<AgentInvisible>();
+        // faceGO.GetComponent<AgentInvisible>().DrawGizmos = true;
 
-        agentInvisible = faceInvisible;
+        // agentInvisible = faceInvisible;
     }
 
 
@@ -63,9 +63,9 @@ public class Wander : Face
 
    
         // Delegamos a Face para que el personaje mire al target de wander.
-        agentInvisible.Position = targetPosition;
-        Target = agentInvisible;
-
+      //  agentInvisible.Position = targetPosition;
+     //   Target = agentInvisible;
+        Target.Position = targetPosition;
 
         // Creamos el target que vamos a delegar a face **
         Steering steer = base.GetSteering(agent);
@@ -79,13 +79,12 @@ public class Wander : Face
 
     private Vector3 OrientationToVector(float _orientation)
     {
-
+        
         Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
         return aux.normalized;
     }
 
 
-    
 
     public void OnDrawGizmos()
     {

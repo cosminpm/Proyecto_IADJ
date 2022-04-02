@@ -45,17 +45,16 @@ public class Seek : SteeringBehaviour
         Vector3 direccion = destino - origen;
 
         // Comprobamos si hemos llegado al objetivo. Si es el caso, el agente se para.
-        if (direccion.magnitude < target.ArrivalRadius)
+        if (direccion.magnitude < target.InteriorRadius)
         {
-            direccion = -agent.Velocity;
-            steer.linear = direccion;
+            steer.linear += -agent.Velocity;
             return steer;
         }
 
         // Se normaliza el vector posicion del agente y se multiplica por la velocidad maxima del mismo.
         // El resultado obtenido sera un vector con la direccion y sentido con origen el agente y destino el target.
         // El modulo de dicho vector sera la velocidad indicada.
-        direccion = Vector3.Normalize(direccion) * agent.MaxSpeed;
+        direccion = Vector3.Normalize(direccion) * agent.MaxAcceleration;
         steer.linear = direccion;
         return steer;
     }

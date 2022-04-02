@@ -8,20 +8,19 @@ using UnityEngine;
 public abstract class SteeringBehaviour : MonoBehaviour
 {
 
+    public enum Group{
+        Colision = 0,
+        Separation = 1,
+        Persecution = 2    
+    }
+
     protected string nameSteering = "no steering";
 
     // El peso asociado a cada steering.
     public float weight;
 
     // El grupo al que pertenece el steering
-    public int group;
-
-    public int Group
-    {
-        set { group = value; }
-        get { return group; }
-
-    }
+    public Group group;
 
     public string NameSteering
     {
