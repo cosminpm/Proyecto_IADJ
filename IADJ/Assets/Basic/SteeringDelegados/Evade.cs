@@ -7,22 +7,18 @@ public class Evade : Flee
     private GameObject prediccionGO;
     private Agent targetAux;
     
-    public override void NewTarget(Agent t)
-    {
-        base.NewTarget(t);
-        targetAux = Target;
-        prediccionGO = GameObject.Find("Controlador").GetComponent<SeleccionarObjetivos>().CreateInvisibleAgent(targetAux.Position);
-        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
-        Target = prediccionGO.GetComponent<AgentInvisible>();
-    }
-
+  
 
     void Start(){
 
         targetAux = Target;
-        prediccionGO = GameObject.Find("Controlador").GetComponent<SeleccionarObjetivos>().CreateInvisibleAgent(targetAux.Position);
-        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
-        Target = prediccionGO.GetComponent<AgentInvisible>();
+        prediccionGO = new GameObject("auxEvade");
+        AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
+        invisible.GetComponent<AgentInvisible>().DrawGizmos = true;
+        invisible.ArrivalRadius = 3f;
+        invisible.InteriorRadius = 3f;
+
+        Target = invisible;
     }
 
     public override Steering GetSteering(Agent agent)
@@ -57,7 +53,7 @@ public class Evade : Flee
         }
         Target.Position = targetAux.Position;
         Target.Position += targetAux.Velocity * prediccion;
-        prediccionGO.transform.position = Target.Position;
+
         
         return base.GetSteering(agent);
     }

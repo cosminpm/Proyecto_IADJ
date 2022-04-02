@@ -8,8 +8,7 @@ public class WallFollowing : Seek {
     [SerializeField] float offSetPrediction = 3f;
     [SerializeField] float offSetWall = 3f;
     
-
-    private List<Collider> wallsCollider;  
+    [SerializeField] GameObject Wall;
 
     void Start(){
 
@@ -17,57 +16,26 @@ public class WallFollowing : Seek {
         Agent auxTarget = go.AddComponent<AgentInvisible>();
         auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
 
-        // Refactoring: nombre del atributo target ?
         Target = auxTarget;
-        // Inicializamos las paredes
-
-        wallsCollider = new List<Collider>();
-        // Obtenemos todas las paredes
-        GameObject[] gos = GameObject.FindGameObjectsWithTag("Wall");
-
-        foreach( var w in gos)
-        {
-            wallsCollider.Add(w.GetComponent<Collider>());
-        }
     }
-
 
     public override Steering GetSteering(Agent agent)
     {
 
         Steering steer = new Steering();
 
+        // Futura posición del agente
         Vector3 posPrediction = agent.Position + agent.Velocity * offSetPrediction;
 
-        float minDistance = Mathf.Infinity;
-
-        Collider wall = null;
-        Vector3 point = Vector3.zero;
-        Vector3 direction = Vector3.zero;
-        Vector3 closestPoint = Vector3.zero;
-
-        // Recorremos las paredes en busca del punto más cercano a la futura pos del agent
-        foreach( var wallAux in wallsCollider)
-        {
-            closestPoint = wallAux.GetComponent<Collider>().ClosestPoint(posPrediction);
-            direction = posPrediction - closestPoint;
-
-            // Encuentro la wall que esté más cercana al agente.
-            if ( direction.magnitude < minDistance)
-            {
-                wall = wallAux;
-                point = closestPoint;
-            }
-        }
-
-
-        // Ahora comprobamos que no hay una posible colisión con la wall
+        // Calculamos el punto más cercano a la pared.
+        Vector3 closestPoint = Wall.GetComponent<Collider>().ClosestPoint(posPrediction);
 
         // Vector director to wall
-        direction = closestPoint - posPrediction;
+        Vector3 direction = closestPoint - posPrediction;
         Vector3 positionFinal = Vector3.zero;
 
         RaycastHit hit;
+
         // Si hay colisión, sacamos la normal del punto de colisión.
         if (Physics.Raycast(posPrediction, direction, out hit))
         {
@@ -76,10 +44,9 @@ public class WallFollowing : Seek {
         } else {
             positionFinal = closestPoint * offSetWall;
         }
-
+        
         positionFinal.y = 0;
         Target.Position = positionFinal;
-
         return base.GetSteering(agent);
     }
 }

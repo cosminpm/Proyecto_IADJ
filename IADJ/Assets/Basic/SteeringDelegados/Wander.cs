@@ -30,7 +30,7 @@ public class Wander : Face
     {   
         GameObject go = new GameObject("WanderTarget");
         Agent auxTarget = go.AddComponent<AgentInvisible>();
-        auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
+        auxTarget.GetComponent<AgentInvisible>().DrawGizmos = false;
         Target = auxTarget;
 
 

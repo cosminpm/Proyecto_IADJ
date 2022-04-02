@@ -44,7 +44,7 @@ public class PathFollowingGameObject: Seek
             return new Steering();
         }
 
-        Target.InteriorRadius = path.radioNodo;
+        Target.ArrivalRadius = path.radioNodo;
         
         if (path.CondArrive(agent.Position, currentPos))
         {
