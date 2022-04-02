@@ -21,7 +21,7 @@ public class Cohesion: Arrive
         targetAux = Target;
         GameObject prediccionGO = new GameObject("AuxCohesion");
         AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
-        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = false;
+        invisible.GetComponent<AgentInvisible>().DrawGizmos = false;
         Target = invisible;
     }
 

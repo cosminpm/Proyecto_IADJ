@@ -6,9 +6,9 @@ public class Pursue : Seek
 
     private Agent targetAux;
     private GameObject prediccionGO;
+    
     public override void NewTarget(Agent t)
     {
-        //base.NewTarget(t);
         targetAux = Target;
 
         GameObject prediccionGO = new GameObject("AuxPursue");

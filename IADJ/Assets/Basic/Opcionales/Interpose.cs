@@ -14,6 +14,8 @@ public class Interpose : Arrive {
         Agent auxTarget = go.AddComponent<AgentInvisible>();
         auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
         auxTarget.Position = Vector3.zero;
+        auxTarget.ArrivalRadius = 5f;
+        auxTarget.InteriorRadius = 5f;
         // Refactoring: nombre del atributo target ?
        
         Target = auxTarget;

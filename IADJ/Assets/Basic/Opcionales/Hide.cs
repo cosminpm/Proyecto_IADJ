@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hide : Arrive {
+public class Hide : Seek {
 
     [SerializeField] float offSetDistance = 4f;
 
@@ -14,6 +14,9 @@ public class Hide : Arrive {
         GameObject go = new GameObject("auxHide");
         Agent auxTarget = go.AddComponent<AgentInvisible>();
         auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
+
+        auxTarget.ArrivalRadius = 3f;
+        auxTarget.InteriorRadius = 3f;
 
         // Refactoring: nombre del atributo target ?
         Target = auxTarget;
@@ -70,6 +73,7 @@ public class Hide : Arrive {
             return steerFace.GetSteering(agent);
         }
         else {
+            bestHidingSpot.y = 0;
             Target.Position = bestHidingSpot;
             return base.GetSteering(agent); 
         }

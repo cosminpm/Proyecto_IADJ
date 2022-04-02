@@ -33,8 +33,38 @@ public class WallAvoidance : Seek
         auxTarget.ArrivalRadius = 1f;
         auxTarget.InteriorRadius = 1f;
         listaBigotes = new List<Vector3>();
+    }
 
-        group = 0;
+    public Steering GetSteeringss(Agent agent){
+        
+        // TODO: Lo hago de la primera FORMA1: No teniendo en cuenta la velocidad, 
+        // Construimos los bigotes
+        Vector3 bigCentral = agent.Velocity.normalized;
+        Vector3 bigIzquierdo = Quaternion.Euler(0,-anguloBigotes,0) * agent.Velocity.normalized;
+        Vector3 bigDerecho = Quaternion.Euler(0,anguloBigotes,0) * agent.Velocity.normalized;
+        RaycastHit hitCent,hitIzq,hitDer;
+        // Detectamos las posibles colisiones. Para la posible trampa de la esquina en una posible colisión, le damos prioridad al bigote central.
+                                                                                          // Colisión frontal-
+        if (Physics.Raycast(agent.Position, bigCentral, out hitCent, lookAheadCentral))
+        {
+         
+            auxTarget.Position = hitCent.point + hitCent.normal * avoidDistance;
+            this.target = auxTarget;
+            return base.GetSteering(agent);
+            
+        } else if (Physics.Raycast(agent.Position, bigIzquierdo, out hitIzq, lookAhead)) { // Colision bigote izquierdo
+            auxTarget.Position = hitIzq.point + hitIzq.normal * avoidDistance;
+            this.target = auxTarget;
+            return base.GetSteering(agent);
+            
+        } else if (Physics.Raycast(agent.Position, bigDerecho, out hitDer, lookAhead)) { // Colision bigote derecho
+            auxTarget.Position = hitDer.point + hitDer.normal * avoidDistance;
+            this.target = auxTarget;
+            return base.GetSteering(agent);
+        }
+        //return base.GetSteering(agent);
+        
+        return new Steering();
     }
 
     public override Steering GetSteering (Agent agent){
@@ -53,9 +83,7 @@ public class WallAvoidance : Seek
 
 
         // Detectamos la colision
-
-        steer = DetectarColision(agent);
-        return steer;
+        return DetectarColision(agent);
     }
 
     private void InicializarBigotes(Agent agent){
@@ -78,7 +106,8 @@ public class WallAvoidance : Seek
             }
             int contador = 0;
             for ( int i = index ; i < numBigotes ; i++){
-                bigote = Quaternion.AngleAxis(-anguloBigotes*aux, Vector3.up) * agent.Velocity.normalized;
+
+                bigote = Quaternion.Euler(0,-anguloBigotes*aux,0) * agent.Velocity.normalized;
                 listaBigotes.Add(bigote);
                 contador++;
                 aux *= -1;
@@ -104,11 +133,12 @@ public class WallAvoidance : Seek
         RaycastHit hit;
         Vector3 positionFinal = Vector3.zero;
 
+        
         // Siempre daremos preferencia al bigote central.
-        if (Physics.Raycast(agent.Position, listaBigotes[0], out hit, lookAheadCentral+lookAhead)) 
+        if (Physics.Raycast(agent.Position, listaBigotes[0], out hit, lookAheadCentral)) 
         {
             positionFinal =  hit.point + hit.normal * avoidDistance;
-            positionFinal.y = 0;
+        //    positionFinal.y = 0;
 
             auxTarget.Position = positionFinal;
             Target = auxTarget;
@@ -118,10 +148,11 @@ public class WallAvoidance : Seek
 
             for (int i = 1  ; i < numBigotes ; i++)
             {
-                if (Physics.Raycast(agent.Position, listaBigotes[i], out hit, lookAhead))
+                RaycastHit hitBigotes;
+                
+                if (Physics.Raycast(agent.Position, listaBigotes[i], out hitBigotes, lookAhead))
                 {
-                    positionFinal = hit.point + hit.normal * avoidDistance;
-                    positionFinal.y = 0;
+                    positionFinal = hitBigotes.point + hitBigotes.normal * avoidDistance;
 
                     auxTarget.Position = positionFinal;
                     Target = auxTarget;
