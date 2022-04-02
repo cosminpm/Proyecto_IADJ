@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba8c72d764e8be408ee1b64f11c94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LIMITER_CELLS: 1000
+  LIMITER_CELLS: 4000
   drawWireGm: 1
   drawCenterGm: 0
   drawAllowedCells: 1
@@ -1124,7 +1124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startColor: {r: 0, g: 1, b: 1, a: 1}
   finishColor: {r: 1, g: 0, b: 0, a: 1}
-  drawColorPath: 0
+  drawColorPath: 1
   drawNumberPath: 0
   sizeOfTextPath: 10
 --- !u!114 &826325792
@@ -1151,17 +1151,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 929cd0377a7a59142b1c9f85920f8641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass: 1
-  _maxSpeed: 15
+  _mass: 100
+  _maxSpeed: 40
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 40
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 50
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
-  _interiorRadius: 1
-  _arrivalRadius: 5.63
-  _interiorAngle: 5.96
-  _exteriorAngle: 8
+  _interiorRadius: 9.86
+  _arrivalRadius: 15.49
+  _interiorAngle: 11.26
+  _exteriorAngle: 27.28
   _drawGizmos: 1
   _anchuraCirculo: 3
   _anchuraLinea: 3
@@ -1171,21 +1174,6 @@ MonoBehaviour:
   listSteerings:
   - {fileID: 0}
   arbitro: {fileID: 0}
---- !u!114 &826325796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 826325789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 194811008332ace4696920010acca005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weight: 0
-  target: {fileID: 1654979454}
-  timeToTarget: 1
 --- !u!1 &892010876
 GameObject:
   m_ObjectHideFlags: 0
@@ -2178,6 +2166,9 @@ MonoBehaviour:
   _maxAcceleration: 4
   _maxAngularAcc: 4
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 3
   _arrivalRadius: 5
@@ -2351,6 +2342,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_Name
       value: Prota
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e028f69e98d5b7947a5a337b1f5ab9f6, type: 3}
       propertyPath: m_TagString
@@ -2735,7 +2730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2065704354
 Transform:
   m_ObjectHideFlags: 0

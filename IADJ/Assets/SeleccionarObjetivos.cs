@@ -41,9 +41,8 @@ public class SeleccionarObjetivos : MonoBehaviour
     {
         return new List<GameObject>(_listNpCs);
     }
-
     
-
+    
     private void SelectNPCs()
     {
         // Comprobamos si se hace click en algun punto del escenario.
@@ -83,11 +82,9 @@ public class SeleccionarObjetivos : MonoBehaviour
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo))
             {
-                
                 // Si se esta chocando algo...
                 if (hitInfo.collider != null)
                 {
-                   
                     Agent agent;
                     if (hitInfo.collider.CompareTag("Terrain"))
                     {

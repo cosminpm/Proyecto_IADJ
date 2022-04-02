@@ -295,11 +295,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -326,6 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &43291134
@@ -384,6 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1 &92832154
@@ -416,7 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0112ff4541bef0447a07203055957484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  personajeInvisible: {fileID: 919132149155446097, guid: 97a34a14b6cb21a4e8be32bfd0b1c6c9, type: 3}
+  personajeInvisible: {fileID: 0}
 --- !u!4 &92832156
 Transform:
   m_ObjectHideFlags: 0
@@ -763,11 +768,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -794,6 +802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &206553155
@@ -852,6 +861,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1 &215371461
@@ -1045,11 +1055,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3.31
@@ -1076,6 +1089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &341843621
@@ -1134,6 +1148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1 &343480717
@@ -1249,7 +1264,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &420513711
 Transform:
   m_ObjectHideFlags: 0
@@ -1457,6 +1472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &490987526
@@ -1472,11 +1488,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -1534,6 +1553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1001 &591544426
@@ -1725,11 +1745,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -1756,6 +1779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &719932899
@@ -1814,6 +1838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1001 &760078761
@@ -1921,6 +1946,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 50
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 0.5
   _arrivalRadius: 0.97
@@ -2103,6 +2131,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 3.3
   _arrivalRadius: 9.89
@@ -2130,6 +2161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 1654979454}
 --- !u!1001 &839346990
 PrefabInstance:
@@ -2227,11 +2259,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -2258,6 +2293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &843235475
@@ -2316,6 +2352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1 &892010876
@@ -2585,7 +2622,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.70711154, y: -0.0000013313257, z: 0.000001353119, w: 0.7071021}
-  m_LocalPosition: {x: 123.350655, y: 870.18176, z: 64.43678}
+  m_LocalPosition: {x: 123.350655, y: 850.9, z: 64.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1558357690}
@@ -2614,11 +2651,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -2645,6 +2685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &998530915
@@ -2703,6 +2744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1001 &1002985378
@@ -2809,11 +2851,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -2840,6 +2885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &1004459804
@@ -2898,6 +2944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1001 &1043543897
@@ -3006,7 +3053,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cd75888121a08674f86e77f56dc74cbc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -283
+      value: -287
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cd75888121a08674f86e77f56dc74cbc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3253,7 +3300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1149223862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3284,7 +3331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listaAgents: []
-  ModoFormacion: 1
+  ModoFormacion: 0
   distanciaSeparacion: 8
   radioExteriorInvisible: 8
   radioInteriorInvisible: 4
@@ -3842,11 +3889,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -3873,6 +3923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &1370969286
@@ -3931,6 +3982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1001 &1470348883
@@ -4102,11 +4154,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -4133,6 +4188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &1506729408
@@ -4191,6 +4247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1 &1558357689
@@ -4251,6 +4308,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 3
   _arrivalRadius: 5
@@ -4951,8 +5011,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 194811008332ace4696920010acca005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 15
-  target: {fileID: 0}
+  weight: 1
+  group: 0
+  target: {fileID: 1854311551}
   timeToTarget: 1
 --- !u!114 &1854311549
 MonoBehaviour:
@@ -4967,6 +5028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!64 &1854311550
@@ -4996,11 +5058,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 3
+  _maxSpeed: 20
   _maxRotation: 180
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 2
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -5022,18 +5087,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1854311545}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acdb2170ab6f4c57bcd854a14533bd80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
   wanderOffset: 0
   wanderRadius: 0
   wanderRate: 0
-  maxAcceleration: 0
+  _drawGizmos: 0
 --- !u!1 &1965774565
 GameObject:
   m_ObjectHideFlags: 0
@@ -5221,12 +5287,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
   wanderOffset: 10
   wanderRadius: 10
   wanderRate: 2
-  maxAcceleration: 2
+  _drawGizmos: 0
 --- !u!114 &1968521299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5245,6 +5312,9 @@ MonoBehaviour:
   _maxAcceleration: 10
   _maxAngularAcc: 20
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 5.63
@@ -5442,6 +5512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 1654979454}
   timeToTarget: 1
 --- !u!114 &2042957565
@@ -5462,6 +5533,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 50
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 2.67
   _arrivalRadius: 5.26
@@ -5832,11 +5906,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 1
-  _maxSpeed: 5
+  _maxSpeed: 20
   _maxRotation: 1
-  _maxAcceleration: 1
+  _maxAcceleration: 20
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 20
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -5863,6 +5940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &2120901224
@@ -5921,6 +5999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 0}
   timeToTarget: 1
 --- !u!1 &2134031329
