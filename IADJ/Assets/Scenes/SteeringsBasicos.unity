@@ -227,6 +227,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 3
   _arrivalRadius: 9.6
@@ -326,7 +329,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
-  target: {fileID: 46076508}
+  group: 0
+  target: {fileID: 0}
   timeToTarget: 1
 --- !u!114 &491741900
 MonoBehaviour:
@@ -346,6 +350,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 20
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 3.7
   _arrivalRadius: 7.6
@@ -441,6 +448,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoldadoArrive
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d512bb7f14a34c42ad05b3c071622e5, type: 3}
+      propertyPath: m_TagString
+      value: NPC
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d512bb7f14a34c42ad05b3c071622e5, type: 3}
 --- !u!1 &568086714 stripped
@@ -461,6 +472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 755040344}
   timeToTarget: 0.1
 --- !u!114 &568086716
@@ -481,6 +493,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -495,6 +510,20 @@ MonoBehaviour:
   listSteerings:
   - {fileID: 568086715}
   arbitro: {fileID: 0}
+--- !u!64 &568086720
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568086714}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -462981019419857548, guid: 2d512bb7f14a34c42ad05b3c071622e5, type: 3}
 --- !u!1001 &574876681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -586,6 +615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 46076508}
   timeToTarget: 1
 --- !u!114 &574876684
@@ -606,6 +636,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 20
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 3.7
   _arrivalRadius: 7.6
@@ -725,6 +758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  group: 0
   target: {fileID: 0}
 --- !u!114 &755040344
 MonoBehaviour:
@@ -744,6 +778,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 7.26
   _arrivalRadius: 35.3
@@ -1060,6 +1097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 46076508}
   timeToTarget: 1
 --- !u!114 &1613285630
@@ -1080,6 +1118,9 @@ MonoBehaviour:
   _maxAcceleration: 30
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -1297,6 +1338,9 @@ MonoBehaviour:
   _maxAcceleration: 1
   _maxAngularAcc: 1
   _maxForce: 1
+  _speed: 0
+  _acceleration: {x: 0, y: 0, z: 0}
+  _rotation: 0
   _orientation: 0
   _interiorRadius: 1
   _arrivalRadius: 3
@@ -1338,6 +1382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  group: 0
   target: {fileID: 755040344}
   disMaxFlee: 15
 --- !u!1 &2103559684

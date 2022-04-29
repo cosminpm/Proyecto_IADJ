@@ -2,7 +2,7 @@
 
 public class Align : SteeringBehaviour
 {
-    // Declaramos las variables que vamos a necesitar. 
+    // Declaramos las variables que vamos a necesitar . 
     [SerializeField] protected Agent target;
 
     [SerializeField] private float timeToTarget = 0.1f;
@@ -15,6 +15,8 @@ public class Align : SteeringBehaviour
         get => target;
         set => target = value;
     }
+
+    int i = 0;us<dieebfiu8waebiutgbf<iawñbiut4
 
     // Obtenemos el target.
     public void NewTarget(Agent t)
