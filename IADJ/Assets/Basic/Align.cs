@@ -16,8 +16,6 @@ public class Align : SteeringBehaviour
         set => target = value;
     }
 
-    int i = 0;us<dieebfiu8waebiutgbf<iawñbiut4
-
     // Obtenemos el target.
     public void NewTarget(Agent t)
     {
