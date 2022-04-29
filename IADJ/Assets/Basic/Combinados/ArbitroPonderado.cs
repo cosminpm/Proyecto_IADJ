@@ -14,12 +14,12 @@ public class ArbitroPonderado : ArbitroManager {
 
         // Acumulamos todos los movimientos de la lista 
         foreach ( var steer in listaBehaviours){
-            Steering aux = steer.GetSteering(agent);
-            steering.linear += steer.weight * aux.linear;
-            steering.angular += steer.weight * aux.angular;
+            if ( steer.enabled){
+                Steering aux = steer.GetSteering(agent);
+                steering.linear += steer.weight * aux.linear;
+                steering.angular += steer.weight * aux.angular;
+            }
         }
-
-        // DUDA. SE UTILIZA LA MaxAcceleration?
 
         float auxLinear = Mathf.Min(steering.linear.magnitude, agent.MaxSpeed);
         steering.linear = steering.linear * auxLinear;

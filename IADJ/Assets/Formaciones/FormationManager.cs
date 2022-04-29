@@ -67,30 +67,29 @@ public abstract class FormationManager : MonoBehaviour
 
     protected List<SlotAssignment> listaSlotsOcupados = new List<SlotAssignment>();
     protected DriftOffset driftoffset;
-    protected int timeWander = 3600;
+
+    // Variable para controlar el tiempo que falta (en frames)
+    // hasta que el líder cambie su steering a wander.
+    protected int timeWander = 300;
 
     // Variable que usaremos para, cuando el líder esté
     // en Wander, controlar el tiempo restante hasta que tenga 
     // que parar.
-    protected int timeToStop = 3600;
-    
+    protected int timeToStop = 300;
     public List<Agent> listaAgents = new List<Agent>();
-    // Variable para controlar el tiempo que falta (en frames)
-    // hasta que el líder cambie su steering a wander.
-
     public int ModoFormacion = 0;
 
     void Start()
     {
         inicializarSlots();
         
-        
+        // Modo formación para líder.
         if (ModoFormacion == 0)
             UpdatesSlotsLider();
-        else if (ModoFormacion == 1)
-        {
+
+        // Modo formación para LRTA.
+        else if (ModoFormacion == 1)        
             UpdateSlotsLRTA();
-        }
     }
 
     // Una vez inicializada la lista de agentes asignamos, si se puede, un slot a cada agente.
@@ -224,8 +223,6 @@ public abstract class FormationManager : MonoBehaviour
 
     protected abstract void UpdateSlotsLRTA();
     protected abstract Agent getAgentSlotLocation(int numberSlot);
-    
-    // TODO: Comentarlo en la memoria
     protected abstract bool AllowsSlots(int numberSlot);
     protected abstract void UpdatesSlotsLider();
     protected abstract DriftOffset getDriftOffset(List<SlotAssignment> s);

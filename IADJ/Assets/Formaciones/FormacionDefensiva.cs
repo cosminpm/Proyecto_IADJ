@@ -65,20 +65,18 @@ public class FormacionDefensiva : FormationManager
         {
             if (ModoFormacion == 0)
             {
-                if (listaAgents.Count > 0)
-                    UpdatesSlotsLider();
+                UpdatesSlotsLider();
             }
+
             else if (ModoFormacion == 1)
             {
                 if (Input.GetKeyUp(KeyCode.Alpha6))
-                {
                     UpdateSlotsLRTA();
-                }
+
             }
         }
     }
 
-    
     private void CheckAndUpdateToWander(Agent lider)
     {
         // Si el líder está quieto, descontamos frames para que
@@ -108,20 +106,20 @@ public class FormacionDefensiva : FormationManager
             lider.Velocity = Vector3.zero;
 
             // Si estamos parados y encontramos un nuevo
-            // target, salimos del estado Wander y reactivamos el Face
+            // target, salimos del estado Wander, reactivamos el Face
             // y el Arrive y ponemos el contador de frames a su estado original.
             if (GameObject.Find("AgenteInvisible"))
             {
                 lider.GetComponent<Arrive>().enabled = true;
                 lider.GetComponent<Face>().enabled = true;
 
-                timeWander = 3600;
+                timeWander = 300;
             }
 
             else
                 lider.GetComponent<Wander>().enabled = true;
 
-            timeToStop = 3600;
+            timeToStop = 300;
         }
     }
 
@@ -130,33 +128,25 @@ public class FormacionDefensiva : FormationManager
     {
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().enabled = false;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(lider.GetComponent<Arrive>().getTarget());
     }
-    
     
     private void UpdateSlotFull(int i, Agent lider)
     {
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().enabled = false;
         
         LocalizacionSlot aux = GetSlotLocation(i);
         float orientacion = lider.Orientation * Mathf.PI / 180;
         Vector3 position = new Vector3((-Mathf.Sin(orientacion) * aux.GetPosicion().z - Mathf.Cos(orientacion) * aux.GetPosicion().x), 0,
             (Mathf.Sin(orientacion) * aux.GetPosicion().x - Mathf.Cos(orientacion) * aux.GetPosicion().z));
         agentesInvisibles[i].Orientation = lider.Orientation + aux.GetOrientacion() - driftoffset.GetOrientation();
+
         // Arrive to relative position.
         agentesInvisibles[i].Position = position + lider.Position - driftoffset.GetPosition();
-
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(agentesInvisibles[i]);
 
-        // Si el NPC no está en movimiento, se alinea con la orientación de su slot.
-                
+        // Si el NPC no está en movimiento, se alinea con la orientación de su slot.    
         if (listaSlotsOcupados[i].GetCharacter().Velocity.magnitude == 0)
         {
             listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().NewTarget(agentesInvisibles[i]);
@@ -216,6 +206,7 @@ public class FormacionDefensiva : FormationManager
     // Devolvemos el DriftOffset de la formaci�n.
     protected override DriftOffset getDriftOffset(List<SlotAssignment> s)
     {
+        //gk<
         // Declaramos el centro de masa.
         DriftOffset center = new DriftOffset();
 

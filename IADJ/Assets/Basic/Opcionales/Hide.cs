@@ -69,7 +69,6 @@ public class Hide : Seek {
         {   
             // TODO: Aqui se suponde que debe hacer un FACE?
             Evade steerFace = this.gameObject.GetComponent<Evade>();
-            Debug.Log("No hay sitio donde esconderse");
             return steerFace.GetSteering(agent);
         }
         else {

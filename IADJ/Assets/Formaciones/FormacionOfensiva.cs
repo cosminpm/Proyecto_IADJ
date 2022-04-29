@@ -109,11 +109,6 @@ public class FormacionOfensiva : FormationManager
             Cell relativeCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>()
                 .WorldToMap(agentesInvisibles[i].Position);
             listaSlotsOcupados[i].GetCharacter().GetComponent<PathFinding>().ApplyLRTA(startCell, relativeCell, ref listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().nodos);
-
-
-
-
-
         }
     }
 
@@ -162,13 +157,13 @@ public class FormacionOfensiva : FormationManager
                 lider.GetComponent<Arrive>().enabled = true;
                 lider.GetComponent<Face>().enabled = true;
 
-                timeWander = 3600;
+                timeWander = 300;
             }
 
             else
                 lider.GetComponent<Wander>().enabled = true;
 
-            timeToStop = 3600;
+            timeToStop = 300;
         }
     }
 
@@ -177,9 +172,6 @@ public class FormacionOfensiva : FormationManager
     {
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().enabled = false;
         
         
         LocalizacionSlot slotLocation = GetSlotLocation(i);
@@ -211,9 +203,6 @@ public class FormacionOfensiva : FormationManager
     {
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().enabled = true;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Align>().enabled = true;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().enabled = false;
-        listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().enabled = false;
         listaSlotsOcupados[i].GetCharacter().GetComponent<Arrive>().NewTarget(lider.GetComponent<Arrive>().getTarget());
     }
 
