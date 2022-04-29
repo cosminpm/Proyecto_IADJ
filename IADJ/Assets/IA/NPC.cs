@@ -3,7 +3,6 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
-using Pathfinding;
 
 public class NPC : MonoBehaviour
 {
