@@ -13,7 +13,6 @@ public abstract class UnitsManager : MonoBehaviour
         Blue = 2    
     }
 
-
     // Bando
     [SerializeField] private Team team;
 
@@ -39,6 +38,7 @@ public abstract class UnitsManager : MonoBehaviour
     // Velocidad de movimiento
     private int _movementSpeed;
 
+    private int prueba;
 
     private float _maxSpeed;
     private float _maxRotation;
