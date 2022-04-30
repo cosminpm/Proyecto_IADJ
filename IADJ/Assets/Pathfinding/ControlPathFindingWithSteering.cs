@@ -47,7 +47,7 @@ namespace Pathfinding
 
                 _path.nodos = new List<Node>();
                 _pathFollowing.currentPos = 0;
-                _pathFinding.ApplyLRTA(startCell, finishCell, ref _path.nodos);
+                _pathFinding.ApplyAStar(startCell, finishCell);
             }
         }
 

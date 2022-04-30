@@ -243,7 +243,7 @@ public class FormacionDefensiva : FormationManager
             listaSlotsOcupados[i].GetCharacter().GetComponent<PathFollowingCell>().currentPos = 0;
             Cell relativeCell = listaSlotsOcupados[i].GetCharacter().GetComponent<ControlPathFindingWithSteering>()
                 .WorldToMap(agentesInvisibles[i].Position);
-            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFinding>().ApplyLRTA(startCell, relativeCell, ref listaSlotsOcupados[i].GetCharacter().GetComponent<PathCell>().nodos);
+            listaSlotsOcupados[i].GetCharacter().GetComponent<PathFinding>().ApplyAStar(startCell, relativeCell);
         }
     }
     

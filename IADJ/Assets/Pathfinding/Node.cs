@@ -32,7 +32,6 @@ namespace Pathfinding
             _hCost = n.GetHCost();
             _gCost = n.GetGCost();
             _fCost = n.GetFCost();
-
             _previousNode = n.GetPreviousNode();
             _tempCost = n.GetTempCost();
             _maxCost = n.GetMaxCost();

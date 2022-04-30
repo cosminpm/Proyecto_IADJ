@@ -34,6 +34,17 @@ namespace Grid
 
         private List<Cell> _cellsAdyacent;
 
+        public enum TipoTerreno
+        {   
+            Camino = 0,
+            Pradera = 1,
+            Bosque = 2,
+            Acantilado = 3,
+            Rio = 4,
+            BaseRoja = 5,
+            BaseAzul = 6,
+        }
+
         void Awake()
         {
             _allowedCells = new List<Cell>();
@@ -213,7 +224,6 @@ namespace Grid
                 sizes[1] /= 10f;
             }
 
-
             _sizePlaneX = sizes[0];
             _sizePlaneZ = sizes[1];
 
@@ -292,7 +302,6 @@ namespace Grid
             c1.RemoveAll(item => item == null);
             return c1.ToArray();
         }
-
 
         public Cell WorldToMap(Vector3 v)
         {

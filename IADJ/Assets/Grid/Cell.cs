@@ -11,7 +11,9 @@ public class Cell
     private GameObject _collider;
     private bool _allowedCell;
     private int _coorX, _coorZ;
-
+    private GridMap.TipoTerreno _tipoTerreno; 
+    
+    
     public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ)
     {
         _sizeX = sizeX;
@@ -19,6 +21,7 @@ public class Cell
         _center = center;
         _coorX = coorX;
         _coorZ = coorZ;
+        //_tipoTerreno = tipoTerreno;
     }
     
     public Cell(Cell c)
@@ -28,8 +31,13 @@ public class Cell
         _center = c._center;
         _coorX = c._coorX;
         _coorZ = c._coorZ;
+        _tipoTerreno = c._tipoTerreno;
     }
-    
+
+    public GridMap.TipoTerreno GetTipoTerreno()
+    {
+        return _tipoTerreno;
+    }
 
     public float GetSizeX()
     {
@@ -69,13 +77,11 @@ public class Cell
             RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
             
            if (CheckIfHitsInsideBox(hits))
-            {
-                return true;
-            }
+               return true;
+            
             else
-            {
-                return false;  
-            }
+               return false;  
+            
         }
         else
             return false;

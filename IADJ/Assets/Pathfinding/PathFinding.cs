@@ -246,16 +246,10 @@ namespace Pathfinding
             {
                 case 0:
                     return GetLocalSpaceRadio(startNode, finishNode);
-
-                // No se ha podido implementar
-                // case 1:
-                //     return GetLocalSpaceAStar(startNode, finishNode);
-
                 default:
                     return GetLocalSpaceRadio(startNode, finishNode);
             }
         }
-
 
         private List<Node> GetLocalSpaceAStar(Node startNode, Node finishNode)
         {
@@ -291,6 +285,7 @@ namespace Pathfinding
         }
 
 
+        // 
         private List<Node> LRTAStarUnPaso(Node startNode, Node finishNode, int heuristicApply)
         {
             SetCostsToStart();
@@ -320,7 +315,7 @@ namespace Pathfinding
             return actualPath;
         }
 
-        public void ApplyLRTA(Cell startCell, Cell finishCell, ref List<Node> finalPath)
+        public void ApplyAStar(Cell startCell, Cell finishCell)
         {
             if (CellIsGood(startCell) && CellIsGood(finishCell) && !startCell.Equals(finishCell))
             {
@@ -328,7 +323,7 @@ namespace Pathfinding
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-                _path = LRTAVariosPasos(startNode, finishNode, heuristic, ref finalPath);
+                ApplyAStar(startNode.GetCell(), finishNode.GetCell(), heuristic);
             }
         }
 
@@ -477,7 +472,7 @@ namespace Pathfinding
             DrawCosts();
         }
 
-// Debug Methods
+        // Debug Methods
         private void PathToString(List<Cell> lista)
         {
             for (var index = 0; index < lista.Count; index++)
