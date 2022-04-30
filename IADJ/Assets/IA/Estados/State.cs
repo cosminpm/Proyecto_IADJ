@@ -8,24 +8,24 @@ public abstract class State : MonoBehaviour
 {
 
      // Objetivo de las acciones del estado
-    private NPC _npc;
+    protected NPC _npc;
 
     // Indica si el npc está en movimiento
-    private bool _movement;
+    protected bool movement;
 
 
     public State(){
         _npc = null;
-        _movement = false;
+        movement = false;
     }
 
    
     
-    public abstract void GetAction(NPC _npc);  
+    public abstract void Action(NPC _npc);  
 
-    public abstract void GetEntryAction(NPC _npc);
+    public abstract void EntryAction(NPC _npc);
 
-    public abstract void GetExitAction(NPC _npc);
+    public abstract void ExitAction(NPC _npc);
 
     public abstract void CheckState(NPC _npc);
 
@@ -34,7 +34,7 @@ public abstract class State : MonoBehaviour
 
     protected bool isDead (NPC npc){
 
-        if ( npc.PhMax <= 0){
+        if ( npc.Unit.CurrentHealthPoints <= 0){
             npc.ChangeState(npc.stateDead);
             return true;
         }

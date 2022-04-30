@@ -8,6 +8,10 @@ using Pathfinding;
 public class NPC : MonoBehaviour
 {
 
+
+    // Tipo de unidad
+    private UnitsManager _unit;
+    
     // Estados posibles del NPC   
     public Capture stateCapture;
     public Dead stateDead;
@@ -15,24 +19,7 @@ public class NPC : MonoBehaviour
     public MeleeAttack stateMeleeAtack;
     public RangeAttack stateRangeAttack;
 
-    // CARACTERÍSTICAS DEL NPC
-
-    // Puntos de vida Máximos
-    private int _phMax;
-    // Puntos de vida
-    private int _ph;
-    // Puntos de ataque
-    private int _pAttack;
-    // Rango de ataque
-    private int _range;
-    // Velocidad de ataque
-    private int _attackSpeed;
-    // Precisión de ataque
-    private int _hitRate;
-    
-
     // Movimiento del personaje
-    private AgentNPC _agentNPC;
     private PathFinding pathFinding;
 
     // Estado actual del NPC
@@ -40,31 +27,35 @@ public class NPC : MonoBehaviour
 
 
 
+    void Awake(){
+        _unit = GetComponent<UnitsManager>();
+    }
 
+    void Start(){
+        
+    }
 
     void Update(){
-
+       
     }
 
 
     public void ChangeState(State newState){
 
     }
+    
 
-    // Getters y Setters;
 
-    public int PhMax
+    public UnitsManager Unit
     {
-        set { _phMax = value; }
-        get { return _phMax; }
+        get { return _unit; }
+        set { _unit = value; }
     }
 
-    public State CurrentState
-    {
-        set { _currentState = value; }
-        get { return _currentState; }
-    }
+    public Vector3 GetUnitPosition(){
 
+        return Unit.UnitAgent.Position;
+    }
 
 }
 

@@ -8,6 +8,58 @@ public abstract class Tank : UnitsManager
 {
 
    
+  void Start(){
+        UnitAgent = GetComponent<AgentNPC>();
+        SetMovementStats();
+    }
+
+    public Tank(){
+        //base();
+
+        SetUnitStats();
+        AddCostsTerrain();
+        AddUnitDamage();  
+
+    }
+
+    protected override void AddCostsTerrain(){
+        costsTerrains = new Dictionary<TypeTerrains, float>();
+        costsTerrains.Add(TypeTerrains.Path, 1.0f);
+        costsTerrains.Add(TypeTerrains.Field, 0.9f);
+        costsTerrains.Add(TypeTerrains.Forest, 0.2f);
+        costsTerrains.Add(TypeTerrains.River, 0f);
+        costsTerrains.Add(TypeTerrains.Cliff, 0f);
+    }
+
+    protected override void AddUnitDamage(){
+        mapUnitDamage = new Dictionary<TypeUnits, float>();
+        mapUnitDamage.Add(TypeUnits.Soldier, 1.5f);
+        mapUnitDamage.Add(TypeUnits.Archer, 1f);
+        mapUnitDamage.Add(TypeUnits.Tank, 0.5f);
+    }
+
+    protected override void SetMovementStats(){
+        // Velocidad
+        UnitAgent.Speed = 2;
+        UnitAgent.MaxSpeed = 4;
+        UnitAgent.MaxRotation = 30;
+        UnitAgent.MaxAcceleration = 1;
+        UnitAgent.MaxAngularAcceleartion = 35;
+    }
+
+    protected override void SetUnitStats(){
+
+        HealthPointsMax = 150;
+        HealthPointsMin = 50;
+        CurrentHealthPoints = 150;
+        AttackPoints = 10;
+        // TODO: El rango se hace a ojo con el modo debug
+        AttackRange = 50;
+        AttackSpeed = 0.5f;
+        AttackAccuracy = 0.9f;
+        VisionDistance = 70; 
+    }
+
 
 
 }
