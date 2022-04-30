@@ -21,7 +21,6 @@ public class Archer : UnitsManager
 
         SetUnitStats();
         AddCostsTerrain();
-        AddUnitDamage();  
 
     }
 
@@ -32,13 +31,6 @@ public class Archer : UnitsManager
         costsTerrains.Add(TypeTerrains.Forest, 0.2f);
         costsTerrains.Add(TypeTerrains.River, 0f);
         costsTerrains.Add(TypeTerrains.Cliff, 0f);
-    }
-
-    protected override void AddUnitDamage(){
-        mapUnitDamage = new Dictionary<TypeUnits, float>();
-        mapUnitDamage.Add(TypeUnits.Soldier, 1.5f);
-        mapUnitDamage.Add(TypeUnits.Archer, 1f);
-        mapUnitDamage.Add(TypeUnits.Tank, 0.5f);
     }
 
     protected override void SetMovementStats(){

@@ -4,7 +4,7 @@ using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class Tank : UnitsManager
+public class Tank : UnitsManager
 {
 
    
@@ -18,7 +18,6 @@ public abstract class Tank : UnitsManager
 
         SetUnitStats();
         AddCostsTerrain();
-        AddUnitDamage();  
 
     }
 
@@ -29,13 +28,6 @@ public abstract class Tank : UnitsManager
         costsTerrains.Add(TypeTerrains.Forest, 0.2f);
         costsTerrains.Add(TypeTerrains.River, 0f);
         costsTerrains.Add(TypeTerrains.Cliff, 0f);
-    }
-
-    protected override void AddUnitDamage(){
-        mapUnitDamage = new Dictionary<TypeUnits, float>();
-        mapUnitDamage.Add(TypeUnits.Soldier, 1.5f);
-        mapUnitDamage.Add(TypeUnits.Archer, 1f);
-        mapUnitDamage.Add(TypeUnits.Tank, 0.5f);
     }
 
     protected override void SetMovementStats(){
@@ -58,6 +50,7 @@ public abstract class Tank : UnitsManager
         AttackSpeed = 0.5f;
         AttackAccuracy = 0.9f;
         VisionDistance = 70; 
+         TypeUnit = TypeUnits.Tank;
     }
 
 

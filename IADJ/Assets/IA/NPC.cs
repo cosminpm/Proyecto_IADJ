@@ -14,10 +14,10 @@ public class NPC : MonoBehaviour
     
     // Estados posibles del NPC   
     public Capture stateCapture;
-    public Dead stateDead;
-    public Healing stateHealing;
-    public MeleeAttack stateMeleeAtack;
-    public RangeAttack stateRangeAttack;
+   // public Dead stateDead;
+   // public Healing stateHealing;
+    public Attack stateAttack;
+
 
     // Movimiento del personaje
     private PathFinding pathFinding;
@@ -25,10 +25,17 @@ public class NPC : MonoBehaviour
     // Estado actual del NPC
     private State _currentState;
 
+    // Manejador de combate
 
 
     void Awake(){
         _unit = GetComponent<UnitsManager>();
+        // RARO LO DE ABAJO
+        stateCapture = this.gameObject.AddComponent<Capture>();
+      //  stateDead = new Dead();
+      //  stateHealing = new Healing();
+        stateAttack = this.gameObject.AddComponent<Attack>();
+        ChangeState(stateCapture);
     }
 
     void Start(){
@@ -36,12 +43,31 @@ public class NPC : MonoBehaviour
     }
 
     void Update(){
-       
+
+        // Tengo que realizar la acción del estado
+
+        if ( _currentState != null){ 
+            _currentState.Execute(this);
+            
+        } 
+
     }
 
 
     public void ChangeState(State newState){
 
+        if ( _currentState != null)
+        {
+            _currentState.ExitAction(this);
+        }
+
+        if (_currentState != newState) {
+
+
+            _currentState = newState;
+            _currentState.EntryAction(this);
+           
+        } 
     }
     
 
@@ -56,6 +82,13 @@ public class NPC : MonoBehaviour
 
         return Unit.UnitAgent.Position;
     }
+
+     public State CurrentState
+    {
+        get { return _currentState; }
+        set { _currentState = value; }
+    }
+
 
 }
 

@@ -70,14 +70,8 @@ public abstract class UnitsManager : MonoBehaviour
       // Tipo de unidad
     private TypeUnits _unitType;
 
-    // Diccionaro con los costes de daño a cada tipo de unidad
-    protected Dictionary<TypeUnits, float> mapUnitDamage;
-
-
-
 
     protected abstract void AddCostsTerrain();
-    protected abstract void AddUnitDamage();
     protected abstract void SetMovementStats();
     protected abstract void SetUnitStats();
 
