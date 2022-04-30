@@ -16,7 +16,9 @@ namespace Grid
         public bool drawWireGm, drawCenterGm, drawAllowedCells, drawCellClicked, drawCellNumber;
         public float intensityAllowedCells = 0.5f;
         public int sizeOfTextGrid = 10;
-        public int modeOfTerrain;
+        public String nameParent = "";
+
+        public String tagFloor = "";
 
         // Private variables
         private bool _initialized;
@@ -28,14 +30,11 @@ namespace Grid
 
         private float _sizePlaneX, _sizePlaneZ, _heightTerrain;
 
-        public String nameFloor = "Floor(Clone)";
-        public String nameParent = "MazePathFinderLRTA";
-        public String tagFloor = "Floor";
 
         private List<Cell> _cellsAdyacent;
 
         public enum TipoTerreno
-        {   
+        {
             Camino = 0,
             Pradera = 1,
             Bosque = 2,
@@ -50,62 +49,37 @@ namespace Grid
             _allowedCells = new List<Cell>();
             _notAllowedCells = new List<Cell>();
             _cellsAdyacent = new List<Cell>();
-
             GetSizeXAndSizeZ();
             CreateGrid();
             _initialized = true;
             AddAllowedCells();
             CreateAllBoxColliders();
+            Debug.Log(_sizePlaneX);
         }
 
         private void CreateGrid()
         {
             _cellMap = new Cell[_xSize, _zSize];
-
             float[] sizeOfCell = GetSizeOfCell();
-
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
                 {
                     float x, z;
-                    Vector3 primerVector3 = GetCornetTopLeft();
+                    Vector3 primerVector3 = GetCornetTopLeft(GameObject.Find(nameParent));
                     x = i * sizeOfCell[0] + sizeOfCell[0] / 2;
                     z = j * sizeOfCell[1] + sizeOfCell[1] / 2;
                     x += primerVector3.x;
                     z += primerVector3.z;
-
                     Vector3 center = new Vector3(x, _heightTerrain, z);
                     _cellMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j);
                 }
             }
         }
-
-        private Vector3 GetCornetTopLeft()
+        private Vector3 GetCornetTopLeft(GameObject parent)
         {
-            GameObject father = GameObject.Find(nameParent);
-            if (modeOfTerrain != 0)
-                return CornerTopLeftMultiple(father);
-
-            else
-                return CornerOnePlane(father);
-        }
-
-        private Vector3 CornerTopLeftMultiple(GameObject father)
-        {
-            Vector3 corner = new Vector3();
-            int nChild = father.transform.childCount;
-            for (int i = 0; i < nChild; i++)
-            {
-                Transform child = father.transform.GetChild(i);
-                if (child.name.Equals(nameFloor))
-                {
-                    corner = child.GetComponent<Renderer>().bounds.center -
-                             child.GetComponent<Renderer>().bounds.extents;
-                    break;
-                }
-            }
-
+            Vector3 corner = parent.transform.GetChild(0).GetComponent<Renderer>().bounds.center -
+                             parent.transform.GetChild(0).GetComponent<Renderer>().bounds.extents;
             return corner;
         }
 
@@ -148,13 +122,9 @@ namespace Grid
             for (int i = 0; i < nChild; i++)
             {
                 Transform child = terrain.transform.GetChild(i);
-                if (child.name.Equals(nameFloor))
-                {
-                    Debug.Log(child.transform.localScale.x);
-                    x += child.GetComponent<Renderer>().bounds.size.x;
-                    z += child.GetComponent<Renderer>().bounds.size.z;
-                    _heightTerrain = child.transform.position.y;
-                }
+                x += child.GetComponent<Renderer>().bounds.size.x;
+                z += child.GetComponent<Renderer>().bounds.size.z;
+                _heightTerrain = child.transform.position.y;
             }
 
             return new[] {x, z};
@@ -162,9 +132,9 @@ namespace Grid
 
         private float[] GetSizeOfCell()
         {
-            float x = _sizePlaneX / _xSize;
-            float z = _sizePlaneZ / _zSize;
-
+            Vector3 size = GameObject.Find(nameParent).transform.GetChild(0).transform.GetComponent<Renderer>().bounds.max;
+            float x = size.x;
+            float z = size.z;
             return new[] {x, z};
         }
 
@@ -213,16 +183,10 @@ namespace Grid
         private void GetSizeXAndSizeZ()
         {
             float[] sizes;
-            if (modeOfTerrain == 0)
-            {
-                sizes = GetSizeOfPlane();
-            }
-            else
-            {
-                sizes = GetSizeOfMultiplePlains();
-                sizes[0] /= 10f;
-                sizes[1] /= 10f;
-            }
+
+            sizes = GetSizeOfMultiplePlains();
+            sizes[0] /= 2.5f;
+            sizes[1] /= 2.5f;
 
             _sizePlaneX = sizes[0];
             _sizePlaneZ = sizes[1];
@@ -312,10 +276,11 @@ namespace Grid
                     return cell;
                 }
             }
+
             throw new Exception("The player is not in the grid");
         }
-        
-        
+
+
         // GET and SET Methods
         public int GetXSize()
         {
