@@ -9,15 +9,15 @@ public class Default : State
 
 
   
-    public override void GetAction(NPC npc){
+    public override void Action(NPC npc){
         
     }
 
-    public override void GetEntryAction(NPC npc){
+    public override void EntryAction(NPC npc){
 
     }
 
-    public override void GetExitAction(NPC npc){
+    public override void ExitAction(NPC npc){
 
     }
 

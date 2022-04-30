@@ -7,14 +7,14 @@ using System.Collections.Generic;
 public abstract class UnitsManager : MonoBehaviour
 {
 
-      public enum Team{
-        Neutral = 0,
-        Red = 1,
-        Blue = 2    
+    public enum Team{
+        Red = 0,
+        Blue = 1    
     }
 
     // Bando
-    [SerializeField] private Team team;
+    [SerializeField] private Team _team;
+
 
     // CARACTERÍSTICAS DEL NPC
     // Puntos de vida Máximos
@@ -35,21 +35,52 @@ public abstract class UnitsManager : MonoBehaviour
     private float _vision;
 
 
+    protected AgentNPC _agentNPC;
+
     // Velocidad de movimiento
     private int _movementSpeed;
-
-    private int prueba;
 
     private float _maxSpeed;
     private float _maxRotation;
     private float _maxAcceleration;
     private float _maxAngularAcc;
     private float _speed; // velocidad escalar
-    private Vector3 _acceleration; // aceleración lineal
-    private float _rotation;
 
     
-    
+    // Tipos de terrenos.
+    public enum TypeTerrains{
+
+        Path = 0,
+        Field = 1,
+        Forest = 2,
+        Cliff = 3,  
+        River = 4
+    }
+
+    // Diccionario con los costes de movimiento de cada tipo de terrenos.
+    protected Dictionary<TypeTerrains, float> costsTerrains;
+
+
+    public enum TypeUnits{
+        Soldier = 0,
+        Archer = 1,
+        Tank = 2,
+    }
+
+      // Tipo de unidad
+    private TypeUnits _unitType;
+
+    // Diccionaro con los costes de daño a cada tipo de unidad
+    protected Dictionary<TypeUnits, float> mapUnitDamage;
+
+
+
+
+    protected abstract void AddCostsTerrain();
+    protected abstract void AddUnitDamage();
+    protected abstract void SetMovementStats();
+    protected abstract void SetUnitStats();
+
 
     public float HealthPointsMax
     {
@@ -98,6 +129,24 @@ public abstract class UnitsManager : MonoBehaviour
         get { return _vision; }
         set { _vision = value; }
     }
+
+    public Team UnitTeam
+    {
+        get { return _team; }
+        set { _team = value; }
+    }
+
+    public TypeUnits TypeUnit
+    {
+        get { return _unitType; }
+        set { _unitType = value; }
+    }
+
+    public AgentNPC UnitAgent{
+        get { return _agentNPC; }
+        set { _agentNPC = value; }
+    }
+
 
     
 
