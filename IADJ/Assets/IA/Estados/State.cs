@@ -34,23 +34,65 @@ public abstract class State : MonoBehaviour
 
     // Transiciones 
 
+    // Función para comprobar si el NPC está muerto. 
+    // Si ese es el caso, pasará al estado Dead.
     protected bool IsDead (NPC npc){
 
         if ( npc.Unit.CurrentHealthPoints <= 0){
-         //   npc.ChangeState(npc.stateDead);
+            npc.ChangeState(npc.stateDead);
             return true;
         }
         return false;
     }
 
+    // Función para comprobar que si el NPC necesita curación.
+    // Si ese es el caso, se cambiará al estado LowHp.
+    protected bool NeedHeal(NPC npc) {
+
+        if (npc.Unit.CurrentHealthPoints <= npc.Unit.HealthPointsMin) {
+            npc.ChangeState(npc.stateLowHp);
+            return true;
+        }
+
+        return false;
+    }
+
+    // Función para comprobar si hay enemigos cerca. 
+    // Si ese es el caso, pasará a estado Attack.
     protected bool EnemyFound(NPC npc){
 
-        if ( findClosestEnemy(npc)){
+        if (findClosestEnemy(npc))
+        {
             npc.stateAttack.ObjetiveNPC = npc.CurrentState.ObjetiveNPC;
             npc.ChangeState(npc.stateAttack);
             return true;
-        } 
+        }
 
+        else
+            npc.ChangeState(npc.stateCapture);
+
+        return false;
+    }
+
+    // Función para respownear a un NPC.
+    protected void RespownUnit(NPC npc) {
+        npc.ChangeState(npc.stateCapture);
+        return;
+    }
+
+    // Función para comprobar si el NPC está en una zona de 
+    // curación y cambiar al estado Healing en ese caso.
+    protected bool IsHealing(NPC npc) {
+        return false;
+    }
+
+    // Función para comprobar si un NPC ha acabado de
+    // curarse. Si ese es el caso, pasará a estado Capture.
+    protected bool HealingFinished(NPC npc) {
+        if (npc.Unit.CurrentHealthPoints >= npc.Unit.HealthPointsMax) {
+            npc.ChangeState(npc.stateCapture);
+            return true;
+        }
         return false;
     }
 

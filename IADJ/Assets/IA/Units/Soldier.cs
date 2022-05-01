@@ -7,8 +7,7 @@ using UnityEditor;
 
 public class Soldier : UnitsManager
 {
-
-         // TODO: para debug
+     // TODO: para debug
      [SerializeField] protected bool _drawGizmos;
 
     void Start(){
@@ -18,12 +17,9 @@ public class Soldier : UnitsManager
 
     public Soldier(){
         //base();
-
         SetUnitStats();
         AddCostsTerrain();
-
     }
-
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<TypeTerrains, float>();
         costsTerrains.Add(TypeTerrains.Path, 1.0f);
@@ -44,36 +40,36 @@ public class Soldier : UnitsManager
 
     protected override void SetUnitStats(){
 
-        HealthPointsMax = 150;
-        HealthPointsMin = 50;
-        CurrentHealthPoints = 150;
-        AttackPoints = 10;
+        HealthPointsMax = 225;
+        HealthPointsMin = 75;
+        CurrentHealthPoints = 225;
+        AttackPoints = 25;
         // TODO: El rango se hace a ojo con el modo debug
-        AttackRange = 50;
-        AttackSpeed = 0.5f;
-        AttackAccuracy = 0.9f;
+        AttackRange = 10;
+        AttackSpeed = 5;
+        AttackAccuracy = 0.8f;
+        CriticRate = 0.1f;
         VisionDistance = 5f; 
         TypeUnit = TypeUnits.Soldier;
     }
 
-
-     public void OnDrawGizmos()
+    /*public void OnDrawGizmos()
     {
         if (_drawGizmos)
         {
             // Velocidad
             Handles.color = Color.red;
-            Handles.DrawLine(UnitAgent.Position, UnitAgent.Position.normalized+VisionDistance* OrientationToVector(UnitAgent.Orientation), 1f);
+            Handles.DrawLine(this.UnitAgent.Position, this.UnitAgent.Position.normalized + VisionDistance * OrientationToVector(this.UnitAgent.Orientation), 3);
         }
     }
-
     private Vector3 OrientationToVector(float _orientation)
     {
-        
         Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
         return aux.normalized;
-    }
+    }*/
+}
 
+   
 
 
 

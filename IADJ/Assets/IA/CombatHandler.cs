@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public static class CombatHandler
 {
 
+    // Definimos los tipos de unidad
     public enum TypeUnits{
         Soldier = 0,
         Archer = 1,
@@ -17,25 +18,41 @@ public static class CombatHandler
      // Diccionaro con los costes de daño a cada tipo de unidad
     private static Dictionary<TypeUnits, Dictionary<TypeUnits,float>> damageTable;
 
-
+    // Creamos la "tabla de tipos"
     static CombatHandler(){
         CreateTableDamage();
     }
 
-   
-   
-   // Calcula el daño infligido del atacante al defensor
+   // Calcula el daño infligido del atacante al defensor. 
    public static float CalculateDamage (NPC attacker, NPC defender){
 
-        Dictionary<TypeUnits, float> dmgDictionary =  damageTable[(TypeUnits)((int)attacker.Unit.TypeUnit)];
+        float miss = Random.Range(0f, 1f);
+        float critic = Random.Range(0f, 1f);
 
-        float damageIndex = dmgDictionary[(TypeUnits)((int)defender.Unit.TypeUnit)];
+        // Comprobamos si el atacante ha acertado el golpe. 
+        if (miss <= attacker.Unit.AttackAccuracy){
 
-        return attacker.Unit.AttackPoints*damageIndex;
+            // Si ha acertado, calculamos el daño causado.
+            Dictionary<TypeUnits, float> dmgDictionary = damageTable[(TypeUnits)((int)attacker.Unit.TypeUnit)];
+            float damageIndex = dmgDictionary[(TypeUnits)((int)defender.Unit.TypeUnit)];
 
-   }
+            // Comprobamos si el golpe es crítico. En ese caso, se hace un 50%
+            // más de daño.
+            if (critic <= attacker.Unit.CriticRate)
+            {
+                Debug.Log("critic!");
+                return attacker.Unit.AttackPoints * damageIndex * 1.5f;
+            }
 
-    // Creo la tabla de tipos, se puede hacer que se lea desde un fichero easy
+            return attacker.Unit.AttackPoints * damageIndex;
+        }
+
+        Debug.Log("miss");
+        // Si ha fallado, no quita vida. 
+        return 0f;
+    }
+
+    // Creamos la tabla de tipos (TODO_Opcional: se puede hacer que se lea desde un fichero easy)
     private static void CreateTableDamage(){
 
         Dictionary<TypeUnits, float> dmgSoldier = new Dictionary<TypeUnits, float>();
@@ -65,10 +82,6 @@ public static class CombatHandler
 
         Debug.Log(damageTable[TypeUnits.Soldier]);
     }
- 
-
-
-
 }
 
    

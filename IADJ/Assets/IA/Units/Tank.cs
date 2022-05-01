@@ -3,12 +3,13 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class Tank : UnitsManager
 {
-
-   
-  void Start(){
+    // TODO: para debug
+    [SerializeField] protected bool _drawGizmos;
+    void Start(){
         UnitAgent = GetComponent<AgentNPC>();
         SetMovementStats();
     }
@@ -18,7 +19,6 @@ public class Tank : UnitsManager
 
         SetUnitStats();
         AddCostsTerrain();
-
     }
 
     protected override void AddCostsTerrain(){
@@ -41,20 +41,31 @@ public class Tank : UnitsManager
 
     protected override void SetUnitStats(){
 
-        HealthPointsMax = 150;
+        HealthPointsMax = 300;
         HealthPointsMin = 50;
-        CurrentHealthPoints = 150;
+        CurrentHealthPoints = 300;
         AttackPoints = 10;
         // TODO: El rango se hace a ojo con el modo debug
-        AttackRange = 50;
-        AttackSpeed = 0.5f;
+        AttackRange = 5;
+        AttackSpeed = 1;
         AttackAccuracy = 0.9f;
-        VisionDistance = 70; 
-         TypeUnit = TypeUnits.Tank;
+        CriticRate = 0.1f;
+        VisionDistance = 3; 
+        TypeUnit = TypeUnits.Tank;
     }
-
-
+    /*public void OnDrawGizmos()
+    {
+        if (_drawGizmos)
+        {
+            // Velocidad
+            Handles.color = Color.red;
+            Handles.DrawLine(UnitAgent.Position, UnitAgent.Position.normalized + VisionDistance * OrientationToVector(UnitAgent.Orientation), 1f);
+        }
+    }
+    private Vector3 OrientationToVector(float _orientation)
+    {
+        Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
+        return aux.normalized;
+    }*/
 
 }
-
-   

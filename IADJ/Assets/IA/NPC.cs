@@ -14,10 +14,10 @@ public class NPC : MonoBehaviour
     
     // Estados posibles del NPC   
     public Capture stateCapture;
-   // public Dead stateDead;
-   // public Healing stateHealing;
+    public Dead stateDead;
+    public LowHp stateLowHp;
     public Attack stateAttack;
-
+    public Healing stateHealing;
 
     // Movimiento del personaje
     private PathFinding pathFinding;
@@ -26,15 +26,14 @@ public class NPC : MonoBehaviour
     private State _currentState;
 
     // Manejador de combate
-
-
     void Awake(){
         _unit = GetComponent<UnitsManager>();
         // RARO LO DE ABAJO
         stateCapture = this.gameObject.AddComponent<Capture>();
-      //  stateDead = new Dead();
-      //  stateHealing = new Healing();
+        stateDead = this.gameObject.AddComponent<Dead>();
+        stateLowHp = this.gameObject.AddComponent<LowHp>();
         stateAttack = this.gameObject.AddComponent<Attack>();
+        stateHealing = this.gameObject.AddComponent<Healing>();
         ChangeState(stateCapture);
     }
 
@@ -44,16 +43,13 @@ public class NPC : MonoBehaviour
 
     void Update(){
 
-        // Tengo que realizar la acción del estado
-
+        // Si el NPC está en un estado, ejecuta la acción correspondiente
         if ( _currentState != null){ 
-            _currentState.Execute(this);
-            
+            _currentState.Execute(this);  
         } 
-
     }
 
-
+    // Función para cambiar el estado del NPC
     public void ChangeState(State newState){
 
         if ( _currentState != null)
@@ -62,15 +58,10 @@ public class NPC : MonoBehaviour
         }
 
         if (_currentState != newState) {
-
-
             _currentState = newState;
             _currentState.EntryAction(this);
-           
         } 
     }
-    
-
 
     public UnitsManager Unit
     {
@@ -79,7 +70,6 @@ public class NPC : MonoBehaviour
     }
 
     public Vector3 GetUnitPosition(){
-
         return Unit.UnitAgent.Position;
     }
 
@@ -88,8 +78,6 @@ public class NPC : MonoBehaviour
         get { return _currentState; }
         set { _currentState = value; }
     }
-
-
 }
 
    

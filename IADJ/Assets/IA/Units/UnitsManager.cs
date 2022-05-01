@@ -28,9 +28,11 @@ public abstract class UnitsManager : MonoBehaviour
     // Rango de ataque
     private float _range;
     // Velocidad de ataque
-    private float _attackSpeed;
+    private int _attackSpeed;
     // Precisión de ataque
     private float _attackAccuracy;
+    // Tasa de crítico
+    private float _criticRate;
     // Rango de visión
     private float _vision;
 
@@ -106,7 +108,7 @@ public abstract class UnitsManager : MonoBehaviour
         set { _range = value; }
     }
 
-    public float AttackSpeed
+    public int AttackSpeed
     {
         get { return _attackSpeed; }
         set { _attackSpeed = value; }
@@ -116,6 +118,11 @@ public abstract class UnitsManager : MonoBehaviour
     {
         get { return _attackAccuracy; }
         set { _attackAccuracy = value; }
+    }
+    public float CriticRate
+    {
+        get { return _criticRate; }
+        set { _criticRate = value; }
     }
 
     public float VisionDistance

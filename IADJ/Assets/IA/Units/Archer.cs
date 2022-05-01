@@ -7,8 +7,7 @@ using UnityEditor;
 
 public class Archer : UnitsManager
 {
-
-       // TODO: para debug
+     // TODO: para debug
      [SerializeField] protected bool _drawGizmos;
 
     void Start(){
@@ -21,7 +20,6 @@ public class Archer : UnitsManager
 
         SetUnitStats();
         AddCostsTerrain();
-
     }
 
     protected override void AddCostsTerrain(){
@@ -50,8 +48,9 @@ public class Archer : UnitsManager
         AttackPoints = 10;
         // TODO: El rango se hace a ojo con el modo debug
         AttackRange = 50;
-        AttackSpeed = 0.5f;
-        AttackAccuracy = 0.9f;
+        AttackSpeed = 3;
+        AttackAccuracy = 0.75f;
+        CriticRate = 0.3f;
         VisionDistance = 5f; 
         TypeUnit = TypeUnits.Archer;
     }
@@ -69,17 +68,9 @@ public class Archer : UnitsManager
 
     private Vector3 OrientationToVector(float _orientation)
     {
-        
         Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
         return aux.normalized;
     }
-
-
-
-
-   
-
-
 }
 
    
