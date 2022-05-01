@@ -71,8 +71,4 @@ public class Soldier : UnitsManager
 
    
 
-
-
-}
-
    
