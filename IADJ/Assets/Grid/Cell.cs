@@ -78,10 +78,8 @@ public class Cell
             
            if (CheckIfHitsInsideBox(hits))
                return true;
-            
-            else
-               return false;  
-            
+           else
+               return false;
         }
         else
             return false;
