@@ -10,16 +10,13 @@ public class Attack : State
 
     // TODO : SE PASA EL NPC COMO PARAMETRO XD??
 
-    private bool _attacking;
-
-    private bool face = false;
-
     // Variable para indicar el tiempo (en frames)
     // que tardar� el NPC en lanzar su pr�ximo ataque.
     private int _cooldwnTime = 0;
 
     void Awake(){
      //   stateImage = Resources.Load<Sprite>("Estados/sword");
+        stateImage.enabled = false;
     }
 
     // Cambiamos los pr�metros de entrada al estado.
@@ -27,13 +24,15 @@ public class Attack : State
     public override void EntryAction(NPC npc){
         Debug.Log("Atacando ");
         movement = false;
-        _attacking = false;
     }
 
     public override void ExitAction(NPC npc){
         // Tenemos que limpiar el path
         // _targetNPC = null;
       //  Destroy(face);
+      _cooldwnTime = 0;
+        npc.GUI.UpdateBarAction(_cooldwnTime);
+
     }
 
     public override void Action(NPC npc, NPC _targetNPC){
@@ -61,7 +60,6 @@ public class Attack : State
         // Si esta dentro de nuestro rango de ataque, atacamos
         if ( npc.Unit.AttackRange >= distance){
             movement = false;
-
             if (_cooldwnTime >= 360)
             {
               //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
@@ -86,7 +84,11 @@ public class Attack : State
         // Comprobamos si el NPC debe salir del estado. 
         // Esto lo har� cuando est� a poca vida, haya 
         // muerto o ya no encuentre a un enemigo.
-        if(NeedHeal(npc) || IsDead(npc) || EnemyFound(npc))
+        if (NeedHeal(npc))
+            return;
+        if (IsDead(npc))
+            return;
+        if (EnemyFound(npc))
             return;
     }
 
