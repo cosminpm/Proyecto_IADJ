@@ -54,13 +54,13 @@ namespace Grid
             _initialized = true;
             AddAllowedCells();
             CreateAllBoxColliders();
-            Debug.Log(_sizePlaneX);
         }
 
         private void CreateGrid()
         {
             _cellMap = new Cell[_xSize, _zSize];
             float[] sizeOfCell = GetSizeOfCell();
+
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
@@ -68,7 +68,7 @@ namespace Grid
                     float x, z;
                     Vector3 primerVector3 = GetCornetTopLeft(GameObject.Find(nameParent));
                     x = i * sizeOfCell[0] + sizeOfCell[0] / 2;
-                    z = j * sizeOfCell[1] + sizeOfCell[1] / 2;
+                    z = (-j + 1) * sizeOfCell[1] + sizeOfCell[1] / 2;
                     x += primerVector3.x;
                     z += primerVector3.z;
                     Vector3 center = new Vector3(x, _heightTerrain, z);
@@ -76,16 +76,12 @@ namespace Grid
                 }
             }
         }
+
         private Vector3 GetCornetTopLeft(GameObject parent)
         {
             Vector3 corner = parent.transform.GetChild(0).GetComponent<Renderer>().bounds.center -
                              parent.transform.GetChild(0).GetComponent<Renderer>().bounds.extents;
             return corner;
-        }
-
-        private Vector3 CornerOnePlane(GameObject father)
-        {
-            return father.GetComponent<Renderer>().bounds.center - father.GetComponent<Renderer>().bounds.extents;
         }
 
         private float GreatestCommonDivisor(float a, float b)
@@ -101,40 +97,23 @@ namespace Grid
             return res;
         }
 
-        // Method if terrain is only One Plane
-        private float[] GetSizeOfPlane()
-        {
-            String nombreUnPlano = nameParent;
-            float x = GameObject.Find(nombreUnPlano).GetComponent<Renderer>().bounds.size.x;
-            float z = GameObject.Find(nombreUnPlano).GetComponent<Renderer>().bounds.size.z;
-            _heightTerrain = GameObject.Find(nombreUnPlano).transform.position.y;
-            return new[] {x, z};
-        }
-
         // Method if terrain are multiple plains
         private float[] GetSizeOfMultiplePlains()
         {
-            float x = 0;
-            float z = 0;
-
+            float x,z;
             GameObject terrain = GameObject.Find(nameParent);
             int nChild = terrain.transform.childCount;
-            for (int i = 0; i < nChild; i++)
-            {
-                Transform child = terrain.transform.GetChild(i);
-                x += child.GetComponent<Renderer>().bounds.size.x;
-                z += child.GetComponent<Renderer>().bounds.size.z;
-                _heightTerrain = child.transform.position.y;
-            }
-
+            Transform child = terrain.transform.GetChild(nChild - 1);
+            var strings = child.name.Split('_');
+            x = (float.Parse(strings[2])) * child.transform.GetComponent<Renderer>().bounds.size.x;
+            z = (float.Parse(strings[1]) + 1) * child.transform.GetComponent<Renderer>().bounds.size.z;
             return new[] {x, z};
         }
 
         private float[] GetSizeOfCell()
         {
-            Vector3 size = GameObject.Find(nameParent).transform.GetChild(0).transform.GetComponent<Renderer>().bounds.max;
-            float x = size.x;
-            float z = size.z;
+            float x = _sizePlaneX / _xSize;
+            float z = _sizePlaneZ / _zSize;
             return new[] {x, z};
         }
 
@@ -183,20 +162,13 @@ namespace Grid
         private void GetSizeXAndSizeZ()
         {
             float[] sizes;
-
             sizes = GetSizeOfMultiplePlains();
-            sizes[0] /= 2.5f;
-            sizes[1] /= 2.5f;
-
             _sizePlaneX = sizes[0];
             _sizePlaneZ = sizes[1];
-
             float greatestCommonDivisor = GreatestCommonDivisor(_sizePlaneX, _sizePlaneZ);
-            _xSize = (int) (_sizePlaneX / greatestCommonDivisor);
             _zSize = (int) (_sizePlaneZ / greatestCommonDivisor);
-
+            _xSize = (int) (_sizePlaneX / greatestCommonDivisor);
             int numCells = _xSize * _zSize;
-
             while (numCells < LIMITER_CELLS)
             {
                 _xSize *= 2;

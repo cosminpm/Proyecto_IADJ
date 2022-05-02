@@ -21,7 +21,7 @@ public class AgentNPC : Agent
 
         // Obtenemos el arbitro
         arbitro = GetComponent<ArbitroManager>();
-
+        listSteerings = new List<SteeringBehaviour>();
         // Construye una lista con todos las componenen del tipo SteeringBehaviour.
         GetComponents<SteeringBehaviour>(listSteerings);
     }
@@ -57,15 +57,14 @@ public class AgentNPC : Agent
     {
         // Reseteamos el steering final.
         steer = new Steering();
-
         
-       
         // Si hay arbitro.
         if (arbitro != null)
         {
             steer = arbitro.GetSteering(this);
             return;
         }
+        Debug.Log(listSteerings);
 
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
