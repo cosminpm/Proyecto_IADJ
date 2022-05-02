@@ -14,7 +14,7 @@ public static class CombatHandler
         Archer = 1,
         Tank = 2,
     }
-
+    
      // Diccionaro con los costes de daño a cada tipo de unidad
     private static Dictionary<TypeUnits, Dictionary<TypeUnits,float>> damageTable;
 

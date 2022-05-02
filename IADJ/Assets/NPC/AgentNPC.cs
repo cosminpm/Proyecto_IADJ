@@ -40,18 +40,7 @@ public class AgentNPC : Agent
 
     private void ApplySteering()
     {
-        
-
-        //  Velocity += steer.linear * Time.deltaTime;
-        //  Debug.Log("LA VELOCIDAAAAAAAAAAAAAAAAAAAAAD ES "+ Velocity);
-        //  Position += Velocity  * Time.deltaTime;
-        //  Rotation = steer.angular;
-
-        //  Orientation += Rotation * Time.deltaTime;
-        //  Orientation = mapToRange(Orientation);
-
-
-         
+           
          Position += Velocity * Time.deltaTime;
 
          Orientation += Rotation * Time.deltaTime;
@@ -80,9 +69,24 @@ public class AgentNPC : Agent
 
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
+        {
+            if ( behavior == null)
+                Debug.Log("Rey de los steering nada "+ listSteerings.Count);
+
             if (behavior.enabled)
                 GetSteering(behavior);
+
+        }
     }
+
+    public void UpdateListSteering(){
+        listSteerings.Clear();
+        GetComponents<SteeringBehaviour>(listSteerings);
+        if (arbitro != null)
+            arbitro.Inicializar();
+    }
+
+
 
     private void GetSteering(SteeringBehaviour behavior)
     {

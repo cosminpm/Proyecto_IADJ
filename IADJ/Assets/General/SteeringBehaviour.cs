@@ -17,7 +17,7 @@ public abstract class SteeringBehaviour : MonoBehaviour
     protected string nameSteering = "no steering";
 
     // El peso asociado a cada steering.
-    public float weight;
+    public float weight = 1;
 
     // El grupo al que pertenece el steering
     public Group group;

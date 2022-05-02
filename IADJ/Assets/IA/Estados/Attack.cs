@@ -12,6 +12,8 @@ public class Attack : State
 
     private bool _attacking;
 
+    private bool face = false;
+
     // Variable para indicar el tiempo (en frames)
     // que tardar� el NPC en lanzar su pr�ximo ataque.
     private int _cooldwnTime = 360;
@@ -19,27 +21,32 @@ public class Attack : State
     // Cambiamos los pr�metros de entrada al estado.
     // P.E. antes de atacar, el NPC tiene que detenerse.
     public override void EntryAction(NPC npc){
+        Debug.Log("Atacando ");
         movement = false;
         _attacking = false;
-        Debug.Log("AH, un men! Me pego >:|");
     }
 
     public override void ExitAction(NPC npc){
         // Tenemos que limpiar el path
         // _targetNPC = null;
+      //  Destroy(face);
     }
 
     public override void Action(NPC npc, NPC _targetNPC){
 
-        if ( _targetNPC == null)
+    
+        Face f = npc.GetComponent<Face>();
+        if (f == null)
         {
-            Debug.Log("El tarjet es null");
+            npc.gameObject.AddComponent<Face>();
+            npc.Unit.UnitAgent.UpdateListSteering();
+            npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
         }
-
-         if ( npc == null)
+        else
         {
-            Debug.Log("Sor null e l atacoasda");
+            npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
         }
+ 
 
         Vector3 direction = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
         // Distancia que hay entre el agente y el target
@@ -53,7 +60,7 @@ public class Attack : State
 
             if (_cooldwnTime <= 0)
             {
-                Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
+              //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
                 float dmg = CombatHandler.CalculateDamage(npc, _targetNPC);
                 _targetNPC.Unit.CurrentHealthPoints -= dmg;
                 _cooldwnTime = 360;

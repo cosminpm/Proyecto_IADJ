@@ -36,7 +36,8 @@ public class Tank : UnitsManager
         UnitAgent.MaxSpeed = 4;
         UnitAgent.MaxRotation = 30;
         UnitAgent.MaxAcceleration = 1;
-        UnitAgent.MaxAngularAcceleartion = 35;
+        UnitAgent.MaxAngularAcceleartion = 80;
+        UnitAgent.MaxRotation = 80;
     }
 
     protected override void SetUnitStats(){

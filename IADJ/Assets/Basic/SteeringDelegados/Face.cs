@@ -47,6 +47,7 @@ public class Face : Align
         if (direction.magnitude < 1)
             agent.Rotation = 0;
 
+        
         return base.GetSteering(agent);
     }
 }

@@ -9,6 +9,7 @@ public class Capture : State
     // Tiempo que tarda una unidad en capturar una zona.
     private int _captureTime = 1200;
     public override void Action(NPC npc, NPC obj){
+        
         if (_captureTime <= 0)
         {
             Debug.Log("He marcado un punto! :D");
@@ -21,6 +22,7 @@ public class Capture : State
     }
 
     public override void EntryAction(NPC npc){
+        
         Debug.Log("Capturemos esa base jeje >:)");
     }
 

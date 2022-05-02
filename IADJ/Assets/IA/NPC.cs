@@ -25,6 +25,9 @@ public class NPC : MonoBehaviour
     // Estado actual del NPC
     private State _currentState;
 
+    // GUI NPC
+    public GUIManager GUI;
+
     // Manejador de combate
     void Awake(){
         _unit = GetComponent<UnitsManager>();
@@ -34,6 +37,9 @@ public class NPC : MonoBehaviour
         stateLowHp = this.gameObject.AddComponent<LowHp>();
         stateAttack = this.gameObject.AddComponent<Attack>();
         stateHealing = this.gameObject.AddComponent<Healing>();
+
+        GUI = GetComponent<GUIManager>();
+        GUI.Initialize();
         ChangeState(stateCapture);
     }
 
@@ -47,6 +53,8 @@ public class NPC : MonoBehaviour
         if ( _currentState != null){ 
             _currentState.Execute(this);  
         } 
+
+
     }
 
     // Función para cambiar el estado del NPC
