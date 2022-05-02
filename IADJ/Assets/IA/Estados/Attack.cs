@@ -16,7 +16,11 @@ public class Attack : State
 
     // Variable para indicar el tiempo (en frames)
     // que tardar� el NPC en lanzar su pr�ximo ataque.
-    private int _cooldwnTime = 360;
+    private int _cooldwnTime = 0;
+
+    void Awake(){
+     //   stateImage = Resources.Load<Sprite>("Estados/sword");
+    }
 
     // Cambiamos los pr�metros de entrada al estado.
     // P.E. antes de atacar, el NPC tiene que detenerse.
@@ -58,15 +62,16 @@ public class Attack : State
         if ( npc.Unit.AttackRange >= distance){
             movement = false;
 
-            if (_cooldwnTime <= 0)
+            if (_cooldwnTime >= 360)
             {
               //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
                 float dmg = CombatHandler.CalculateDamage(npc, _targetNPC);
                 _targetNPC.Unit.CurrentHealthPoints -= dmg;
-                _cooldwnTime = 360;
+                _cooldwnTime = 0;
             }
             else
-                _cooldwnTime-=npc.Unit.AttackSpeed;
+                _cooldwnTime+=npc.Unit.AttackSpeed;
+            npc.GUI.UpdateBarAction(_cooldwnTime);
         } 
         
         else if (npc.Unit.VisionDistance >= distance) {      // Tenemos que perseguir el objetivo, si se puede
