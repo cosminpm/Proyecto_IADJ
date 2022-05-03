@@ -45,12 +45,19 @@ public class AgentNPC : Agent
 
          Orientation += Rotation * Time.deltaTime;
 
-         Velocity += steer.linear * Time.deltaTime;
+         if ( steer.linear == Vector3.zero )
+            Velocity = Vector3.zero;  
+        else 
+            Velocity += steer.linear * Time.deltaTime;
 
-         Rotation += steer.angular * Time.deltaTime;
+        if ( steer.angular == 0)
+            Rotation = 0;
+        else
+            Rotation += steer.angular * Time.deltaTime;
 
         transform.rotation = new Quaternion();
         transform.Rotate(Vector3.up, Orientation);
+
     }
 
     public virtual void LateUpdate()
@@ -64,8 +71,6 @@ public class AgentNPC : Agent
             steer = arbitro.GetSteering(this);
             return;
         }
-        Debug.Log(listSteerings);
-
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
         {
@@ -83,6 +88,10 @@ public class AgentNPC : Agent
             arbitro.Inicializar();
     }
 
+    // public void RemoveSteering(Steering steer){
+    //     listSteerings.RemoveSteering
+
+    // }
 
 
     private void GetSteering(SteeringBehaviour behavior)
