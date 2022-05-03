@@ -64,7 +64,6 @@ public class AgentNPC : Agent
             steer = arbitro.GetSteering(this);
             return;
         }
-        Debug.Log(listSteerings);
 
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
