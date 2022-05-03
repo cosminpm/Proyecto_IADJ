@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using Color = UnityEngine.Color;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Grid
 {
@@ -29,9 +32,9 @@ namespace Grid
         private List<Cell> _notAllowedCells;
 
         private float _sizePlaneX, _sizePlaneZ, _heightTerrain;
-
-
         private List<Cell> _cellsAdyacent;
+        // Debug variables
+        private List<Vector3> _debugListVertex;
 
         public enum TipoTerreno
         {
@@ -49,6 +52,7 @@ namespace Grid
             _allowedCells = new List<Cell>();
             _notAllowedCells = new List<Cell>();
             _cellsAdyacent = new List<Cell>();
+            _debugListVertex = new List<Vector3>();
             GetSizeXAndSizeZ();
             CreateGrid();
             _initialized = true;
@@ -60,25 +64,57 @@ namespace Grid
         {
             _cellMap = new Cell[_xSize, _zSize];
             float[] sizeOfCell = GetSizeOfCell();
-
+            Vector3 primerVector3 = GetCornetTopLeft(GameObject.Find(nameParent));
+            float x, z;
+            
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
                 {
-                    float x, z;
-                    Vector3 primerVector3 = GetCornetTopLeft(GameObject.Find(nameParent));
-                    x = i * sizeOfCell[0] + sizeOfCell[0] / 2;
-                    z = (-j + 1) * sizeOfCell[1] + sizeOfCell[1] / 2;
-                    x += primerVector3.x;
-                    z += primerVector3.z;
-                    Vector3 center = new Vector3(x, _heightTerrain, z);
-                    _cellMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j);
+                    x = sizeOfCell[0] / 2 + i * sizeOfCell[0] + primerVector3.x;
+                    z = -(sizeOfCell[1] / 2 + j * sizeOfCell[1] + primerVector3.z);
+                    Vector3 center = new Vector3(x, 0, z);
+                    TipoTerreno tipoTerreno = GetTipoTerrenoCell(center);
+                    _cellMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j, tipoTerreno);
                 }
             }
         }
 
+        private TipoTerreno GetTipoTerrenoCell(Vector3 center)
+        {
+            RaycastHit hitInfo;
+            Vector3 upVector = new Vector3(center.x, 10, center.z);
+            if (Physics.Raycast(upVector, (center-upVector).normalized ,out hitInfo))
+                return TagInTerrain(hitInfo.transform.gameObject.tag);
+            
+            throw new Exception("ERROR: El raycast no ha chocado con nada");
+        }
+
+        private TipoTerreno TagInTerrain(String str)
+        {
+            switch (str)
+            {
+                case "Camino":
+                    return TipoTerreno.Camino;
+                case "Rio":
+                    return TipoTerreno.Rio;
+                case "Pradera":
+                    return TipoTerreno.Pradera;
+                case "Bosque":
+                    return TipoTerreno.Bosque;
+                case "Acantilado":
+                    return TipoTerreno.Acantilado;
+                case "BaseRoja":
+                    return TipoTerreno.BaseRoja;
+                case "BaseAzul":
+                    return TipoTerreno.BaseAzul;
+            }
+            throw new Exception("ERROR: No se ha chocado con un elemento TERRENO, si no con otra cosa:" + str);
+        }
+        
         private Vector3 GetCornetTopLeft(GameObject parent)
         {
+            
             Vector3 corner = parent.transform.GetChild(0).GetComponent<Renderer>().bounds.center -
                              parent.transform.GetChild(0).GetComponent<Renderer>().bounds.extents;
             return corner;
@@ -278,6 +314,11 @@ namespace Grid
                 DrawCellClicked();
                 DrawCellsAllowance();
             }
+
+            if (_debugListVertex != null && _debugListVertex.Count > 0)
+            {
+                DrawVertex();
+            }
         }
 
         private void DrawAdyacentCells(Cell c)
@@ -295,6 +336,17 @@ namespace Grid
             }
         }
 
+        private void DrawVertex()
+        {
+            
+            Gizmos.color = Color.green;
+            foreach (var v in _debugListVertex)
+            {
+                Gizmos.DrawSphere(v, 0.25f);
+            }
+        }
+        
+        
         private void DrawCellClicked()
         {
             if (drawCellClicked && _cellClicked != null)
@@ -354,5 +406,9 @@ namespace Grid
 
             Debug.Log("Finish of Map");
         }
+
+
+
+
     }
 }

@@ -14,16 +14,16 @@ public class Cell
     private GridMap.TipoTerreno _tipoTerreno; 
     
     
-    public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ)
+    public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ, GridMap.TipoTerreno tipoTerreno)
     {
         _sizeX = sizeX;
         _sizeZ = sizeZ;
         _center = center;
         _coorX = coorX;
         _coorZ = coorZ;
-        //_tipoTerreno = tipoTerreno;
+        _tipoTerreno = tipoTerreno;
     }
-    
+
     public Cell(Cell c)
     {
         _sizeX = c._sizeX;
@@ -68,7 +68,7 @@ public class Cell
     {
         return _center;
     }
-
+    
     public bool CheckIfCellClicked(bool input)
     {
         if (input)

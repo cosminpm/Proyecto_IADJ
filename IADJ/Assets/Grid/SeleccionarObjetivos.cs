@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Grid;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 
 /*
  * L. Daniel Hernández. 2018. Copyleft
@@ -19,14 +22,10 @@ public class SeleccionarObjetivos : MonoBehaviour
     private List<GameObject> _listNpCs = new List<GameObject>();
     private Material _matRojo, _matBlanco;
     [SerializeField] private GameObject personajeInvisible;
-
+    
     private void Start()
     {
-        _matRojo = new Material(Shader.Find("Standard"));
-        _matRojo.color = Color.red;
 
-        _matBlanco = new Material(Shader.Find("Standard"));
-        _matBlanco.color = Color.white;
     }
 
     // Update is called once per frame
@@ -52,26 +51,29 @@ public class SeleccionarObjetivos : MonoBehaviour
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo))
             {
-                if (hitInfo.collider != null && hitInfo.collider.CompareTag("NPC"))
+                if (hitInfo.collider != null && hitInfo.collider.transform.CompareTag("BaseRoja"))
                 {
+                    
                     GameObject npc = GameObject.Find(hitInfo.collider.gameObject.name);
+                    Debug.Log(npc.name);
                     if (_listNpCs.Contains(npc))
                     {
                         SendNewTarget(npc, null);
+                        npc.transform.Find("BolaAmarilla").gameObject.SetActive(false);
                         _listNpCs.Remove(npc);
-                        npc.GetComponent<MeshRenderer>().material = _matBlanco;
-                        Debug.Log("aaaa");
                     }
                     else
                     {
                         _listNpCs.Add(npc);
-                        npc.GetComponent<MeshRenderer>().material = _matRojo;
+                        npc.transform.Find("BolaAmarilla").gameObject.SetActive(true);
                     }
                 }
             }
         }
     }
-
+    
+    
+    
     private void SendOrder()
     {
         if (Input.GetMouseButtonUp(1))
@@ -94,9 +96,10 @@ public class SeleccionarObjetivos : MonoBehaviour
                         agent = ai.GetComponent<Agent>();
                     }
 
-                    else if (hitInfo.collider.CompareTag("Prota") || hitInfo.collider.CompareTag("NPC"))
+                    else if (hitInfo.collider.transform.parent.CompareTag("BaseRoja") || hitInfo.collider.CompareTag("NPC"))
                     {
                         agent = hitInfo.transform.gameObject.GetComponent<Agent>();
+
                     }
 
                     // En caso de que no se esté clickando nada, el método termina
@@ -173,6 +176,9 @@ public class SeleccionarObjetivos : MonoBehaviour
     }
 
 
+
+
+
     public virtual GameObject CreateInvisibleAgent(Vector3 positionSpawn)
     {
         string nombreAI = "AgenteInvisible";
@@ -190,5 +196,11 @@ public class SeleccionarObjetivos : MonoBehaviour
         ai = GameObject.Find(nombreAI);
         ai.transform.position = positionSpawn;
         return ai;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // if (_listNpCs!= null && _listNpCs.Count > 0)
+        //     DrawAllPlayersSelected();
     }
 }
