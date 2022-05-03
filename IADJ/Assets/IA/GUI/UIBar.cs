@@ -17,8 +17,6 @@ public class UIBar : MonoBehaviour
     public virtual void UpdateBar(float value){
         bar.value = value;
     }
-    
-
 
 
 

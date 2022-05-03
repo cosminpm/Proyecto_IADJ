@@ -68,8 +68,6 @@ public class AgentNPC : Agent
         // Recorremos cada steering
         foreach (SteeringBehaviour behavior in listSteerings)
         {
-            if ( behavior == null)
-                Debug.Log("Rey de los steering nada "+ listSteerings.Count);
 
             if (behavior.enabled)
                 GetSteering(behavior);

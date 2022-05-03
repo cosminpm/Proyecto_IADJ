@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq; 
+using UnityEngine.UI;
 
 
 public abstract class State : MonoBehaviour
@@ -13,10 +14,16 @@ public abstract class State : MonoBehaviour
     // Indica si el npc está en movimiento
     protected bool movement;
 
+    // Imagen del estado
+    public Image stateImage;
 
     public State(){
         _targetNPC = null;
         movement = false;
+    }
+
+    void Awake(){
+        stateImage.enabled = false;
     }
 
    
@@ -39,7 +46,7 @@ public abstract class State : MonoBehaviour
     protected bool IsDead (NPC npc){
 
         if ( npc.Unit.CurrentHealthPoints <= 0){
-            npc.ChangeState(npc.stateDead);
+            npc.stateManager.ChangeState(npc.stateManager.stateDead, npc);
             return true;
         }
         return false;
@@ -50,7 +57,7 @@ public abstract class State : MonoBehaviour
     protected bool NeedHeal(NPC npc) {
 
         if (npc.Unit.CurrentHealthPoints <= npc.Unit.HealthPointsMin) {
-            npc.ChangeState(npc.stateLowHp);
+            npc.stateManager.ChangeState(npc.stateManager.stateLowHp, npc);
             return true;
         }
 
@@ -60,23 +67,23 @@ public abstract class State : MonoBehaviour
     // Función para comprobar si hay enemigos cerca. 
     // Si ese es el caso, pasará a estado Attack.
     protected bool EnemyFound(NPC npc){
-
+        
         if (findClosestEnemy(npc))
         {
-            npc.stateAttack.ObjetiveNPC = npc.CurrentState.ObjetiveNPC;
-            npc.ChangeState(npc.stateAttack);
+            npc.stateManager.stateAttack.ObjetiveNPC = npc.stateManager.CurrentState.ObjetiveNPC;
+            npc.stateManager.ChangeState(npc.stateManager.stateAttack, npc);
             return true;
         }
 
         else
-            npc.ChangeState(npc.stateCapture);
+            npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
 
         return false;
     }
 
     // Función para respownear a un NPC.
     protected void RespownUnit(NPC npc) {
-        npc.ChangeState(npc.stateCapture);
+        npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
         return;
     }
 
@@ -90,7 +97,7 @@ public abstract class State : MonoBehaviour
     // curarse. Si ese es el caso, pasará a estado Capture.
     protected bool HealingFinished(NPC npc) {
         if (npc.Unit.CurrentHealthPoints >= npc.Unit.HealthPointsMax) {
-            npc.ChangeState(npc.stateCapture);
+            npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
             return true;
         }
         return false;
