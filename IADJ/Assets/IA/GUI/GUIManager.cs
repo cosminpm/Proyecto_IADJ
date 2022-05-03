@@ -37,7 +37,9 @@ public class GUIManager : MonoBehaviour
 
 
     public void UpdateStateImagen(State oldState, State newState){
-        oldState.stateImage.enabled = false;
+        if ( oldState != null)
+            oldState.stateImage.enabled = false;
+            
         newState.stateImage.enabled = true;
     }
     

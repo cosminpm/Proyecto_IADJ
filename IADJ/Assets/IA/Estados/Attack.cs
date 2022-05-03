@@ -24,25 +24,41 @@ public class Attack : State
     public override void EntryAction(NPC npc){
         Debug.Log("Atacando ");
         movement = false;
+
+        Face f = npc.GetComponent<Face>();
+        Seek s = npc.GetComponent<Seek>();
+
+
+        if ( f != null )
+            npc.GetComponent<Face>().enabled = true;
+
+        if ( s != null )
+            npc.GetComponent<Seek>().enabled = true;
     }
 
     public override void ExitAction(NPC npc){
         // Tenemos que limpiar el path
         // _targetNPC = null;
-      //  Destroy(face);
-      _cooldwnTime = 0;
+        
+        _cooldwnTime = 0;
         npc.GUI.UpdateBarAction(_cooldwnTime);
+        npc.GetComponent<Seek>().enabled = false;
+        npc.GetComponent<Face>().enabled = false;
+        npc.Unit.UnitAgent.UpdateListSteering();
+        _targetNPC = null;
 
     }
 
     public override void Action(NPC npc, NPC _targetNPC){
 
+
+        // LO de abajo es mejor HACERLO EN EL ENTRY NO? QUE PASA EN EL CASO QUE AHAYA MAS DE UN ENEMIGO AL QUE ATACAR EN M,IU RANGO DE VISION ==============?
     
         Face f = npc.GetComponent<Face>();
         if (f == null)
         {
             npc.gameObject.AddComponent<Face>();
-            npc.Unit.UnitAgent.UpdateListSteering();
+          // npc.Unit.UnitAgent.UpdateListSteering();
             npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
         }
         else
@@ -72,11 +88,17 @@ public class Attack : State
             npc.GUI.UpdateBarAction(_cooldwnTime);
         } 
         
-        else if (npc.Unit.VisionDistance >= distance) {      // Tenemos que perseguir el objetivo, si se puede
+        else  {      // Tenemos que perseguir el objetivo, si se puede
 
-            // Como nos hace falta cosmin para esto.. vamos a utilizar steerings ( es decir vectores de posicion en vez de casillas del grid)
-            npc.gameObject.AddComponent<Seek>();
-            npc.gameObject.GetComponent<Seek>().Target = _targetNPC.gameObject.GetComponent<AgentNPC>();
+            Seek arr = npc.GetComponent<Seek>(); 
+            if ( arr == null){
+                npc.gameObject.AddComponent<Seek>();
+                npc.gameObject.GetComponent<Seek>().NewTarget(_targetNPC.Unit.UnitAgent);
+                npc.Unit.UnitAgent.UpdateListSteering();
+                
+            } else  {
+                npc.gameObject.GetComponent<Seek>().NewTarget(_targetNPC.Unit.UnitAgent);
+            }
         }
     }
 
@@ -84,10 +106,11 @@ public class Attack : State
         // Comprobamos si el NPC debe salir del estado. 
         // Esto lo har� cuando est� a poca vida, haya 
         // muerto o ya no encuentre a un enemigo.
-        if (NeedHeal(npc))
-            return;
         if (IsDead(npc))
             return;
+        if (npc.stateManager.IsLowHP(npc))
+            return;
+
         if (EnemyFound(npc))
             return;
     }
@@ -95,6 +118,10 @@ public class Attack : State
     public override void Execute(NPC npc){
         Action(npc, _targetNPC);
         CheckState(npc);
+    }
+
+    public void SetObjetiveNPC(NPC npc){
+        ObjetiveNPC = npc;
     }
 }
 

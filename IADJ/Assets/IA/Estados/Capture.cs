@@ -8,6 +8,13 @@ public class Capture : State
 {
     // Tiempo que tarda una unidad en capturar una zona.
     private int _captureTime = 1200;
+
+
+    void Awake(){
+        stateImage.enabled = true;
+    }
+
+
     public override void Action(NPC npc, NPC obj){
         
         if (_captureTime <= 0)

@@ -7,6 +7,14 @@ public class Dead : State
     // Variable para comprobar, en frames, el tiempo de respown.
     // 600 frames = 10s
     private int _timeRespown = 1800;
+
+
+    void Awake(){
+
+        stateImage.enabled = false;
+    }
+
+
     public override void EntryAction(NPC npc)
     {
         // El NPC deber�a hacer respown en su base. 

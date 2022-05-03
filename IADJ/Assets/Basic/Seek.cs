@@ -47,7 +47,7 @@ public class Seek : SteeringBehaviour
         // Comprobamos si hemos llegado al objetivo. Si es el caso, el agente se para.
         if (direccion.magnitude < target.InteriorRadius)
         {
-            steer.linear += -agent.Velocity;
+            steer.linear += -agent.Velocity*4;
             return steer;
         }
 

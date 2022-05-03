@@ -67,6 +67,7 @@ public abstract class UnitsManager : MonoBehaviour
         Soldier = 0,
         Archer = 1,
         Tank = 2,
+        Healer = 3
     }
 
       // Tipo de unidad

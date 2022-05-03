@@ -48,7 +48,7 @@ public class Arrive : SteeringBehaviour
         // Comprobamos si la distancia es menor que el radio del agente, en cuyo caso, pararíamos el agente.
         if (distance <= target.InteriorRadius)
         {
-            steer.linear = -agent.Velocity;
+            steer.linear = -agent.Velocity*3;
             steer.angular = 0;
             return steer;
         }

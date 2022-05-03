@@ -39,12 +39,12 @@ public abstract class State : MonoBehaviour
     public abstract void Execute(NPC npc);
 
 
-    // Transiciones 
+    // Transiciones TODO: JAJAJAJAJAJ
 
     // Función para comprobar si el NPC está muerto. 
     // Si ese es el caso, pasará al estado Dead.
     protected bool IsDead (NPC npc){
-
+        
         if ( npc.Unit.CurrentHealthPoints <= 0){
             npc.stateManager.ChangeState(npc.stateManager.stateDead, npc);
             return true;
@@ -52,23 +52,11 @@ public abstract class State : MonoBehaviour
         return false;
     }
 
-    // Función para comprobar que si el NPC necesita curación.
-    // Si ese es el caso, se cambiará al estado LowHp.
-    protected bool NeedHeal(NPC npc) {
-
-        if (npc.Unit.CurrentHealthPoints <= npc.Unit.HealthPointsMin) {
-            npc.stateManager.ChangeState(npc.stateManager.stateLowHp, npc);
-            return true;
-        }
-
-        return false;
-    }
-
     // Función para comprobar si hay enemigos cerca. 
     // Si ese es el caso, pasará a estado Attack.
     protected bool EnemyFound(NPC npc){
         
-        if (findClosestEnemy(npc))
+        if (FindClosestEnemy(npc))
         {
             npc.stateManager.stateAttack.ObjetiveNPC = npc.stateManager.CurrentState.ObjetiveNPC;
             npc.stateManager.ChangeState(npc.stateManager.stateAttack, npc);
@@ -80,6 +68,7 @@ public abstract class State : MonoBehaviour
 
         return false;
     }
+
 
     // Función para respownear a un NPC.
     protected void RespownUnit(NPC npc) {
@@ -93,21 +82,12 @@ public abstract class State : MonoBehaviour
         return false;
     }
 
-    // Función para comprobar si un NPC ha acabado de
-    // curarse. Si ese es el caso, pasará a estado Capture.
-    protected bool HealingFinished(NPC npc) {
-        if (npc.Unit.CurrentHealthPoints >= npc.Unit.HealthPointsMax) {
-            npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
-            return true;
-        }
-        return false;
-    }
 
     // Funciones auxiliares
 
 
     // Encuentro el enemigo más cercano dentro de mi rango de visión. Me gusta más en el NPC JULIO 
-    private bool findClosestEnemy(NPC npc){
+    private bool FindClosestEnemy(NPC npc){
 
         // Lista de enemigos
         GameObject[] enemys;

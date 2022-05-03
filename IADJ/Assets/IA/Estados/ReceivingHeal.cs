@@ -1,10 +1,12 @@
+using System.Numerics;
+using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class Healing : State
+public class ReceivingHeal : State
 {
-    void Awake(){
+     void Awake(){
      //   stateImage = Resources.Load<Sprite>("Estados/sword");
         stateImage.enabled = false;
     }

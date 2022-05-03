@@ -28,7 +28,7 @@ public class NPC : MonoBehaviour
         stateManager = GetComponent<StateManager>();
         GUI = GetComponent<GUIManager>();
         GUI.Initialize();
-        stateManager.Initialize(this);
+        stateManager.Initialize(GetUnitType(), this);
     }
 
     void Start(){
@@ -42,6 +42,57 @@ public class NPC : MonoBehaviour
 
     }
 
+    public List<NPC> FindNearbyAllies(){
+
+       // Lista de aliados
+        GameObject[] allies;
+        List<NPC> listAllies = new List<NPC>();
+
+        // Dependiendo del equipo que sea, busco mis amigos
+        switch ((int) GetUnitTeam())
+        {
+            case 0:
+                allies = GameObject.FindGameObjectsWithTag("TeamRed");
+                break;
+            case 1:
+                allies = GameObject.FindGameObjectsWithTag("TeamBlue");
+                break;
+            default:
+                allies = null;
+                break;
+        }
+
+        foreach ( var a in allies){
+            if ( this.isInVisionRange(a.GetComponent<NPC>()))
+                 listAllies.Add(a.GetComponent<NPC>());
+        }
+
+        return listAllies;
+    }
+
+
+    public bool isInVisionRange(NPC npc){
+
+        if (npc == null)
+            Debug.Log(" DEsauno con juevboi");
+
+        // Obtenemos la dirección hacia el target
+        Vector3 direction = npc.GetUnitPosition() - this.GetUnitPosition();
+        // Distancia que hay entre el agente y el target
+        float distance = direction.magnitude;
+
+        if ( distance <= GetUnitVisionDistance() ){
+            return true;
+        }
+        return false;
+    }
+
+    public bool NeedHeal()
+    {
+        return GetUnitCurrentHP() <= GetUnitHPMin();
+    }
+
+
     public UnitsManager Unit
     {
         get { return _unit; }
@@ -51,6 +102,46 @@ public class NPC : MonoBehaviour
     public Vector3 GetUnitPosition(){
         return Unit.UnitAgent.Position;
     }
+
+    public float GetUnitVisionDistance(){
+
+        return Unit.VisionDistance;
+    }
+
+    public float GetUnitHPMax(){
+
+        return Unit.HealthPointsMax;
+
+    }
+
+    public float GetUnitHPMin(){
+
+        return Unit.HealthPointsMin;
+    }
+
+    public float GetUnitCurrentHP(){
+        return Unit.CurrentHealthPoints;
+    }
+
+    public int GetUnitType(){
+        return (int) Unit.TypeUnit;
+    }
+
+    public int GetUnitTeam(){
+        return (int) Unit.UnitTeam;
+    }
+
+    public float GetNPCArrivalRadius(){
+        return Unit.UnitAgent.ArrivalRadius;
+    }
+
+   
+
+
+
+
+
+
 
 }
 

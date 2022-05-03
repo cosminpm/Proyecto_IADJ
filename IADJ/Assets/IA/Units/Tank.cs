@@ -32,26 +32,28 @@ public class Tank : UnitsManager
 
     protected override void SetMovementStats(){
         // Velocidad
-        UnitAgent.Speed = 2;
-        UnitAgent.MaxSpeed = 4;
+        UnitAgent.Speed = 1;
+        UnitAgent.MaxSpeed = 2;
         UnitAgent.MaxRotation = 30;
         UnitAgent.MaxAcceleration = 1;
         UnitAgent.MaxAngularAcceleartion = 80;
         UnitAgent.MaxRotation = 80;
+        UnitAgent.InteriorRadius = 5.0f;
+        UnitAgent.ArrivalRadius = 5.5f;
     }
 
     protected override void SetUnitStats(){
 
-        HealthPointsMax = 300;
+        HealthPointsMax = 500;
         HealthPointsMin = 50;
-        CurrentHealthPoints = 300;
-        AttackPoints = 10;
+        CurrentHealthPoints = 500;
+        AttackPoints = 50;
         // TODO: El rango se hace a ojo con el modo debug
         AttackRange = 5;
         AttackSpeed = 1;
         AttackAccuracy = 0.9f;
         CriticRate = 0.1f;
-        VisionDistance = 3; 
+        VisionDistance = 10; 
         TypeUnit = TypeUnits.Tank;
     }
     /*public void OnDrawGizmos()

@@ -3,10 +3,10 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 
-public class Soldier : UnitsManager
+public class Healer : UnitsManager
 {
+
      // TODO: para debug
      [SerializeField] protected bool _drawGizmos;
 
@@ -15,7 +15,7 @@ public class Soldier : UnitsManager
         SetMovementStats();
     }
 
-    public Soldier(){
+    public Healer(){
         //base();
         SetUnitStats();
         AddCostsTerrain();
@@ -52,7 +52,7 @@ public class Soldier : UnitsManager
         AttackAccuracy = 0.8f;
         CriticRate = 0.1f;
         VisionDistance = 10; 
-        TypeUnit = TypeUnits.Soldier;
+        TypeUnit = TypeUnits.Healer;
     }
 
     /*public void OnDrawGizmos()
@@ -69,8 +69,8 @@ public class Soldier : UnitsManager
         Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
         return aux.normalized;
     }*/
-}
 
-   
+
+}
 
    
