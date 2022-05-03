@@ -74,7 +74,6 @@ namespace Grid
                     x = sizeOfCell[0] / 2 + i * sizeOfCell[0] + primerVector3.x;
                     z = -(sizeOfCell[1] / 2 + j * sizeOfCell[1] + primerVector3.z);
                     Vector3 center = new Vector3(x, 0, z);
-                    _debugListVertex.Add(center);
                     TipoTerreno tipoTerreno = GetTipoTerrenoCell(center);
                     _cellMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j, tipoTerreno);
                 }

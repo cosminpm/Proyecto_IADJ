@@ -68,7 +68,7 @@ public class Cell
     {
         return _center;
     }
-
+    
     public bool CheckIfCellClicked(bool input)
     {
         if (input)

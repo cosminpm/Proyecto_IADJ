@@ -60,7 +60,6 @@ public class SeleccionarObjetivos : MonoBehaviour
                         SendNewTarget(npc, null);
                         _listNpCs.Remove(npc);
                         npc.GetComponent<MeshRenderer>().material = _matBlanco;
-                        Debug.Log("aaaa");
                     }
                     else
                     {
