@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Global;
 using Grid;
 using UnityEditor;
 using UnityEngine;
@@ -18,7 +19,6 @@ namespace Pathfinding
         public int heuristic = 2;
 
         // Private variables
-        private int localSpaceMode = 0;
         private Node[,] _nodeMap;
         private int _xSize, _zSize;
         private List<Node> _path;
@@ -27,15 +27,6 @@ namespace Pathfinding
         {
             _path = new List<Node>();
             InitializeNodeMap();
-        }
-
-        private void Update()
-        {
-            // Cell startCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha1));
-            // Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
-            //
-            // List<Node> finalPath = new List<Node>(); 
-            // ApplyAStar(startCell, finishCell, ref _path);
         }
 
         private float HeuristicApply(Node startNode, Node finishNode, int heuristicApply)
@@ -55,7 +46,7 @@ namespace Pathfinding
 
         private List<Node> GetNeighboursList(Node node, int heuristicApply)
         {
-            List<Cell> neighbours = GameObject.Find("GridController").GetComponent<GridMap>()
+            List<Cell> neighbours = GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>()
                 .GetAllNeighbours(node.GetCell(), heuristicApply).ToList();
 
             List<Node> result = new List<Node>();
@@ -110,16 +101,17 @@ namespace Pathfinding
 
         private void InitializeNodeMap()
         {
-            GridMap gridMap = GameObject.Find("GridController").GetComponent<GridMap>();
+            GridMap gridMap = GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>();
             _xSize = gridMap.GetXSize();
             _zSize = gridMap.GetZSize();
+            
             _nodeMap = new Node[_xSize, _zSize];
             SetCostsToStart();
         }
 
         private void SetCostsToStart()
         {
-            GridMap gridMap = GameObject.Find("GridController").GetComponent<GridMap>();
+            GridMap gridMap = GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>();
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
@@ -130,15 +122,14 @@ namespace Pathfinding
             }
         }
 
-        public void ApplyAStar(Cell startCell, Cell finishCell, ref List<Node> _path)
+        public void ApplyAStar(Cell startCell, Cell finishCell, ref List<Node> path)
         {
             if (CellIsGood(startCell) && CellIsGood(finishCell) && !startCell.Equals(finishCell))
             {
                 SetCostsToStart();
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
-                _path.Clear();
-                AStar(startNode, finishNode, ref _path);
+                AStar(startNode, finishNode, ref path);
             }
         }
 
@@ -147,23 +138,6 @@ namespace Pathfinding
         {
             return node != null && node.GetIsAllowedCell();
         }
-
-        // A STAR
-        // private void ApplyAStar(Cell startCell, Cell finishCell, int heuristicCost)
-        // {
-        //     Debug.Log("ST:" + startCell);
-        //     Debug.Log("FC:" + finishCell);
-        //     Debug.Log(finishCell.GetIsAllowedCell());
-        //     if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
-        //         finishCell.GetIsAllowedCell())
-        //     {
-        //         Node startNode = RecoverNodeFromCell(startCell);
-        //         Node finishNode = RecoverNodeFromCell(finishCell);
-        //         _path.Clear();
-        //         AStar(startNode, finishNode, ref _path);
-        //     }
-        // }
-
         private List<Node> AStar(Node startNode, Node finalNode, ref List<Node> path)
         {
             List<Node> closedList = new List<Node>();
@@ -172,8 +146,7 @@ namespace Pathfinding
             startNode.SetGCost(0);
             startNode.SetHCost(HeuristicApply(startNode, finalNode, heuristic));
             startNode.CalculateFCost();
-
-            int count = 0;
+            
             while (openList.Count > 0)
             {
                 Node currentNode = GetLowestCostFNode(openList);
@@ -206,8 +179,6 @@ namespace Pathfinding
                         }
                     }
                 }
-
-                count += 1;
             }
 
             return null;

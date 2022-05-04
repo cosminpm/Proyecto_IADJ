@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Global;
 using Grid;
 using UnityEditor;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace Pathfinding
             _path = _pathFollowing.path;
 
             _path.nodos = new List<Node>();
-            gridMap = GameObject.Find("GridController").GetComponent<GridMap>();
+            gridMap = GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>();
             GetComponent<ArbitroPonderado>().Inicializar();
             drawColorPath = true;
         }
@@ -42,17 +43,21 @@ namespace Pathfinding
         {
             if (Input.GetKeyUp(KeyCode.Alpha2))
             {
-                Cell startCell = WorldToMap(transform.position);
                 Cell finishCell = gridMap.CheckIfCellClicked(true);
-
-                _path.nodos = new List<Node>();
-                _pathFollowing.currentPos = 0;
-                _pathFinding.ApplyAStar(startCell, finishCell, ref _path.nodos);
+                SendOrder(finishCell);
             }
-            Debug.Log(_path.nodos.Count);
         }
 
 
+        public void SendOrder(Cell finishCell)
+        {
+            Cell startCell = WorldToMap(transform.position);
+            _path.nodos = new List<Node>();
+            _pathFollowing.currentPos = 0;
+            _pathFinding.ApplyAStar(startCell, finishCell, ref _path.nodos);
+        }
+        
+        
         private void OnDrawGizmos()
         {
             DrawPath();

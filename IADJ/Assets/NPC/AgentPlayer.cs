@@ -8,10 +8,7 @@ using UnityEngine;
 
 public class AgentPlayer : Agent
 {
-    public override void Awake()
-    {
-        //  TODO: Hace nada ahora mismo
-    }
+    public override void Awake() {}
     
     public virtual void Update()
     {

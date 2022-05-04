@@ -7,8 +7,7 @@ using UnityEditor;
 
 public class Archer : UnitsManager
 {
-     // TODO: para debug
-     [SerializeField] protected bool _drawGizmos;
+    [SerializeField] protected bool drawGizmos;
 
     void Start(){
         UnitAgent = GetComponent<AgentNPC>();
@@ -58,7 +57,7 @@ public class Archer : UnitsManager
 
      public void OnDrawGizmos()
     {
-        if (_drawGizmos)
+        if (drawGizmos)
         {
             // Velocidad
             Handles.color = Color.red;

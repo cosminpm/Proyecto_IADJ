@@ -3,6 +3,8 @@ using Grid;
 using Pathfinding;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class Cell
 {
@@ -33,6 +35,11 @@ public class Cell
         _coorX = c._coorX;
         _coorZ = c._coorZ;
         _tipoTerreno = c._tipoTerreno;
+    }
+
+    protected Cell()
+    {
+        throw new NotImplementedException();
     }
 
     public GridMap.TipoTerreno GetTipoTerreno()
@@ -114,10 +121,10 @@ public class Cell
         Vector3 point = entrante;
 
         if (
-            point.x > (_center.x - amplitudeX) &&
-            point.x < (_center.x + amplitudeX) &&
-            point.z > (_center.z - amplitudeZ) &&
-            point.z < (_center.z + amplitudeZ)
+            point.x >= (_center.x - amplitudeX) &&
+            point.x <= (_center.x + amplitudeX) &&
+            point.z >= (_center.z - amplitudeZ) &&
+            point.z <= (_center.z + amplitudeZ)
         )
             return true;
         return false;
@@ -140,6 +147,9 @@ public class Cell
         Gizmos.color = color;
         Gizmos.DrawCube(_center, new Vector3(_sizeX, 0,_sizeZ));
     }
+    
+    
+    
 
     public void DrawCellNumber(int sizeOfTextGrid)
     {
@@ -186,15 +196,15 @@ public class Cell
         Collider[] colls = Physics.OverlapBox(_center, new Vector3(_sizeX, 1, _sizeZ) / 2);
         foreach (var c in colls)
         {
-            if (c.transform.CompareTag("Untagged"))
+            if (!c.transform.CompareTag("Untagged"))
             {
                 _allowedCell = true;
-                return true;
+                return false;
             }
                
         }
-        _allowedCell = true;
-        return false;
+        _allowedCell = false;
+        return true;
     }
 
     public bool Equals(Cell n)

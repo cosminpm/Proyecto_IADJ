@@ -103,7 +103,6 @@ public class SeleccionarObjetivos : MonoBehaviour
                     else if (hitInfo.collider.transform.parent.CompareTag("BaseRoja") || hitInfo.collider.CompareTag("NPC"))
                     {
                         agent = hitInfo.transform.gameObject.GetComponent<Agent>();
-
                     }
 
                     // En caso de que no se esté clickando nada, el método termina

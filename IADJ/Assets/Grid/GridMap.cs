@@ -21,8 +21,6 @@ namespace Grid
         public int sizeOfTextGrid = 10;
         public String nameParent = "";
 
-        public String tagFloor = "";
-
         // Private variables
         private bool _initialized;
         private Cell[,] _cellMap;
@@ -90,7 +88,7 @@ namespace Grid
             throw new Exception("ERROR: El raycast no ha chocado con nada");
         }
 
-        private TipoTerreno TagInTerrain(String str)
+        public static TipoTerreno TagInTerrain(String str)
         {
             switch (str)
             {
@@ -259,11 +257,6 @@ namespace Grid
             return new[] {topLeft, topRight, botLeft, botRight};
         }
 
-        public Cell[] GetAllNeighbours(Cell c)
-        {
-            return GetAllNeighbours(c, 999);
-        }
-
         public Cell[] GetAllNeighbours(Cell c, int heuristicApply)
         {
             List<Cell> c1 = new List<Cell>();
@@ -284,8 +277,8 @@ namespace Grid
                     return cell;
                 }
             }
-
-            throw new Exception("The player is not in the grid");
+            _debugListVertex.Add(v);
+            throw new Exception("The player with vector:"+v+" is not in the grid");
         }
 
 
@@ -342,7 +335,7 @@ namespace Grid
             Gizmos.color = Color.green;
             foreach (var v in _debugListVertex)
             {
-                Gizmos.DrawSphere(v, 0.25f);
+                Gizmos.DrawSphere(v, 1f);
             }
         }
         

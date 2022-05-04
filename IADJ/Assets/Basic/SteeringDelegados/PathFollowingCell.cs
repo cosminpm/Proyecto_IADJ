@@ -51,7 +51,7 @@ public class PathFollowingCell : Seek
             if (currentPos >= path.Length() || currentPos < 0)
             {
                 currentPos = pathDir;
-             //   path.nodos = new List<Node>();
+                //path.nodos = new List<Node>();
                 path.DeletePath();
                 return new Steering();
                 //currentPos = path.Length() - 1;

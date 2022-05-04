@@ -5,9 +5,6 @@ using Vector3 = UnityEngine.Vector3;
 public class Seek : SteeringBehaviour
 {
     [SerializeField] protected Agent target;
-
-    // TODO: Preguntar al profesor si esto es correcto
-    // Por ahora esto funciona
     public virtual void NewTarget(Agent t)
     {
         target = t;
