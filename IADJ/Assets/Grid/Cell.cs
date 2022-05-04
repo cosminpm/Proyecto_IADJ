@@ -9,7 +9,8 @@ public class Cell
     private float _sizeX, _sizeZ;
     private Vector3 _center;
     private GameObject _collider;
-    private bool _allowedCell;
+    // TODO: HOTFIX, comprobarlo posteriormente
+    private bool _allowedCell = true;
     private int _coorX, _coorZ;
     private GridMap.TipoTerreno _tipoTerreno; 
     
@@ -92,13 +93,16 @@ public class Cell
             float amplitudeX = _sizeX / 2;
             float amplitudeZ = _sizeZ / 2;
             Vector3 point = h.point;
-            if (h.transform.CompareTag(GameObject.Find("Controlador").GetComponent<GridMap>().tagFloor) &&
+            if (
                 point.x > (_center.x - amplitudeX) &&
                 point.x < (_center.x + amplitudeX) &&
                 point.z > (_center.z - amplitudeZ) &&
                 point.z < (_center.z + amplitudeZ)
             )
-                return true;
+            {
+                return true; 
+            }
+
         }
         return false;
     }
@@ -175,6 +179,8 @@ public class Cell
         return  _coorX + ", " + _coorZ;
     }
     
+    
+    // TODO: Cambiar el comparador del tag, para detectar colisiones
     public bool CheckCollision()
     {
         Collider[] colls = Physics.OverlapBox(_center, new Vector3(_sizeX, 1, _sizeZ) / 2);
@@ -182,7 +188,7 @@ public class Cell
         {
             if (c.transform.CompareTag("Untagged"))
             {
-                _allowedCell = false;
+                _allowedCell = true;
                 return true;
             }
                

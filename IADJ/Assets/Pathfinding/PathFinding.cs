@@ -16,9 +16,7 @@ namespace Pathfinding
         public bool drawNumberPath, drawColorPath, drawCosts;
         public int sizeOfTextPath = 10;
         public int heuristic = 2;
-        public int radio = 3;
-        public int maxCounterLRTA = 1000;
-        
+
         // Private variables
         private int localSpaceMode = 0;
         private Node[,] _nodeMap;
@@ -57,7 +55,8 @@ namespace Pathfinding
 
         private List<Node> GetNeighboursList(Node node, int heuristicApply)
         {
-            List<Cell> neighbours = GameObject.Find("Controlador").GetComponent<GridMap>().GetAllNeighbours(node.GetCell(), heuristicApply).ToList();
+            List<Cell> neighbours = GameObject.Find("GridController").GetComponent<GridMap>()
+                .GetAllNeighbours(node.GetCell(), heuristicApply).ToList();
 
             List<Node> result = new List<Node>();
             foreach (var neighbour in neighbours)
@@ -91,6 +90,7 @@ namespace Pathfinding
                 currentNode = currentNode.GetPreviousNode();
                 path.Add(currentNode);
             }
+
             path.Reverse();
             return path;
         }
@@ -110,7 +110,7 @@ namespace Pathfinding
 
         private void InitializeNodeMap()
         {
-            GridMap gridMap = GameObject.Find("Controlador").GetComponent<GridMap>();
+            GridMap gridMap = GameObject.Find("GridController").GetComponent<GridMap>();
             _xSize = gridMap.GetXSize();
             _zSize = gridMap.GetZSize();
             _nodeMap = new Node[_xSize, _zSize];
@@ -119,7 +119,7 @@ namespace Pathfinding
 
         private void SetCostsToStart()
         {
-            GridMap gridMap = GameObject.Find("Controlador").GetComponent<GridMap>();
+            GridMap gridMap = GameObject.Find("GridController").GetComponent<GridMap>();
             for (int i = 0; i < _xSize; i++)
             {
                 for (int j = 0; j < _zSize; j++)
@@ -128,191 +128,6 @@ namespace Pathfinding
                     _nodeMap[i, j].SetFCost(Mathf.Infinity);
                 }
             }
-        }
-
-        // Functions of Finding Path
-        private void SetHeuristicOfEveryOne(Node finishNode, int heuristicCost)
-        {
-            for (int i = 0; i < _xSize; i++)
-            {
-                for (int j = 0; j < _zSize; j++)
-                {
-                    _nodeMap[i, j].SetHCost(HeuristicApply(_nodeMap[i, j], finishNode, heuristicCost));
-                    if (_nodeMap[i, j].Equals(finishNode))
-                    {
-                        _nodeMap[i, j].SetHCost(0f);
-                    }
-                }
-            }
-        }
-
-        // LRTA Star
-        private List<Node> LRTAVariosPasos(Node startNode, Node finalNode, int heuristicApply, ref List<Node> finalPath)
-        {
-            SetHeuristicOfEveryOne(finalNode, heuristicApply);
-            Node currentNode = new Node(startNode);
-            finalPath.Add(startNode);
-
-            int contador = 0;
-
-            while (!currentNode.Equals(finalNode))
-            {
-                List<Node> localSpace = GetLocalSpace(currentNode, finalNode);
-
-                if (!localSpace.Contains(currentNode))
-                    UpdateValuesLocalSpace(localSpace, heuristicApply);
-
-                float minCost = Mathf.Infinity;
-                List<Node> neighbours = GetNeighboursList(currentNode, heuristicApply);
-                Node minNode = neighbours[0];
-                foreach (var neighbour in neighbours)
-                {
-                    if (neighbour.GetHCost() < minCost)
-                    {
-                        minCost = neighbour.GetHCost();
-                        minNode = neighbour;
-                    }
-                }
-
-                currentNode = new Node(minNode);
-                finalPath.Add(currentNode);
-
-                contador += 1;
-                if (contador > maxCounterLRTA)
-                {
-                    return finalPath;
-                }
-            }
-            return finalPath;
-        }
-
-        private void UpdateValuesLocalSpace(List<Node> localSpace, int costHeuristic)
-        {
-            List<Node> copyLocalSpace = new List<Node>();
-            foreach (var node in localSpace)
-                copyLocalSpace.Add(new Node(node));
-
-            foreach (var node in copyLocalSpace)
-            {
-                node.SetTempCost(node.GetHCost());
-                node.SetMaxCost(Mathf.NegativeInfinity);
-                node.SetHCost(Mathf.Infinity);
-            }
-
-            // While Infinit values exists in the HCost
-            while (copyLocalSpace.Count > 0)
-            {
-                foreach (var node in copyLocalSpace)
-                {
-                    float minCost = Mathf.Infinity;
-                    foreach (var neighbour in GetNeighboursList(node))
-                    {
-                        float hCost = neighbour.GetHCost() + HeuristicApply(neighbour, node, costHeuristic);
-                        if (hCost < minCost)
-                            minCost = hCost;
-                    }
-
-                    float maxCost = Mathf.Max(minCost, node.GetTempCost());
-                    node.SetMaxCost(maxCost);
-                }
-
-                Node maxNode = copyLocalSpace[0];
-                float maxValue = Mathf.NegativeInfinity;
-                foreach (var node in copyLocalSpace)
-                {
-                    if (node.GetMaxCost() > maxValue)
-                    {
-                        maxValue = node.GetMaxCost();
-                        maxNode = node;
-                    }
-                }
-
-                // Recover node from not the copy and set it cost
-                RecoverNodeFromCell(maxNode.GetCell()).SetHCost(maxNode.GetMaxCost());
-                maxNode.SetHCost(maxNode.GetMaxCost());
-                // Set the cost in the local space
-                foreach (var node in localSpace)
-                    node.SetMaxCost(Mathf.Infinity);
-                foreach (var node in copyLocalSpace)
-                    node.SetMaxCost(Mathf.Infinity);
-
-                copyLocalSpace.Remove(maxNode);
-            }
-        }
-
-        private List<Node> GetLocalSpace(Node startNode, Node finishNode)
-        {
-            switch (localSpaceMode)
-            {
-                case 0:
-                    return GetLocalSpaceRadio(startNode, finishNode);
-                default:
-                    return GetLocalSpaceRadio(startNode, finishNode);
-            }
-        }
-
-        private List<Node> GetLocalSpaceAStar(Node startNode, Node finishNode)
-        {
-            List<Node> localSpace = AStar(startNode, finishNode);
-            return localSpace;
-        }
-
-
-        private List<Node> GetLocalSpaceRadio(Node startNode, Node finishNode)
-        {
-            List<Node> localSpace = GetLSRadioRecursive(startNode, radio);
-            localSpace = localSpace.Distinct().ToList();
-            localSpace.Remove(finishNode);
-            return localSpace;
-        }
-
-
-        private List<Node> GetLSRadioRecursive(Node startNode, int radioNeighbours)
-        {
-            List<Node> neighboursList = GetNeighboursList(startNode);
-            List<Node> localSpace = new List<Node>();
-            localSpace.AddRange(neighboursList);
-
-            int count = 1;
-            while (count < radioNeighbours)
-            {
-                foreach (var neighbour in neighboursList)
-                    localSpace.AddRange(GetLSRadioRecursive(neighbour, radioNeighbours - 1));
-                count += 1;
-            }
-
-            return localSpace;
-        }
-
-
-        // 
-        private List<Node> LRTAStarUnPaso(Node startNode, Node finishNode, int heuristicApply)
-        {
-            SetCostsToStart();
-            SetHeuristicOfEveryOne(finishNode, heuristicApply);
-            Node actualNode = new Node(startNode);
-
-            List<Node> actualPath = new List<Node> {actualNode};
-            while (!actualNode.Equals(finishNode))
-            {
-                List<Node> neighboursList = GetNeighboursList(actualNode);
-                Node min = neighboursList[0];
-                float minCost = Mathf.Infinity;
-                foreach (var neighbour in neighboursList)
-                {
-                    if (1 + neighbour.GetHCost() < minCost)
-                    {
-                        min = neighbour;
-                        minCost = 1 + neighbour.GetHCost();
-                    }
-                }
-
-                actualNode.SetHCost(1 + min.GetHCost());
-                actualNode = min;
-                actualPath.Add(actualNode);
-            }
-
-            return actualPath;
         }
 
         public void ApplyAStar(Cell startCell, Cell finishCell)
@@ -336,6 +151,9 @@ namespace Pathfinding
         // A STAR
         private void ApplyAStar(Cell startCell, Cell finishCell, int heuristicCost)
         {
+            Debug.Log("ST:" + startCell);
+            Debug.Log("FC:" + finishCell);
+            Debug.Log(finishCell.GetIsAllowedCell());
             if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
                 finishCell.GetIsAllowedCell())
             {
@@ -354,7 +172,7 @@ namespace Pathfinding
             startNode.SetGCost(0);
             startNode.SetHCost(HeuristicApply(startNode, finalNode, heuristic));
             startNode.CalculateFCost();
-            
+
             int count = 0;
 
             while (openList.Count > 0)

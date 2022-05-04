@@ -33,7 +33,7 @@ namespace Pathfinding
             _path = _pathFollowing.path;
 
             _path.nodos = new List<Node>();
-            gridMap = GameObject.Find("Controlador").GetComponent<GridMap>();
+            gridMap = GameObject.Find("GridController").GetComponent<GridMap>();
             GetComponent<ArbitroPonderado>().Inicializar();
             drawColorPath = true;
         }

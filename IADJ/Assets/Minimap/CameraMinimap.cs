@@ -13,10 +13,16 @@ public class CameraMinimap : MonoBehaviour
         Vector3 newPosition = player.position;
         newPosition.y = transform.position.y;
         transform.position = newPosition;
-        
         transform.rotation = Quaternion.Euler(90f, player.eulerAngles.y,0f);
     }
 
+
+
+    public void SetTransform(Transform t)
+    {
+        player = t;
+    }
+    
     // Update is called once per frame
     void Update()
     {

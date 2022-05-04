@@ -40,8 +40,7 @@ public class SeleccionarObjetivos : MonoBehaviour
     {
         return new List<GameObject>(_listNpCs);
     }
-    
-    
+
     private void SelectNPCs()
     {
         // Comprobamos si se hace click en algun punto del escenario.
@@ -51,7 +50,7 @@ public class SeleccionarObjetivos : MonoBehaviour
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo))
             {
-                if (hitInfo.collider != null && hitInfo.collider.transform.CompareTag("BaseRoja"))
+                if (hitInfo.collider != null && CompareTagTeam(hitInfo))
                 {
                     
                     GameObject npc = GameObject.Find(hitInfo.collider.gameObject.name);
@@ -59,12 +58,16 @@ public class SeleccionarObjetivos : MonoBehaviour
                     if (_listNpCs.Contains(npc))
                     {
                         SendNewTarget(npc, null);
-                        npc.transform.Find("BolaAmarilla").gameObject.SetActive(false);
                         _listNpCs.Remove(npc);
+                        
+                        npc.transform.Find("BolaAmarilla").gameObject.SetActive(false);
+                        if (_listNpCs.Count > 0)
+                            GameObject.Find("MinimapCamera").GetComponent<CameraMinimap>().SetTransform(_listNpCs[_listNpCs.Count-1].transform);
                     }
                     else
                     {
                         _listNpCs.Add(npc);
+                        GameObject.Find("MinimapCamera").GetComponent<CameraMinimap>().SetTransform(npc.transform);
                         npc.transform.Find("BolaAmarilla").gameObject.SetActive(true);
                     }
                 }
@@ -94,6 +97,7 @@ public class SeleccionarObjetivos : MonoBehaviour
                         Vector3 center = GameObject.Find("Controlador").GetComponent<GridMap>().WorldToMap(position).GetCenter();
                         GameObject ai = CreateInvisibleAgent(center);
                         agent = ai.GetComponent<Agent>();
+                        
                     }
 
                     else if (hitInfo.collider.transform.parent.CompareTag("BaseRoja") || hitInfo.collider.CompareTag("NPC"))
@@ -151,7 +155,11 @@ public class SeleccionarObjetivos : MonoBehaviour
         }
     }
 
-
+    private bool CompareTagTeam(RaycastHit hitInfo)
+    {
+        return hitInfo.collider.transform.CompareTag("BaseRoja") || hitInfo.collider.transform.CompareTag("BaseAzul");
+    }
+    
     private void SelectAllUnits()
     {
         if (Input.GetKeyUp(KeyCode.P))
