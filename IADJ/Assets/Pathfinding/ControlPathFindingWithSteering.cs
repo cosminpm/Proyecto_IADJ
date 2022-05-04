@@ -47,8 +47,9 @@ namespace Pathfinding
 
                 _path.nodos = new List<Node>();
                 _pathFollowing.currentPos = 0;
-                _pathFinding.ApplyAStar(startCell, finishCell);
+                _pathFinding.ApplyAStar(startCell, finishCell, ref _path.nodos);
             }
+            Debug.Log(_path.nodos.Count);
         }
 
 

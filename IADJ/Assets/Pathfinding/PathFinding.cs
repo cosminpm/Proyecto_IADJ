@@ -35,7 +35,7 @@ namespace Pathfinding
             // Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(Input.GetKeyUp(KeyCode.Alpha2));
             //
             // List<Node> finalPath = new List<Node>(); 
-            // ApplyLRTA(startCell, finishCell,ref _path);
+            // ApplyAStar(startCell, finishCell, ref _path);
         }
 
         private float HeuristicApply(Node startNode, Node finishNode, int heuristicApply)
@@ -130,7 +130,7 @@ namespace Pathfinding
             }
         }
 
-        public void ApplyAStar(Cell startCell, Cell finishCell)
+        public void ApplyAStar(Cell startCell, Cell finishCell, ref List<Node> _path)
         {
             if (CellIsGood(startCell) && CellIsGood(finishCell) && !startCell.Equals(finishCell))
             {
@@ -138,7 +138,7 @@ namespace Pathfinding
                 Node startNode = RecoverNodeFromCell(startCell);
                 Node finishNode = RecoverNodeFromCell(finishCell);
                 _path.Clear();
-                ApplyAStar(startNode.GetCell(), finishNode.GetCell(), heuristic);
+                AStar(startNode, finishNode, ref _path);
             }
         }
 
@@ -149,22 +149,22 @@ namespace Pathfinding
         }
 
         // A STAR
-        private void ApplyAStar(Cell startCell, Cell finishCell, int heuristicCost)
-        {
-            Debug.Log("ST:" + startCell);
-            Debug.Log("FC:" + finishCell);
-            Debug.Log(finishCell.GetIsAllowedCell());
-            if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
-                finishCell.GetIsAllowedCell())
-            {
-                Node startNode = RecoverNodeFromCell(startCell);
-                Node finishNode = RecoverNodeFromCell(finishCell);
-                _path.Clear();
-                _path = AStar(startNode, finishNode);
-            }
-        }
+        // private void ApplyAStar(Cell startCell, Cell finishCell, int heuristicCost)
+        // {
+        //     Debug.Log("ST:" + startCell);
+        //     Debug.Log("FC:" + finishCell);
+        //     Debug.Log(finishCell.GetIsAllowedCell());
+        //     if (startCell != null && finishCell != null && startCell != finishCell && startCell.GetIsAllowedCell() &&
+        //         finishCell.GetIsAllowedCell())
+        //     {
+        //         Node startNode = RecoverNodeFromCell(startCell);
+        //         Node finishNode = RecoverNodeFromCell(finishCell);
+        //         _path.Clear();
+        //         AStar(startNode, finishNode, ref _path);
+        //     }
+        // }
 
-        private List<Node> AStar(Node startNode, Node finalNode)
+        private List<Node> AStar(Node startNode, Node finalNode, ref List<Node> path)
         {
             List<Node> closedList = new List<Node>();
             List<Node> openList = new List<Node> {startNode};
@@ -174,14 +174,15 @@ namespace Pathfinding
             startNode.CalculateFCost();
 
             int count = 0;
-
             while (openList.Count > 0)
             {
                 Node currentNode = GetLowestCostFNode(openList);
 
                 if (currentNode.Equals(finalNode))
                 {
-                    return CalculatePath(currentNode);
+                    List<Node> calculatedPath =  CalculatePath(currentNode);
+                    path = calculatedPath;
+                    return calculatedPath;
                 }
 
                 openList.Remove(currentNode);
