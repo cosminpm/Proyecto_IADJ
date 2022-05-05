@@ -38,17 +38,8 @@ namespace Pathfinding
             GetComponent<ArbitroPonderado>().Inicializar();
             drawColorPath = true;
         }
-
-        public void Update()
-        {
-            if (Input.GetKeyUp(KeyCode.Alpha2))
-            {
-                Cell finishCell = gridMap.CheckIfCellClicked(true);
-                SendOrder(finishCell);
-            }
-        }
-
-
+        
+        
         public void SendOrder(Cell finishCell)
         {
             Cell startCell = WorldToMap(transform.position);
@@ -66,6 +57,7 @@ namespace Pathfinding
 
         private void DrawPath()
         {
+            Debug.Log(_path);
             if (_path != null)
             {
                 int pathLen = _path.nodos.Count;

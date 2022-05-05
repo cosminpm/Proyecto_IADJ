@@ -25,9 +25,6 @@ namespace InfluenceMap
             _teamInfluence = teamInfluence;
             _valueOfInfluence = valueOfInfluence;
         }
-
-        
-        
         
         public void SetNewInfluence(int newTeamInfluence, float newValueOfInfluence)
         {
@@ -75,6 +72,11 @@ namespace InfluenceMap
         public void SetValueOfInfluence(float valueOfInfluence)
         {
             _valueOfInfluence = valueOfInfluence;
+            if (_valueOfInfluence < GlobalAttributes.MINIMUM_VALUE_INFLUENCE)
+            {
+                _teamInfluence = GlobalAttributes.CELDA_INFLUENCIA_NADIE;
+            }
+            
         }
 
         public float GetValueInfluence()
@@ -85,8 +87,6 @@ namespace InfluenceMap
 
         public void DrawInfluenceNode(int i, int j)
         {
-            GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().GetCellMap()[i,j].DrawCell();
-
             Color c;
 
             if (_teamInfluence == GlobalAttributes.CELDA_INFLUENCIA_ROJO)
@@ -99,7 +99,7 @@ namespace InfluenceMap
             }
             else
             {
-                c = Color.gray;
+                c = Color.white;
             }
 
             GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().GetCellMap()[i,j].DrawCellColored(c);

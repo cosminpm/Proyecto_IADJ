@@ -56,6 +56,7 @@ namespace Grid
             _initialized = true;
             AddAllowedCells();
             CreateAllBoxColliders();
+            GetComponent<SeleccionarObjetivos>().SetInteriorAndExteriorRadiusAgentInvisible(_cellMap[0,0].GetSizeX()/4, _cellMap[0,0].GetSizeX()/4);
         }
 
         private void CreateGrid()

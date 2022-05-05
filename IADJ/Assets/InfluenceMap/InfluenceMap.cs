@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Global;
 using Grid;
 using UnityEditor;
@@ -22,17 +23,21 @@ namespace InfluenceMap
             _allPlayers = new Dictionary<GameObject, Cell>();
             CreateInfluenceMap();
             AddAllPlayers();
-            UpdateMapInfluence();
+            UpdateValuesInfluence();
         }
 
+        private void UpdateMap()
+        {
+            UpdatePositionPlayers();
+            UpdateValuesInfluence();
+            DecreaseInfluence();
+        }
         private void Update()
         {
+            UpdateMap();
+            //InvokeRepeating("UpdateMap", 1f, 1f);
         }
         
-        
-        
-        
-
         private void AddAllPlayers()
         {
             GameObject[] blueTeam = GetBlueTeamObjects();
@@ -43,7 +48,23 @@ namespace InfluenceMap
                 _allPlayers.Add(e,_gridMap.WorldToMap(e.transform.position));
         }
 
-        private void UpdateMapInfluence()
+        public void UpdatePositionPlayers()
+        {
+            foreach (var e in _allPlayers.Keys.ToList())
+            {
+                _allPlayers[e] = _gridMap.WorldToMap(e.transform.position);
+            }
+        }
+
+        public void DecreaseInfluence()
+        {
+            foreach (var node in _influenceNodes)
+            {
+               node.SetValueOfInfluence(node.GetValueInfluence() - GlobalAttributes.CONSTANT_DECRASING_VALUE);
+            }
+        }
+        
+        public void UpdateValuesInfluence()
         {
             foreach (var e in _allPlayers)
             {

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Global;
 using Grid;
+using Pathfinding;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
@@ -57,18 +59,17 @@ public class SeleccionarObjetivos : MonoBehaviour
                     Debug.Log(npc.name);
                     if (_listNpCs.Contains(npc))
                     {
-                        SendNewTarget(npc, null);
                         _listNpCs.Remove(npc);
                         
-                        npc.transform.Find("BolaAmarilla").gameObject.SetActive(false);
+                        npc.transform.Find(GlobalAttributes.NAME_BOLA_AMARILLA).gameObject.SetActive(false);
                         if (_listNpCs.Count > 0)
-                            GameObject.Find("MinimapCamera").GetComponent<CameraMinimap>().SetTransform(_listNpCs[_listNpCs.Count-1].transform);
+                            GameObject.Find(GlobalAttributes.NAME_MINICAMERA).GetComponent<CameraMinimap>().SetTransform(_listNpCs[_listNpCs.Count-1].transform);
                     }
                     else
                     {
                         _listNpCs.Add(npc);
-                        GameObject.Find("MinimapCamera").GetComponent<CameraMinimap>().SetTransform(npc.transform);
-                        npc.transform.Find("BolaAmarilla").gameObject.SetActive(true);
+                        GameObject.Find(GlobalAttributes.NAME_MINICAMERA).GetComponent<CameraMinimap>().SetTransform(npc.transform);
+                        npc.transform.Find(GlobalAttributes.NAME_BOLA_AMARILLA).gameObject.SetActive(true);
                     }
                 }
             }
@@ -91,20 +92,13 @@ public class SeleccionarObjetivos : MonoBehaviour
                 if (hitInfo.collider != null)
                 {
                     Agent agent;
-                    if (hitInfo.collider.CompareTag("Terrain"))
+                    if (GlobalAttributes.CheckIfItIsFloor(hitInfo.collider.tag))
                     {
                         Vector3 position = hitInfo.point;
-                        Vector3 center = GameObject.Find("Controlador").GetComponent<GridMap>().WorldToMap(position).GetCenter();
+                        Vector3 center = GetComponent<GridMap>().WorldToMap(position).GetCenter();
                         GameObject ai = CreateInvisibleAgent(center);
                         agent = ai.GetComponent<Agent>();
-                        
                     }
-
-                    else if (hitInfo.collider.transform.parent.CompareTag("BaseRoja") || hitInfo.collider.CompareTag("NPC"))
-                    {
-                        agent = hitInfo.transform.gameObject.GetComponent<Agent>();
-                    }
-
                     // En caso de que no se esté clickando nada, el método termina
                     else
                     {
@@ -114,12 +108,25 @@ public class SeleccionarObjetivos : MonoBehaviour
                     foreach (var npc in _listNpCs)
                     {
                         SendNewTarget(npc, agent);
+                        Cell finsihCell = GetComponent<GridMap>().CheckIfCellClicked(true);
+                        npc.GetComponent<ControlPathFindingWithSteering>().SendOrder(finsihCell);
+                        
                     }
                 }
             }
         }
     }
-
+    
+    
+    //
+    // if (Input.GetKeyUp(KeyCode.Alpha2))
+    // {
+    //     Cell finishCell = gridMap.CheckIfCellClicked(true);
+    //     SendOrder(finishCell);
+    // }
+        
+        
+    // TODO: SE TIENE QUE ELIMINAR
     private void SendNewTarget(GameObject npc, Agent agent)
     {
         {
@@ -182,29 +189,20 @@ public class SeleccionarObjetivos : MonoBehaviour
         }
     }
 
-
-
-
-
     public virtual GameObject CreateInvisibleAgent(Vector3 positionSpawn)
     {
-        string nombreAI = "AgenteInvisible";
-        GameObject ai;
-        if (!GameObject.Find(nombreAI))
-        {
-            ai = Instantiate(personajeInvisible, positionSpawn, Quaternion.identity);
-            ai.AddComponent<AgentInvisible>();
-            ai.GetComponent<AgentInvisible>().DrawGizmos = true;
-            ai.GetComponent<MeshRenderer>().enabled = false;
-            ai.name = nombreAI;
-            return ai;
-        }
-
-        ai = GameObject.Find(nombreAI);
+        string nombreAI = GlobalAttributes.NAME_AGENTE_INVISIBLE;
+        GameObject ai = GameObject.Find(nombreAI);
         ai.transform.position = positionSpawn;
         return ai;
     }
 
+    public void SetInteriorAndExteriorRadiusAgentInvisible(float interiorRadius, float exteriorRadius)
+    {
+        GameObject.Find(GlobalAttributes.NAME_AGENTE_INVISIBLE).GetComponent<AgentInvisible>().InteriorAngle = interiorRadius;
+        GameObject.Find(GlobalAttributes.NAME_AGENTE_INVISIBLE).GetComponent<AgentInvisible>().ExteriorAngle = exteriorRadius;
+    }
+    
     private void OnDrawGizmos()
     {
         // if (_listNpCs!= null && _listNpCs.Count > 0)
