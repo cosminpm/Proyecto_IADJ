@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq; 
 using UnityEngine.UI;
-
+using Global;
 
 public abstract class State : MonoBehaviour
 {
@@ -52,6 +52,8 @@ public abstract class State : MonoBehaviour
         return false;
     }
 
+    // TODO: Esto a lo mejor hay que moverlo a StateManager.
+    //
     // Función para comprobar si hay enemigos cerca. 
     // Si ese es el caso, pasará a estado Attack.
     protected bool EnemyFound(NPC npc){
@@ -96,10 +98,10 @@ public abstract class State : MonoBehaviour
         switch ((int) npc.Unit.UnitTeam)
         {
             case 0:
-                enemys = GameObject.FindGameObjectsWithTag("TeamBlue");
+                enemys = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
                 break;
             case 1:
-                enemys = GameObject.FindGameObjectsWithTag("TeamRed");
+                enemys = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
                 break;
             default:
                 enemys = null;

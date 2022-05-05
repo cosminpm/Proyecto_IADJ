@@ -7,7 +7,8 @@ using UnityEditor;
 
 public class Archer : UnitsManager
 {
-    [SerializeField] protected bool drawGizmos;
+     // TODO: para debug
+     [SerializeField] protected bool _drawGizmos;
 
     void Start(){
         UnitAgent = GetComponent<AgentNPC>();
@@ -41,34 +42,46 @@ public class Archer : UnitsManager
 
     protected override void SetUnitStats(){
 
+        // Modificamos las estadisticas del
+        // NPC en funci�n del modo en el 
+        // que se encuentre.
+
+        // En el caso del arquero, se modificara el 
+        // rango de ataque, la tasa de criticos y el momento en el que huyan.
+        if (Mode == Modes.Normal || Mode == Modes.TotalWar)
+        {
+            AttackRange = 50;
+            CriticRate = 0.3f;
+            HealthPointsMin = 50;
+        }
+
+        // Los arqueros en modo ofensivo tender�n a
+        // situarse algo mas cerca y acertar 
+        // mas golpes criticos.
+        if (Mode == Modes.Offensive)
+        {
+            AttackRange = 35;
+            CriticRate = 0.5f;
+            HealthPointsMin = 35;
+        }
+
+        // En modo defensivo, los arqueros se situaran 
+        // mas lejos y huiran antes, pero acertaran 
+        // menos golpes criticos.
+        if (Mode == Modes.Defensive)
+        {
+            AttackRange = 75;
+            CriticRate = 0.1f;
+            HealthPointsMin = 75;
+        }
+
         HealthPointsMax = 150;
-        HealthPointsMin = 50;
-        CurrentHealthPoints = 150;
+        CurrentHealthPoints = HealthPointsMax;
         AttackPoints = 10;
-        // TODO: El rango se hace a ojo con el modo debug
-        AttackRange = 50;
         AttackSpeed = 3;
         AttackAccuracy = 0.75f;
-        CriticRate = 0.3f;
         VisionDistance = 5f; 
         TypeUnit = TypeUnits.Archer;
-    }
-
-
-     public void OnDrawGizmos()
-    {
-        if (drawGizmos)
-        {
-            // Velocidad
-            Handles.color = Color.red;
-            Handles.DrawLine(UnitAgent.Position, UnitAgent.Position.normalized+VisionDistance* OrientationToVector(UnitAgent.Orientation), 1f);
-        }
-    }
-
-    private Vector3 OrientationToVector(float _orientation)
-    {
-        Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
-        return aux.normalized;
     }
 }
 

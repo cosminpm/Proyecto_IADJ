@@ -5,11 +5,15 @@ using UnityEngine;
 public class StateManager: MonoBehaviour
 {
 
+    // TODO: Variable de debug Defend. ELIMINAR.
+    int framesToDefend = 120;
+
     // Estados posibles del NPC   
     public Capture stateCapture;
     public Dead stateDead;
     public LowHp stateLowHp;
     public Attack stateAttack;
+    public Defend stateDefend;
     public Healing stateHealing;
     public ReceivingHeal stateReceivingHeal;
     public SearchHealing stateSearchHealing;
@@ -39,15 +43,15 @@ public class StateManager: MonoBehaviour
         stateDead = this.gameObject.GetComponent<Dead>();
         stateLowHp = this.gameObject.GetComponent<LowHp>();
         stateAttack = this.gameObject.GetComponent<Attack>();
+        stateDefend = this.gameObject.GetComponent<Defend>();
         stateHealing = this.gameObject.GetComponent<Healing>();
         stateReceivingHeal = this.gameObject.GetComponent<ReceivingHeal>();
         stateSearchHealing = this.gameObject.GetComponent<SearchHealing>();
-       // stateSearchHealing = this.gameObject.GetComponent<ReceivingHeal>();
     
         if ( type == 3)  
-            ChangeState(stateSearchHealing,npc);
+            ChangeState(stateSearchHealing, npc);
         else    
-            ChangeState(stateCapture,npc);
+            ChangeState(stateCapture, npc);
 
         _currentState.stateImage.enabled = true;
      
@@ -75,6 +79,22 @@ public class StateManager: MonoBehaviour
         } 
     }
 
+    // Función para comprobar si hay enemigos en la base.
+    public bool EnemiesInBase(NPC npc) {
+
+        // TODO: Comprobar que van perdiendo (GameManager).
+        // TODO: Si van perdiendo, se comprueba si hay enemigos
+        //       en la base (mapa de influencia).
+        if (false)//framesToDefend == 0)
+        {
+            ChangeState(stateDefend, npc);
+            return true;
+        }
+
+        //framesToDefend--;
+        return false;
+    }
+
     // Función para comprobar si un NPC ha acabado de
     // curarse. Si ese es el caso, pasará a estado Capture.
     public bool HealingFinished(NPC npc) {
@@ -86,7 +106,15 @@ public class StateManager: MonoBehaviour
         return false;
     }
 
-
+    // Función para comprobar si el Healer ha acabado de 
+    // curar a un NPC.
+    public bool CureFinished(NPC npc) {
+        if (CurrentState._targetNPC.GetUnitCurrentHP() == CurrentState._targetNPC.GetUnitHPMax()) {
+            ChangeState(stateSearchHealing, npc);
+            return true;
+        }
+        return false;
+    }
 
     public bool HealthPointReached(Vector3 posBase, NPC npc, NPC healer, bool medicFound){
 
@@ -133,15 +161,18 @@ public class StateManager: MonoBehaviour
 
         if ( listAllies.Count > 0)
         {
-
             foreach( var a in listAllies)
             {
-                if (a.NeedHeal()){
-                    ChangeState(stateSearchHealing,npc);
+                Debug.Log("Aliado encontrado: " + a.stateManager.CurrentState);
+                Debug.Log("Aliado encontrado2: " + stateLowHp.name);
+                if (a.NeedHeal())
+                {
+                    Debug.Log("Alguien necesita mi ayuda " + a.name);
+                    ChangeState(stateHealing, npc);
+                    CurrentState._targetNPC = a;
                     return true;
                 }
             }
-
         }
         return false;
     }
@@ -158,9 +189,5 @@ public class StateManager: MonoBehaviour
 
     public void SetStateAttackTarget(NPC npc){
         stateAttack.SetObjetiveNPC(npc);
-    }
-
-
-       
-    
+    }     
 }

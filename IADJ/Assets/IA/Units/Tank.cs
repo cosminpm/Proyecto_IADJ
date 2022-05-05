@@ -44,11 +44,35 @@ public class Tank : UnitsManager
 
     protected override void SetUnitStats(){
 
-        HealthPointsMax = 500;
-        HealthPointsMin = 50;
-        CurrentHealthPoints = 500;
-        AttackPoints = 50;
-        // TODO: El rango se hace a ojo con el modo debug
+        // Modificamos las estadisticas del
+        // NPC en funci�n del modo en el 
+        // que se encuentre.
+
+        // En el caso del tanque, se modificara la 
+        // vida maxima y los puntos de ataque.
+        if (Mode == Modes.Normal || Mode == Modes.TotalWar)
+        {
+            HealthPointsMax = 500;
+            AttackPoints = 15;
+        }
+
+        if (Mode == Modes.Offensive)
+        {
+            HealthPointsMax = 400;
+            AttackPoints = 25;
+        }
+
+        // En modo defensivo, la funcion del tanque sera
+        // la de recibir golpes en defensa de sus compa�eros.
+        // A cambio de su vida extra, perdera ataque.
+        if (Mode == Modes.Defensive)
+        {
+            HealthPointsMin = 600;
+            AttackPoints = 5;
+        }
+
+        HealthPointsMin = 100;
+        CurrentHealthPoints = HealthPointsMax;
         AttackRange = 5;
         AttackSpeed = 1;
         AttackAccuracy = 0.9f;
@@ -56,19 +80,4 @@ public class Tank : UnitsManager
         VisionDistance = 10; 
         TypeUnit = TypeUnits.Tank;
     }
-    /*public void OnDrawGizmos()
-    {
-        if (_drawGizmos)
-        {
-            // Velocidad
-            Handles.color = Color.red;
-            Handles.DrawLine(UnitAgent.Position, UnitAgent.Position.normalized + VisionDistance * OrientationToVector(UnitAgent.Orientation), 1f);
-        }
-    }
-    private Vector3 OrientationToVector(float _orientation)
-    {
-        Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
-        return aux.normalized;
-    }*/
-
 }

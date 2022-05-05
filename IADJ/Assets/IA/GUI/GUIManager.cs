@@ -9,32 +9,24 @@ using UnityEngine.UI;
 
 public class GUIManager : MonoBehaviour
 {
-
-
-    private NPC npc;
-
+    private NPC _npc;
     public HealthBar healthBar;
-
     public UIBar actionBar;
 
      void Update(){
-        healthBar.UpdateBar(npc.Unit.CurrentHealthPoints);
+        healthBar.UpdateBar(_npc.Unit.CurrentHealthPoints);
     }
 
     public void Initialize(){
-        npc = GetComponent<NPC>();
-        healthBar.SetMaxValue(npc.Unit.HealthPointsMax);
+        _npc = GetComponent<NPC>();
+        healthBar.SetMaxValue(_npc.Unit.HealthPointsMax);
         actionBar.SetMaxValue(360);
-
     }
-
 
     public void UpdateBarAction(int cooldwnTime)
     {
         actionBar.UpdateBar(cooldwnTime);
     }
-
-
 
     public void UpdateStateImagen(State oldState, State newState){
         if ( oldState != null)
@@ -42,24 +34,6 @@ public class GUIManager : MonoBehaviour
             
         newState.stateImage.enabled = true;
     }
-    
-
-
-
-
-
-
-  
-
-
-    
-
-
-
-
-
-
- 
 }
 
    

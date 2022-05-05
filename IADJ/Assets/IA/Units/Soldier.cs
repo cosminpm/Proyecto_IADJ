@@ -42,11 +42,38 @@ public class Soldier : UnitsManager
 
     protected override void SetUnitStats(){
 
-        HealthPointsMax = 225;
-        HealthPointsMin = 75;
-        CurrentHealthPoints = 225;
-        AttackPoints = 25;
-        // TODO: El rango se hace a ojo con el modo debug
+        // Modificamos las estadisticas del
+        // NPC en funci�n del modo en el 
+        // que se encuentre.
+
+        if (Mode == Modes.Normal || Mode == Modes.TotalWar) {
+            HealthPointsMax = 225;
+            HealthPointsMin = 75;
+            AttackPoints = 25;
+        }
+
+        // El soldado en modo ofensivo atacara mas
+        // contundentemente al enemigo y huira mas tarde,
+        // pero perdera vida maxima. 
+        if (Mode == Modes.Offensive)
+        {
+            HealthPointsMax = 200;
+            HealthPointsMin = 50;
+            AttackPoints = 35;
+        }
+
+
+        // El soldado en modo defensivo ganara puntos de
+        // vida maximos, pero huira antes y atacara con 
+        // menos fuerza.
+        if (Mode == Modes.Defensive)
+        {
+            HealthPointsMax = 250;
+            HealthPointsMin = 125;
+            AttackPoints = 15;
+        }
+
+        CurrentHealthPoints = HealthPointsMax;
         AttackRange = 5;
         AttackSpeed = 4;
         AttackAccuracy = 0.8f;
@@ -54,21 +81,6 @@ public class Soldier : UnitsManager
         VisionDistance = 10; 
         TypeUnit = TypeUnits.Soldier;
     }
-
-    /*public void OnDrawGizmos()
-    {
-        if (_drawGizmos)
-        {
-            // Velocidad
-            Handles.color = Color.red;
-            Handles.DrawLine(this.UnitAgent.Position, this.UnitAgent.Position.normalized + VisionDistance * OrientationToVector(this.UnitAgent.Orientation), 3);
-        }
-    }
-    private Vector3 OrientationToVector(float _orientation)
-    {
-        Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
-        return aux.normalized;
-    }*/
 }
 
    

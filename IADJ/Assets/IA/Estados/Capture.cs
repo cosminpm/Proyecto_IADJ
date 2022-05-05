@@ -41,12 +41,12 @@ public class Capture : State
     public override void CheckState(NPC npc){
 
         // Si estoy muerto, cambio al estado a muerti
-        if  ( IsDead(npc) ){
+        if  (IsDead(npc) || npc.stateManager.EnemiesInBase(npc)){
              return;
         }
 
         // Si hay algún al que atacar, cambio de estado a MeleeAttack
-        if ( EnemyFound(npc) ){
+        if (EnemyFound(npc)){
             _captureTime = 1200;
             return;
         }

@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LowHp : State
+public class Defend : State
 {
-
     // PARA DEBUG!!
     private AgentInvisible zoneBase;
 
     // Posicion base (MAS CORRECTO EN EL GAME MANAGER)
-    private Vector3 posBase = new Vector3(25,0,-5);
+    private Vector3 posBase = new Vector3(25, 0, -5);
 
     private bool medicFound = false;
 
     private NPC healer;
 
-    void Awake(){
+    void Awake()
+    {
         stateImage.enabled = false;
     }
 
@@ -24,16 +24,21 @@ public class LowHp : State
     {
         movement = true;
         _targetNPC = null;
-        Debug.Log("Me queda poca vida :(");
+
+        Debug.Log("Nos pegan :(");
         CreateInvisible();
-        // Por defecto me voy a mi base
-        Seek seek = npc.GetComponent<Seek>(); 
-        if (seek == null){
+
+        // Si atacan nuestra base, me voy a defenderla.
+        Seek seek = npc.GetComponent<Seek>();
+        if (seek == null)
+        {
             npc.gameObject.AddComponent<Seek>();
             npc.gameObject.GetComponent<Seek>().NewTarget(zoneBase);
             npc.Unit.UnitAgent.UpdateListSteering();
 
-        } else {
+        }
+        else
+        {
             npc.GetComponent<Seek>().enabled = true;
             npc.gameObject.GetComponent<Seek>().NewTarget(zoneBase);
         }
@@ -63,48 +68,22 @@ public class LowHp : State
         healer = null;
     }
 
-
-    // TODO: En este estado, el NPC deber� buscar la zona de curaci�n m�s 
-    // cercana y huir hacia all�.
     public override void Action(NPC npc, NPC obj)
     {
-
-        if (medicFound && !npc.isInVisionRange(healer) )
-        {
-            npc.gameObject.GetComponent<Seek>().NewTarget(zoneBase);
-            npc.gameObject.GetComponent<Face>().NewTarget(zoneBase);
-            medicFound = false;
-        } else { 
-         
-
-            // Encuentro mis aliados cercanos
-            List<NPC> allies = npc.FindNearbyAllies();
-            // Hay un healear ?
-            foreach ( var a in allies)
-            {
-                // La unidad aliada es un healear?
-                if ((int) a.GetUnitType() == 3)
-                {   
-                    npc.gameObject.GetComponent<Seek>().NewTarget(a.Unit.UnitAgent);
-                    npc.gameObject.GetComponent<Face>().NewTarget(a.Unit.UnitAgent);
-                    medicFound = true;
-                    healer = a;
-                } 
-
-            }
-        }
     }
 
     public override void CheckState(NPC npc)
     {
-        // TODO: Aqu� hay que comprobar si ha llegado a una zona de
-        // curaci�n. Si ese es el caso habr� que pasar a un estado Healing.
-        //
-        // Tambi�n hay que comprobar si el NPC est� muerto, ya que alguien
-        // puede matarlo por el camino.
         if (IsDead(npc))
             return;
-        if (npc.stateManager.HealthPointReached(posBase, npc, healer, medicFound))
+
+
+        // TODO: Esto se tiene que hacer con el grid.
+        Vector3 direction = posBase - npc.GetUnitPosition();
+        float distance = direction.magnitude; 
+        // Si ha llegado a la base y hay enemigos 
+        // cerca, el NPC ataca.
+        if (direction.magnitude == 0 && EnemyFound(npc))
             return;
     }
 
@@ -117,7 +96,8 @@ public class LowHp : State
 
 
     // ESTO ESPRA DEBUG ELIMINAR
-    public void CreateInvisible(){
+    public void CreateInvisible()
+    {
 
         GameObject prediccionGO = new GameObject("AuxPursueIA");
         AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();

@@ -39,12 +39,5 @@ public class HealthBar : UIBar
         temporalDamage.value = _oldValue;
 
     }
-    
 
-
-
-
- 
 }
-
-   

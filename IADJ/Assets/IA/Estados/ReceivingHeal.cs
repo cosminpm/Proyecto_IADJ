@@ -27,14 +27,15 @@ public class ReceivingHeal : State
     // cercana y huir hacia all�.
     public override void Action(NPC npc, NPC obj)
     {
-        if (npc.Unit.CurrentHealthPoints < npc.Unit.HealthPointsMax)
-            npc.Unit.CurrentHealthPoints += 10;
+
     }
 
     public override void CheckState(NPC npc)
     {
-   //     if (IsDead(npc) || HealingFinished(npc))
-     //       return;
+        if (IsDead(npc))
+            return;
+        if (npc.stateManager.HealingFinished(npc))
+            return;
     }
 
     public override void Execute(NPC npc)

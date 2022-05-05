@@ -163,7 +163,7 @@ public class SeleccionarObjetivos : MonoBehaviour
 
     private bool CompareTagTeam(RaycastHit hitInfo)
     {
-        return hitInfo.collider.transform.CompareTag("BaseRoja") || hitInfo.collider.transform.CompareTag("BaseAzul");
+        return hitInfo.collider.transform.CompareTag(GlobalAttributes.TAG_EQUIPO_ROJO) || hitInfo.collider.transform.CompareTag(GlobalAttributes.TAG_EQUIPO_AZUL);
     }
     
     private void SelectAllUnits()

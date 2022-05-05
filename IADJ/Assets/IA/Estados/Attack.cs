@@ -28,7 +28,6 @@ public class Attack : State
         Face f = npc.GetComponent<Face>();
         Seek s = npc.GetComponent<Seek>();
 
-
         if ( f != null )
             npc.GetComponent<Face>().enabled = true;
 
@@ -85,6 +84,7 @@ public class Attack : State
             }
             else
                 _cooldwnTime+=npc.Unit.AttackSpeed;
+
             npc.GUI.UpdateBarAction(_cooldwnTime);
         } 
         
@@ -104,13 +104,12 @@ public class Attack : State
 
     public override void CheckState(NPC npc){
         // Comprobamos si el NPC debe salir del estado. 
-        // Esto lo har� cuando est� a poca vida, haya 
-        // muerto o ya no encuentre a un enemigo.
         if (IsDead(npc))
+            return;
+        if (npc.stateManager.EnemiesInBase(npc))
             return;
         if (npc.stateManager.IsLowHP(npc))
             return;
-
         if (EnemyFound(npc))
             return;
     }
@@ -124,5 +123,3 @@ public class Attack : State
         ObjetiveNPC = npc;
     }
 }
-
-   

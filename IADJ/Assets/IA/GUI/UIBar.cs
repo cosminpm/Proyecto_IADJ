@@ -18,9 +18,6 @@ public class UIBar : MonoBehaviour
         bar.value = value;
     }
 
-
-
- 
 }
 
    

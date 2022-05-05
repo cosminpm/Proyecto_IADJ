@@ -51,7 +51,6 @@ public abstract class UnitsManager : MonoBehaviour
     
     // Tipos de terrenos.
     public enum TypeTerrains{
-
         Path = 0,
         Field = 1,
         Forest = 2,
@@ -62,7 +61,7 @@ public abstract class UnitsManager : MonoBehaviour
     // Diccionario con los costes de movimiento de cada tipo de terrenos.
     protected Dictionary<TypeTerrains, float> costsTerrains;
 
-
+    // Tipos de unidad.
     public enum TypeUnits{
         Soldier = 0,
         Archer = 1,
@@ -70,8 +69,19 @@ public abstract class UnitsManager : MonoBehaviour
         Healer = 3
     }
 
-      // Tipo de unidad
+    // Modos de comportamiento de la unidad. 
+    public enum Modes { 
+        Normal = 0,
+        Offensive = 1,
+        Defensive = 2,
+        TotalWar = 3
+    }
+
+    // Tipo de unidad
     private TypeUnits _unitType;
+
+    // Modo de comportamiento de la unidad
+    private Modes _unitMode = Modes.Normal;
 
 
     protected abstract void AddCostsTerrain();
@@ -144,12 +154,15 @@ public abstract class UnitsManager : MonoBehaviour
         set { _unitType = value; }
     }
 
+    public Modes Mode {
+        get { return _unitMode; }
+        set { _unitMode = value; }
+    } 
+
     public AgentNPC UnitAgent{
         get { return _agentNPC; }
         set { _agentNPC = value; }
     }
-
-
 }
 
    

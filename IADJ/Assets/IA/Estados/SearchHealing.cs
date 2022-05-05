@@ -15,23 +15,20 @@ public class SearchHealing : State
     public override void EntryAction(NPC npc)
     {
         movement = true;
-
-
         Wander w = npc.GetComponent<Wander>();
 
         if ( w != null )
             npc.GetComponent<Wander>().enabled = true;
         else{
-
              npc.gameObject.AddComponent<Wander>();
         }
-
     }
 
     public override void ExitAction(NPC npc)
     {
         movement = false;
         _targetNPC = null;
+        Debug.Log("Encontré a alguien a quien curar :)");
         npc.GetComponent<Wander>().enabled  = false;
     }
 
@@ -45,14 +42,11 @@ public class SearchHealing : State
         // Cuando ccambio ? de estado
         if ( IsDead(npc))
             return;
-        
+
         // Hay que cambiar de estado cuadno 
-            // Se encuentre un aliado ( campo de visión) y ese personaje esté en estado lowHP ( )
-        //if (  )
-
-        
-
-        
+        // Se encuentre un aliado (campo de visión) y ese personaje esté en estado lowHP.
+        if (npc.stateManager.AllieHealthReached(npc))
+            return;
     }
 
     public override void Execute(NPC npc)

@@ -42,35 +42,35 @@ public class Healer : UnitsManager
 
     protected override void SetUnitStats(){
 
+        // Modificamos las estadisticas del
+        // NPC en funci�n del modo en el 
+        // que se encuentre.
+
+        // Los curanderos en modo ofensivo
+        // se mantienen igual que en modo
+        // normal.
+        if (Mode == Modes.Normal || Mode == Modes.Offensive || Mode == Modes.TotalWar)
+        {
+            AttackSpeed = 4;
+        }
+
+        // Los curanderos en modo defensivo
+        // curaran mas rapido de lo normal.
+        if (Mode == Modes.Defensive)
+        {
+            AttackSpeed = 7;
+        }
+
         HealthPointsMax = 225;
         HealthPointsMin = 75;
-        CurrentHealthPoints = 225;
-        AttackPoints = 25;
-        // TODO: El rango se hace a ojo con el modo debug
+        CurrentHealthPoints = HealthPointsMax;
+        AttackPoints = -25;
         AttackRange = 5;
-        AttackSpeed = 4;
         AttackAccuracy = 0.8f;
         CriticRate = 0.1f;
         VisionDistance = 10; 
         TypeUnit = TypeUnits.Healer;
     }
-
-    /*public void OnDrawGizmos()
-    {
-        if (_drawGizmos)
-        {
-            // Velocidad
-            Handles.color = Color.red;
-            Handles.DrawLine(this.UnitAgent.Position, this.UnitAgent.Position.normalized + VisionDistance * OrientationToVector(this.UnitAgent.Orientation), 3);
-        }
-    }
-    private Vector3 OrientationToVector(float _orientation)
-    {
-        Vector3 aux = new Vector3(Mathf.Sin(_orientation * Mathf.Deg2Rad), 0, Mathf.Cos(_orientation * Mathf.Deg2Rad));
-        return aux.normalized;
-    }*/
-
-
 }
 
    

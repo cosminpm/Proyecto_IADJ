@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Healing : State
 {
+
+    private int _cooldwnTime = 0;
+
     void Awake(){
      //   stateImage = Resources.Load<Sprite>("Estados/sword");
         stateImage.enabled = false;
@@ -23,21 +26,38 @@ public class Healing : State
 
     // TODO: En este estado, el NPC deber� buscar la zona de curaci�n m�s 
     // cercana y huir hacia all�.
-    public override void Action(NPC npc, NPC obj)
+    public override void Action(NPC npc, NPC targetNPC)
     {
-        if (npc.Unit.CurrentHealthPoints < npc.Unit.HealthPointsMax)
-            npc.Unit.CurrentHealthPoints += 10;
-    }
+        Debug.Log("Estoy curando :)");
 
+        Vector3 direction = targetNPC.GetUnitPosition() - npc.GetUnitPosition();
+        // Distancia que hay entre el agente y el target
+        float distance = direction.magnitude;
+
+        // Si esta dentro de nuestro rango de ataque, atacamos
+        if (npc.Unit.AttackRange >= distance)
+        {
+            movement = false;
+            if (_cooldwnTime >= 360)
+            {
+                //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
+                float dmg = npc.GetAttackPoints();
+                targetNPC.Unit.CurrentHealthPoints -= dmg;
+                _cooldwnTime = 0;
+            }
+            else
+                _cooldwnTime += npc.Unit.AttackSpeed;
+        }
+    }
     public override void CheckState(NPC npc)
     {
-   //     if (IsDead(npc) || HealingFinished(npc))
-     //       return;
+        if (IsDead(npc) || npc.stateManager.CureFinished(npc))
+            return;
     }
 
     public override void Execute(NPC npc)
     {
-        Action(npc, _targetNPC);
+        Action(npc, npc.stateManager.CurrentState._targetNPC);
         CheckState(npc);
     }
 }

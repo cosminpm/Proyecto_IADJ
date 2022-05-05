@@ -4,6 +4,7 @@ using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
+using Global;
 
 public class NPC : MonoBehaviour
 {
@@ -52,10 +53,10 @@ public class NPC : MonoBehaviour
         switch ((int) GetUnitTeam())
         {
             case 0:
-                allies = GameObject.FindGameObjectsWithTag("TeamRed");
+                allies = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
                 break;
             case 1:
-                allies = GameObject.FindGameObjectsWithTag("TeamBlue");
+                allies = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
                 break;
             default:
                 allies = null;
@@ -111,7 +112,10 @@ public class NPC : MonoBehaviour
     public float GetUnitHPMax(){
 
         return Unit.HealthPointsMax;
+    }
 
+    public float GetAttackPoints() {
+        return Unit.AttackPoints;
     }
 
     public float GetUnitHPMin(){
@@ -134,15 +138,6 @@ public class NPC : MonoBehaviour
     public float GetNPCArrivalRadius(){
         return Unit.UnitAgent.ArrivalRadius;
     }
-
-   
-
-
-
-
-
-
-
 }
 
    
