@@ -17,11 +17,11 @@ public class SearchHealing : State
         movement = true;
         Wander w = npc.GetComponent<Wander>();
 
-        if ( w != null )
-            npc.GetComponent<Wander>().enabled = true;
-        else{
-             npc.gameObject.AddComponent<Wander>();
-        }
+        // if ( w != null )
+        //     npc.GetComponent<Wander>().enabled = true;
+        // else{
+        //      npc.gameObject.AddComponent<Wander>();
+        // }
     }
 
     public override void ExitAction(NPC npc)
@@ -29,7 +29,7 @@ public class SearchHealing : State
         movement = false;
         _targetNPC = null;
         Debug.Log("Encontré a alguien a quien curar :)");
-        npc.GetComponent<Wander>().enabled  = false;
+       // npc.GetComponent<Wander>().enabled  = false;
     }
 
     public override void Action(NPC npc, NPC obj)

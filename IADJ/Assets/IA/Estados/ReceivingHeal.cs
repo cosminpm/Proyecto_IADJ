@@ -14,19 +14,24 @@ public class ReceivingHeal : State
     // Start is called before the first frame update
     public override void EntryAction(NPC npc)
     {
-        movement = true;
+        movement = false;
         _targetNPC = null;
-        Debug.Log("Me queda poca vida :(");
     }
 
     public override void ExitAction(NPC npc)
     {
+        _targetNPC = null;
     }
 
     // TODO: En este estado, el NPC deber� buscar la zona de curaci�n m�s 
     // cercana y huir hacia all�.
     public override void Action(NPC npc, NPC obj)
     {
+
+        if ( npc.IsBase())
+        {
+            npc.Unit.CurrentHealthPoints+=5;
+        }
 
     }
 

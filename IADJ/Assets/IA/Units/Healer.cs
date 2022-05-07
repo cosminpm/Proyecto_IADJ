@@ -65,7 +65,7 @@ public class Healer : UnitsManager
         HealthPointsMin = 75;
         CurrentHealthPoints = HealthPointsMax;
         AttackPoints = -25;
-        AttackRange = 5;
+        AttackRange = 9;
         AttackAccuracy = 0.8f;
         CriticRate = 0.1f;
         VisionDistance = 10; 

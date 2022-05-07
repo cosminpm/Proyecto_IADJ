@@ -6,7 +6,8 @@ public class Dead : State
 {
     // Variable para comprobar, en frames, el tiempo de respown.
     // 600 frames = 10s
-    private int _timeRespown = 1800;
+    private int _timeRespown = 900;
+    private bool _dead = false ;
 
 
     void Awake(){
@@ -17,8 +18,7 @@ public class Dead : State
 
     public override void EntryAction(NPC npc)
     {
-        // El NPC deber�a hacer respown en su base. 
-        npc.Unit.UnitAgent.Position = new Vector3(-115, 0, 100);
+        // El NPC deber�a hacer respawn en su base. 
         Debug.Log("Me mor� T.T");
     }
 
@@ -26,12 +26,17 @@ public class Dead : State
     {
         // movement = false;
         // _targetNPC = null;
+        npc.Unit.CurrentHealthPoints = npc.Unit.HealthPointsMax;
     }
 
     // Cambiamos la posici�n del NPC y hacemos que se cure por completo.
     public override void Action(NPC npc, NPC obj)
     {
-        npc.Unit.CurrentHealthPoints = npc.Unit.HealthPointsMax;
+
+        if (_timeRespown <= 450 && !_dead){
+            npc.Respawn();
+            _dead = true;
+        }
     }
 
     // Comprobamos el tiempo que queda para que el NPC haga respown.
@@ -41,7 +46,7 @@ public class Dead : State
     public override void CheckState(NPC npc)
     {
         if (_timeRespown <= 0)
-            RespownUnit(npc);
+            npc.stateManager.RespawnUnit(npc);
         else
             _timeRespown--;
     }

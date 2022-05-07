@@ -26,13 +26,16 @@ public class Attack : State
         movement = false;
 
         Face f = npc.GetComponent<Face>();
-        Seek s = npc.GetComponent<Seek>();
 
-        if ( f != null )
-            npc.GetComponent<Face>().enabled = true;
+        //Pathfinding c = npc.GetComponent<Pathfinding>();
 
-        if ( s != null )
-            npc.GetComponent<Seek>().enabled = true;
+        // if ( f != null )
+        //     npc.GetComponent<Face>().enabled = true;
+
+        // if ( s != null )
+        //     npc.GetComponent<Seek>().enabled = true;
+        //if ( c != null)
+       //     npc.GetComponent<Pathfinding>().enabled = true;
     }
 
     public override void ExitAction(NPC npc){
@@ -41,10 +44,13 @@ public class Attack : State
         
         _cooldwnTime = 0;
         npc.GUI.UpdateBarAction(_cooldwnTime);
-        npc.GetComponent<Seek>().enabled = false;
-        npc.GetComponent<Face>().enabled = false;
+        // npc.GetComponent<Seek>().enabled = false;
+        // npc.GetComponent<Face>().enabled = false;
+     //   npc.GetComponent<Pathfinding>().enabled = false;
         npc.Unit.UnitAgent.UpdateListSteering();
         _targetNPC = null;
+        npc.pathFinding.ClearPath();
+        
 
     }
 
@@ -57,7 +63,7 @@ public class Attack : State
         if (f == null)
         {
             npc.gameObject.AddComponent<Face>();
-          // npc.Unit.UnitAgent.UpdateListSteering();
+            npc.Unit.UnitAgent.UpdateListSteering();
             npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
         }
         else
@@ -73,11 +79,17 @@ public class Attack : State
         // TODO: FALTA EL CONO XD
 
         // Si esta dentro de nuestro rango de ataque, atacamos
-        if ( npc.Unit.AttackRange >= distance){
-            movement = false;
+        if ( !_targetNPC.IsCurrentStateDead() && npc.Unit.AttackRange >= distance){
+
+
+            // me dejo de mover
+            if ( movement){
+                movement = false;
+                npc.pathFinding.ClearPath();
+            }
+
             if (_cooldwnTime >= 360)
             {
-              //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
                 float dmg = CombatHandler.CalculateDamage(npc, _targetNPC);
                 _targetNPC.Unit.CurrentHealthPoints -= dmg;
                 _cooldwnTime = 0;
@@ -88,17 +100,14 @@ public class Attack : State
             npc.GUI.UpdateBarAction(_cooldwnTime);
         } 
         
-        else  {      // Tenemos que perseguir el objetivo, si se puede
+        else if ( !_targetNPC.IsCurrentStateDead())  {      // Tenemos que perseguir el objetivo, si se puede
 
-            Seek arr = npc.GetComponent<Seek>(); 
-            if ( arr == null){
-                npc.gameObject.AddComponent<Seek>();
-                npc.gameObject.GetComponent<Seek>().NewTarget(_targetNPC.Unit.UnitAgent);
-                npc.Unit.UnitAgent.UpdateListSteering();
-                
-            } else  {
-                npc.gameObject.GetComponent<Seek>().NewTarget(_targetNPC.Unit.UnitAgent);
+            if ( !movement)
+            {
+                npc.pathFinding.CalculatePath(_targetNPC.Unit.UnitAgent.Position);
+                movement = true;
             }
+
         }
     }
 

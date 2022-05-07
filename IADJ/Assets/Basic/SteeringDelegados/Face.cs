@@ -12,6 +12,10 @@ public class Face : Align
         prota = Target;
     }
 
+    public void NewPositionTarget(Vector3 posTarget){
+        explicitTarget.Position = posTarget;
+    }
+
     public override Steering GetSteering(Agent agent)
     {
         if (explicitTarget == null)

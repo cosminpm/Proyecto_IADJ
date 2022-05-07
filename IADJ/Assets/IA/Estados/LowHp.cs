@@ -9,9 +9,9 @@ public class LowHp : State
     private AgentInvisible zoneBase;
 
     // Posicion base (MAS CORRECTO EN EL GAME MANAGER)
-    private Vector3 posBase = new Vector3(25,0,-5);
+    private Vector3 posBase = new Vector3(10,0,-5);
 
-    private bool medicFound = false;
+    private bool medicFound;
 
     private NPC healer;
 
@@ -22,21 +22,12 @@ public class LowHp : State
     // Start is called before the first frame update
     public override void EntryAction(NPC npc)
     {
-        movement = true;
-        _targetNPC = null;
-        Debug.Log("Me queda poca vida :(");
-        CreateInvisible();
-        // Por defecto me voy a mi base
-        Seek seek = npc.GetComponent<Seek>(); 
-        if (seek == null){
-            npc.gameObject.AddComponent<Seek>();
-            npc.gameObject.GetComponent<Seek>().NewTarget(zoneBase);
-            npc.Unit.UnitAgent.UpdateListSteering();
 
-        } else {
-            npc.GetComponent<Seek>().enabled = true;
-            npc.gameObject.GetComponent<Seek>().NewTarget(zoneBase);
-        }
+        movement = false;
+        _targetNPC = null;
+        medicFound = false;
+
+        Debug.Log("Me queda poca vida :(");
 
         Face face = npc.GetComponent<Face>();
         if (face == null)
@@ -56,11 +47,13 @@ public class LowHp : State
     {
         movement = false;
 
-        npc.GetComponent<Seek>().enabled = false;
-        npc.GetComponent<Face>().enabled = false;
+        // npc.GetComponent<Seek>().enabled = false;
+        // npc.GetComponent<Face>().enabled = false;
         npc.Unit.UnitAgent.UpdateListSteering();
+
         _targetNPC = null;
         healer = null;
+        npc.pathFinding.ClearPath();
     }
 
 
@@ -69,29 +62,48 @@ public class LowHp : State
     public override void Action(NPC npc, NPC obj)
     {
 
-        if (medicFound && !npc.isInVisionRange(healer) )
+        // // Si no está en rango de visión, lo intento perseguir ??
+        if ( medicFound)
         {
-            npc.gameObject.GetComponent<Seek>().NewTarget(zoneBase);
-            npc.gameObject.GetComponent<Face>().NewTarget(zoneBase);
-            medicFound = false;
-        } else { 
-         
+            // Tengo que comprobar si el médico sigue vivo o sigue en mi rango de visión
+            if ( healer.IsCurrentStateDead() || !npc.IsInVisionRange(healer)){
+                medicFound = false;
+                npc.pathFinding.ClearPath();
+                movement = false;
+            }
 
-            // Encuentro mis aliados cercanos
+        }
+        else { 
+       //  Encuentro mis aliados cercanos
             List<NPC> allies = npc.FindNearbyAllies();
-            // Hay un healear ?
+            // Hay un healear dentro de mi rango de viision ? ?
             foreach ( var a in allies)
             {
-                // La unidad aliada es un healear?
-                if ((int) a.GetUnitType() == 3)
+                
+                if ((int) a.GetUnitType() == 3 && npc.IsInVisionRange(a) )
                 {   
-                    npc.gameObject.GetComponent<Seek>().NewTarget(a.Unit.UnitAgent);
+                    // He encontrado  un medico en mi rango de visión
+
                     npc.gameObject.GetComponent<Face>().NewTarget(a.Unit.UnitAgent);
+                    npc.pathFinding.CalculatePath(a.GetUnitPosition());
                     medicFound = true;
+                    movement = true;
                     healer = a;
                 } 
 
             }
+
+            // Me voy a la base
+            if ( !medicFound)
+            {
+                if (!movement){
+                    
+                    npc.gameObject.GetComponent<Face>().NewPositionTarget(posBase);
+                    npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetBasePosition(npc));
+                    movement = true;
+                }
+            }
+
         }
     }
 
@@ -104,7 +116,11 @@ public class LowHp : State
         // puede matarlo por el camino.
         if (IsDead(npc))
             return;
-        if (npc.stateManager.HealthPointReached(posBase, npc, healer, medicFound))
+
+        // if (npc.stateManager.HealthPointReached(posBase, npc, healer, medicFound))
+        //     return;
+
+        if ( npc.stateManager.HealthPointReached(npc, npc.pathFinding.IsEndPath()))
             return;
     }
 
@@ -123,8 +139,8 @@ public class LowHp : State
         AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
         prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
         invisible.Position = posBase;
-        invisible.InteriorRadius = 3.5f;
-        invisible.ArrivalRadius = 4.0f;
+        invisible.InteriorRadius = 1.5f;
+        invisible.ArrivalRadius = 1.0f;
         zoneBase = invisible;
     }
 }

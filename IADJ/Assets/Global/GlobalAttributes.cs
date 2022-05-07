@@ -32,6 +32,11 @@ namespace Global
         public static float MINIMUM_VALUE_INFLUENCE = 0.1f;
         public static float MAXIMUM_VALUE_INFLUENCE = 20f;
         public static float CONSTANT_DECRASING_VALUE = 0.5f;
+
+        public enum Team {
+            Red = 0,
+            Blue = 1    
+        }
         
 
         public static bool CheckIfItIsFloor(String tagFloor)

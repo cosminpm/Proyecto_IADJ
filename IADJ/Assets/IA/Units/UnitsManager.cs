@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public abstract class UnitsManager : MonoBehaviour
 {
 
-    public enum Team{
+    public enum Team {
         Red = 0,
         Blue = 1    
     }
@@ -104,7 +104,12 @@ public abstract class UnitsManager : MonoBehaviour
     public float CurrentHealthPoints
     {
         get { return _hp; }
-        set { _hp = value; }
+        set { 
+            if ( value >= HealthPointsMax)
+                _hp = HealthPointsMax;
+            else 
+                _hp = value;
+        }
     }
 
     public float AttackPoints

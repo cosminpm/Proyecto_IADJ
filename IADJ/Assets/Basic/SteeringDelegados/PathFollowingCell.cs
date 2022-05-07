@@ -37,6 +37,10 @@ public class PathFollowingCell : Seek
         Target = t;
     }
 
+    public bool EndPath(){
+        return currentPos == path.Length()-1;
+    }
+
     public override Steering GetSteering(Agent agent)
     {
         
@@ -57,6 +61,7 @@ public class PathFollowingCell : Seek
                 //currentPos = path.Length() - 1;
             }
         }
+
         targetParam = currentPos;
         
         // La posicion del target a la que tiene que ir el agente

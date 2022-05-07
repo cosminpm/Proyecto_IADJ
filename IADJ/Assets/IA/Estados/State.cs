@@ -72,11 +72,6 @@ public abstract class State : MonoBehaviour
     }
 
 
-    // Función para respownear a un NPC.
-    protected void RespownUnit(NPC npc) {
-        npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
-        return;
-    }
 
     // Función para comprobar si el NPC está en una zona de 
     // curación y cambiar al estado Healing en ese caso.
@@ -124,8 +119,10 @@ public abstract class State : MonoBehaviour
 
             if ( distance < minDistance && distance <= npc.Unit.VisionDistance)
             {
-                auxEnemy = e.GetComponent<NPC>();
-                minDistance = distance;
+                if ( !e.GetComponent<NPC>().IsCurrentStateDead() ){
+                    auxEnemy = e.GetComponent<NPC>();
+                    minDistance = distance;
+                }
             } 
         }
 

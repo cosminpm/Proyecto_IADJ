@@ -53,7 +53,7 @@ public class Tank : UnitsManager
         if (Mode == Modes.Normal || Mode == Modes.TotalWar)
         {
             HealthPointsMax = 500;
-            AttackPoints = 15;
+            AttackPoints = 60;
         }
 
         if (Mode == Modes.Offensive)
@@ -74,7 +74,7 @@ public class Tank : UnitsManager
         HealthPointsMin = 100;
         CurrentHealthPoints = HealthPointsMax;
         AttackRange = 5;
-        AttackSpeed = 1;
+        AttackSpeed = 3;
         AttackAccuracy = 0.9f;
         CriticRate = 0.1f;
         VisionDistance = 10; 

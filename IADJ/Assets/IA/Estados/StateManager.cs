@@ -108,39 +108,50 @@ public class StateManager: MonoBehaviour
 
     // Función para comprobar si el Healer ha acabado de 
     // curar a un NPC.
-    public bool CureFinished(NPC npc) {
-        if (CurrentState._targetNPC.GetUnitCurrentHP() == CurrentState._targetNPC.GetUnitHPMax()) {
+    public bool CureFinished(NPC npc, NPC targetNPC) {
+        if (targetNPC.IsFullHP()) {
             ChangeState(stateSearchHealing, npc);
             return true;
         }
         return false;
     }
 
-    public bool HealthPointReached(Vector3 posBase, NPC npc, NPC healer, bool medicFound){
+    // public bool HealthPointReached(Vector3 posBase, NPC npc, NPC healer, bool medicFound, ){
 
-        // Obtenemos la dirección hacia el target
-        Vector3 direction;
-        // Distancia que hay entre el agente y el target
-        float distance;
+    //     // Obtenemos la dirección hacia el target
+    //     Vector3 direction;
+    //     // Distancia que hay entre el agente y el target
+    //     float distance;
         
-        if ( medicFound)
-        {
-            direction = healer.GetUnitPosition() - npc.GetUnitPosition();
-            distance = direction.magnitude;
-            if (  distance <= healer.GetNPCArrivalRadius()){
-                ChangeState(stateReceivingHeal, npc);
-                return true;
-            }
+    //     if ( medicFound)
+    //     {
+    //         direction = healer.GetUnitPosition() - npc.GetUnitPosition();
+    //         distance = direction.magnitude;
+    //         if (  distance <= healer.GetNPCArrivalRadius()){
+    //             ChangeState(stateReceivingHeal, npc);
+    //             Debug.Log("Voy pal pollo payo");
+    //             return true;
+    //         }
 
-        } else {
-            direction = posBase - npc.GetUnitPosition();
-            distance = direction.magnitude;
-            if (  distance == 0 ){
-                ChangeState(stateReceivingHeal, npc);
-                return true;
-            }
+    //     } else {
+    //         direction = posBase - npc.GetUnitPosition();
+    //         distance = direction.magnitude;
+    //         if (  distance == 0 ){
+    //             Debug.Log("Me voy pa la base amigo0");
+    //             ChangeState(stateReceivingHeal, npc);
+    //             return true;
+    //         }
+    //     }
+
+    //     return false;
+    // }
+
+    public bool HealthPointReached( NPC npc, bool finalPath ){
+
+        if ( finalPath){
+            ChangeState(stateReceivingHeal, npc);
+            return true;
         }
-
         return false;
     }
 
@@ -153,6 +164,12 @@ public class StateManager: MonoBehaviour
             return true;
         }
         return false;
+    }
+     
+        // Función para respawnear a un NPC.
+    public void RespawnUnit(NPC npc) {
+        npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
+        return;
     }
 
     public bool AllieHealthReached(NPC npc){
@@ -181,6 +198,14 @@ public class StateManager: MonoBehaviour
     {
         get { return _currentState; }
         set { _currentState = value; }
+    }
+
+    public bool CurrentStateIsDead(){
+        return CurrentState == stateDead;
+    }
+
+    public bool CurrentStateIsCapture(){
+        return CurrentState == stateCapture;
     }
 
     public NPC GetStateTarget(){

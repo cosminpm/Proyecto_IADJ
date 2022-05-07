@@ -47,6 +47,26 @@ namespace Pathfinding
             _pathFollowing.currentPos = 0;
             _pathFinding.ApplyAStar(startCell, finishCell, ref _path.nodos);
         }
+
+        public void ClearPath(){
+            _path.nodos.Clear();
+            _pathFollowing.currentPos = 0;
+        }
+
+        public void CalculatePath(Vector3 posObjective){
+
+            Cell startCell = WorldToMap(transform.position);
+            Cell finishCell = WorldToMap(posObjective);
+
+            _path.nodos = new List<Node>();
+            _pathFollowing.currentPos = 0;
+            _pathFinding.ApplyAStar(startCell, finishCell, ref _path.nodos);
+        }
+
+        public bool IsEndPath(){
+            return _pathFollowing.EndPath();
+
+        }
         
         
         private void OnDrawGizmos()
@@ -57,7 +77,6 @@ namespace Pathfinding
 
         private void DrawPath()
         {
-            Debug.Log(_path);
             if (_path != null)
             {
                 int pathLen = _path.nodos.Count;

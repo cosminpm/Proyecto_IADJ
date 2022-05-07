@@ -15,13 +15,14 @@ public class Healing : State
     // Start is called before the first frame update
     public override void EntryAction(NPC npc)
     {
-        movement = true;
+        movement = false;
         _targetNPC = null;
         Debug.Log("Me queda poca vida :(");
     }
 
     public override void ExitAction(NPC npc)
     {
+        _targetNPC = null;
     }
 
     // TODO: En este estado, el NPC deber� buscar la zona de curaci�n m�s 
@@ -48,10 +49,17 @@ public class Healing : State
             else
                 _cooldwnTime += npc.Unit.AttackSpeed;
         }
+        npc.GUI.UpdateBarAction(_cooldwnTime);
+
     }
     public override void CheckState(NPC npc)
     {
-        if (IsDead(npc) || npc.stateManager.CureFinished(npc))
+        // if (IsDead(npc) || npc.stateManager.CureFinished(npc))
+        //     return;
+        if (IsDead(npc))
+            return;
+
+        if(npc.stateManager.CureFinished(npc, _targetNPC))
             return;
     }
 

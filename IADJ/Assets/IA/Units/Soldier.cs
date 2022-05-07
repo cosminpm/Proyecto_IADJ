@@ -49,7 +49,7 @@ public class Soldier : UnitsManager
         if (Mode == Modes.Normal || Mode == Modes.TotalWar) {
             HealthPointsMax = 225;
             HealthPointsMin = 75;
-            AttackPoints = 25;
+            AttackPoints = 55;
         }
 
         // El soldado en modo ofensivo atacara mas

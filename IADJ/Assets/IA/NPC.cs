@@ -16,11 +16,15 @@ public class NPC : MonoBehaviour
     // Controlador de estados
     public StateManager stateManager;
 
-    // Movimiento del personaje
-    private PathFinding pathFinding;
-
     // GUI NPC
     public GUIManager GUI;
+
+    // Controlador pathfinding
+    public ControlPathFindingWithSteering pathFinding;
+
+    // DUDA AQUI ABAJO HACE FALTA??
+    // GameManager
+    private GameHandler _gameManager;
 
 
     // Manejador de combate
@@ -30,6 +34,7 @@ public class NPC : MonoBehaviour
         GUI = GetComponent<GUIManager>();
         GUI.Initialize();
         stateManager.Initialize(GetUnitType(), this);
+        pathFinding = GetComponent<ControlPathFindingWithSteering>();
     }
 
     void Start(){
@@ -64,7 +69,7 @@ public class NPC : MonoBehaviour
         }
 
         foreach ( var a in allies){
-            if ( this.isInVisionRange(a.GetComponent<NPC>()))
+            if ( this.IsInVisionRange(a.GetComponent<NPC>()))
                  listAllies.Add(a.GetComponent<NPC>());
         }
 
@@ -72,7 +77,7 @@ public class NPC : MonoBehaviour
     }
 
 
-    public bool isInVisionRange(NPC npc){
+    public bool IsInVisionRange(NPC npc){
 
         if (npc == null)
             Debug.Log(" DEsauno con juevboi");
@@ -88,16 +93,58 @@ public class NPC : MonoBehaviour
         return false;
     }
 
+    public void Respawn(){
+        this.Unit.UnitAgent.Position = _gameManager.waypointManager.GetBasePosition(this);
+    }
+
+    public bool IsFullHP(){
+        return GetUnitCurrentHP() >= GetUnitHPMax();
+    }
+
     public bool NeedHeal()
     {
         return GetUnitCurrentHP() <= GetUnitHPMin();
     }
+
+    public bool IsCurrentStateDead(){
+        return stateManager.CurrentStateIsDead();
+    }
+    
+    public bool IsCapturing(){
+
+        if ( stateManager.CurrentStateIsCapture() && _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this))) 
+            return true;
+
+        return false;
+
+        // if ( stateManager.CurrentStateIsCapture())
+        //     Debug.Log("ESTOY EN EL ESTADO ATACAR ES TRUEE EJIJIJI");
+        
+        // if (_gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this))) 
+        //     Debug.Log("He llegado al destino buaajjaja");
+
+      //  return false;
+
+    }
+
+    public bool IsBase(){
+        
+        return _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetBase(this));
+
+    }
+
 
 
     public UnitsManager Unit
     {
         get { return _unit; }
         set { _unit = value; }
+    }
+
+    public GameHandler GameManager
+    {
+        get { return _gameManager; }
+        set { _gameManager = value; }
     }
 
     public Vector3 GetUnitPosition(){
