@@ -7,21 +7,18 @@ namespace InfluenceMap
 {
     public class InfluenceNode
     {
-        private bool _isUnitOnNode;
         private int _teamInfluence;
         private float _valueOfInfluence;
             
             
         public InfluenceNode()
         {
-            _isUnitOnNode = false;
             _teamInfluence = GlobalAttributes.CELDA_INFLUENCIA_NADIE;
             _valueOfInfluence = 0;
         }
         
-        public InfluenceNode(bool isUnitOnNode, int teamInfluence, float valueOfInfluence)
+        public InfluenceNode(int teamInfluence, float valueOfInfluence)
         {
-            _isUnitOnNode = isUnitOnNode;
             _teamInfluence = teamInfluence;
             _valueOfInfluence = valueOfInfluence;
         }
@@ -59,10 +56,6 @@ namespace InfluenceMap
             }
         }
 
-        public void SetUnitOnNode(bool isUnitOnNode)
-        {
-            _isUnitOnNode = isUnitOnNode;
-        }
         
         public void SetTeamInfluence(int teamInfluence)
         {
@@ -102,7 +95,11 @@ namespace InfluenceMap
                 c = Color.white;
             }
 
-            GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().GetCellMap()[i,j].DrawCellColored(c);
+
+            Vector3 originalPos =
+                GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().GetCellMap()[i, j].GetCenter();
+            Vector3 whereToDraw = new Vector3(originalPos.x + GlobalAttributes.POS_DRAW_INFLUENCE_MAP.x, GlobalAttributes.POS_DRAW_INFLUENCE_MAP.y, originalPos.z + GlobalAttributes.POS_DRAW_INFLUENCE_MAP.z);
+            GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().GetCellMap()[i,j].DrawCellColored(whereToDraw,c);
             
         }
         

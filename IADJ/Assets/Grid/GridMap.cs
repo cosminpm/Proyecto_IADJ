@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Global;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -19,7 +20,6 @@ namespace Grid
         public bool drawWireGm, drawCenterGm, drawAllowedCells, drawCellClicked, drawCellNumber;
         public float intensityAllowedCells = 0.5f;
         public int sizeOfTextGrid = 10;
-        public String nameParent = "";
 
         // Private variables
         private bool _initialized;
@@ -63,7 +63,7 @@ namespace Grid
         {
             _cellMap = new Cell[_xSize, _zSize];
             float[] sizeOfCell = GetSizeOfCell();
-            Vector3 primerVector3 = GetCornetTopLeft(GameObject.Find(nameParent));
+            Vector3 primerVector3 = GetCornetTopLeft(GameObject.Find(GlobalAttributes.NAME_MAP_PARENT));
             float x, z;
             
             for (int i = 0; i < _xSize; i++)
@@ -136,7 +136,7 @@ namespace Grid
         private float[] GetSizeOfMultiplePlains()
         {
             float x,z;
-            GameObject terrain = GameObject.Find(nameParent);
+            GameObject terrain = GameObject.Find(GlobalAttributes.NAME_MAP_PARENT);
             int nChild = terrain.transform.childCount;
             Transform child = terrain.transform.GetChild(nChild - 1);
             var strings = child.name.Split('_');

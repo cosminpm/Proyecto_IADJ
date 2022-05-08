@@ -148,6 +148,11 @@ public class Cell
         Gizmos.DrawCube(_center, new Vector3(_sizeX, 0,_sizeZ));
     }
     
+    public void DrawCellColored(Vector3 center, Color color)
+    {
+        Gizmos.color = color;
+        Gizmos.DrawCube(center, new Vector3(_sizeX, 0,_sizeZ));
+    }
     
     
 

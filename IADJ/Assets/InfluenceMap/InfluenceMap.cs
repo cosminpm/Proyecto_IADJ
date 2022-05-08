@@ -151,7 +151,7 @@ namespace InfluenceMap
         }
         
         
-        private void DrawGridMap()
+        private void DrawInfluenceMap()
         {
             if (drawInfluenceMapNode)
             {
@@ -159,7 +159,6 @@ namespace InfluenceMap
                 {
                     for (int j = 0; j < _zSize; j++)
                     {
-                    
                         _influenceNodes[i, j].DrawInfluenceNode(i, j);
                     }
                 }
@@ -169,7 +168,7 @@ namespace InfluenceMap
 
         private void OnDrawGizmos()
         {
-            DrawGridMap();
+            DrawInfluenceMap();
         }
     }
 }
