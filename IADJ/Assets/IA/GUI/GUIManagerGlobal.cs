@@ -9,30 +9,25 @@ using UnityEngine.UI;
 
 public class GUIManagerGlobal : MonoBehaviour
 {
-    public Image barraVidaRoja;
-    public Image barraVidaAzul;
+    public UIBar barraRoja;
+    public UIBar barraAzul;
+    private GameHandler gameManager;
 
-    //  void Update(){
-    //     healthBar.UpdateBar(_npc.Unit.CurrentHealthPoints);
-    // }
 
-    // public void Initialize(){
-    //     _npc = GetComponent<NPC>();
-    //     healthBar.SetMaxValue(_npc.Unit.HealthPointsMax);
-    //     actionBar.SetMaxValue(360);
-    // }
+    void Awake(){
+        gameManager = GetComponent<GameHandler>();
+    }
 
-    // public void UpdateBarAction(int cooldwnTime)
-    // {
-    //     actionBar.UpdateBar(cooldwnTime);
-    // }
+    void Update(){
+        barraRoja.UpdateBar(gameManager.waypointManager.blueEnemyBase.winningPercentage);
+        barraAzul.UpdateBar(gameManager.waypointManager.redEnemyBase.winningPercentage);
+    }
 
-    // public void UpdateStateImagen(State oldState, State newState){
-    //     if ( oldState != null)
-    //         oldState.stateImage.enabled = false;
-            
-    //     newState.stateImage.enabled = true;
-    // }
+    public void Initialize(){
+        barraRoja.SetMaxValue(100);
+        barraAzul.SetMaxValue(100);
+    }
+
 }
 
    

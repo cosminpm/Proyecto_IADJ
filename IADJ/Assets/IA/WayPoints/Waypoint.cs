@@ -29,7 +29,7 @@ public class Waypoint : MonoBehaviour
 
     void Start() {
         if (typeWaypoint == TypeWayPoint.BaseEnemigaAzul || typeWaypoint == TypeWayPoint.BaseEnemigaAzul)
-            winningPercentage = 100;
+            winningPercentage = 0;
     }
 
 

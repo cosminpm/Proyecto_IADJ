@@ -18,6 +18,9 @@ public class GameHandler : MonoBehaviour
 
     public List<NPC> _listNpcsBlue;
 
+    // GUI JUEGO
+    public GUIManagerGlobal gui;
+
     // Waypoint Manager
     [SerializeField] public WaypointManager waypointManager;
    
@@ -26,6 +29,7 @@ public class GameHandler : MonoBehaviour
     void Start(){
         InitializeNPCS();
  
+        gui = GetComponent<GUIManagerGlobal>();
         foreach( var npc in _listNpcsRed)
             npc.GameManager = this;
 
@@ -56,10 +60,12 @@ public class GameHandler : MonoBehaviour
         }
 
         if (!redCapturing){
+            Debug.Log("No hay nadie del equipo rojo capturando");
             waypointManager.NotCapturing(GlobalAttributes.Team.Red);
         }
 
         if (!blueCapturing){
+            Debug.Log("No hay nadie del equipo azul capturando");
             waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
         }
 
