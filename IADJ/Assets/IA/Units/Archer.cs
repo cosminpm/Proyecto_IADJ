@@ -4,6 +4,8 @@ using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using Grid;
+
 
 public class Archer : UnitsManager
 {
@@ -23,12 +25,22 @@ public class Archer : UnitsManager
     }
 
     protected override void AddCostsTerrain(){
-        costsTerrains = new Dictionary<TypeTerrains, float>();
-        costsTerrains.Add(TypeTerrains.Path, 1.0f);
-        costsTerrains.Add(TypeTerrains.Field, 0.9f);
-        costsTerrains.Add(TypeTerrains.Forest, 0.2f);
-        costsTerrains.Add(TypeTerrains.River, 0f);
-        costsTerrains.Add(TypeTerrains.Cliff, 0f);
+
+        costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
+        costsTerrains.Add(GridMap.TipoTerreno.Camino, 1.0f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.9f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.2f);
+        costsTerrains.Add(GridMap.TipoTerreno.Rio, 0f);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0f);
+
+        if ( UnitTeam == Team.Red){
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 0.5f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 2f);
+        } else {
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 2f);
+             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 0.5f);
+        }
+        
     }
 
     protected override void SetMovementStats(){
@@ -83,6 +95,9 @@ public class Archer : UnitsManager
         VisionDistance = 5f; 
         TypeUnit = TypeUnits.Archer;
     }
+
+
+
 }
 
    

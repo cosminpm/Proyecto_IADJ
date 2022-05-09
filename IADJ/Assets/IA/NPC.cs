@@ -24,7 +24,7 @@ public class NPC : MonoBehaviour
 
     // DUDA AQUI ABAJO HACE FALTA??
     // GameManager
-    private GameHandler _gameManager;
+    public GameHandler _gameManager;
 
 
     // Manejador de combate
@@ -48,34 +48,6 @@ public class NPC : MonoBehaviour
 
     }
 
-    public List<NPC> FindNearbyAllies(){
-
-       // Lista de aliados
-        GameObject[] allies;
-        List<NPC> listAllies = new List<NPC>();
-
-        // Dependiendo del equipo que sea, busco mis amigos
-        switch ((int) GetUnitTeam())
-        {
-            case 0:
-                allies = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
-                break;
-            case 1:
-                allies = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
-                break;
-            default:
-                allies = null;
-                break;
-        }
-
-        foreach ( var a in allies){
-            if ( this.IsInVisionRange(a.GetComponent<NPC>()))
-                 listAllies.Add(a.GetComponent<NPC>());
-        }
-
-        return listAllies;
-    }
-
 
     public bool IsInVisionRange(NPC npc){
 
@@ -91,6 +63,37 @@ public class NPC : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    // Encuentro el enemigo más cercano dentro de mi rango de visión. Me gusta más en el NPC JULIO 
+    public NPC FindClosestEnemy(List<NPC> listEnemy){
+
+
+         // Obtenemos la dirección hacia el target
+        Vector3 direction;
+        // Distancia que hay entre el agente y el target
+        float distance;
+        float minDistance = Mathf.Infinity;
+
+        NPC auxEnemy = null;
+
+        // Recorro todos mis enemigos y me quedo con el más cercano si está en mi rango de visión.
+        foreach ( var e in listEnemy)
+        {
+            direction = e.transform.position - this.GetUnitPosition();
+            distance = direction.magnitude;
+
+            if ( distance < minDistance && distance <= this.Unit.VisionDistance)
+            {
+                if ( !e.GetComponent<NPC>().IsCurrentStateDead() ){
+                    auxEnemy = e.GetComponent<NPC>();
+                    minDistance = distance;
+                }
+            } 
+        }
+
+        return auxEnemy;
+
     }
 
     public void Respawn(){
@@ -145,6 +148,14 @@ public class NPC : MonoBehaviour
     {
         get { return _gameManager; }
         set { _gameManager = value; }
+    }
+
+    public GlobalAttributes.Team GetEnemyTeam(){
+
+        if ( GetUnitTeam() == (int) GlobalAttributes.Team.Red)
+            return GlobalAttributes.Team.Blue;
+        else 
+            return GlobalAttributes.Team.Red;
     }
 
     public Vector3 GetUnitPosition(){

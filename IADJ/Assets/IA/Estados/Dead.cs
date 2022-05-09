@@ -19,7 +19,6 @@ public class Dead : State
     public override void EntryAction(NPC npc)
     {
         // El NPC deber�a hacer respawn en su base. 
-        Debug.Log("Me mor� T.T");
     }
 
     public override void ExitAction(NPC npc)

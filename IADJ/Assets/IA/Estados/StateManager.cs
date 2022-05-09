@@ -68,7 +68,6 @@ public class StateManager: MonoBehaviour
        
         if ( _currentState != null && _currentState != newState)
         {
-             Debug.Log("Estoy cambiandaosd asd");
             _currentState.ExitAction(npc);
         }
 
@@ -174,17 +173,14 @@ public class StateManager: MonoBehaviour
 
     public bool AllieHealthReached(NPC npc){
 
-        List<NPC> listAllies = npc.FindNearbyAllies();
+        List<NPC> listAllies = npc.GameManager.FindNearbyAllies(npc);
 
         if ( listAllies.Count > 0)
         {
             foreach( var a in listAllies)
             {
-                Debug.Log("Aliado encontrado: " + a.stateManager.CurrentState);
-                Debug.Log("Aliado encontrado2: " + stateLowHp.name);
                 if (a.NeedHeal())
                 {
-                    Debug.Log("Alguien necesita mi ayuda " + a.name);
                     ChangeState(stateHealing, npc);
                     CurrentState._targetNPC = a;
                     return true;

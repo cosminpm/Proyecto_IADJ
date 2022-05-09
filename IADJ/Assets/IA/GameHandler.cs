@@ -13,8 +13,10 @@ public class GameHandler : MonoBehaviour
     // Grid
     private GridMap _grid;
 
-    // Lista de NPC del juego
-    private List<NPC> _listNpcs;
+    // Lista de NPC Rojos del juego
+    public List<NPC> _listNpcsRed;
+
+    public List<NPC> _listNpcsBlue;
 
     // Waypoint Manager
     [SerializeField] public WaypointManager waypointManager;
@@ -24,6 +26,12 @@ public class GameHandler : MonoBehaviour
     void Start(){
         InitializeNPCS();
  
+        foreach( var npc in _listNpcsRed)
+            npc.GameManager = this;
+
+        foreach( var npc in _listNpcsBlue)
+            npc.GameManager = this;
+
     }
 
     // Comprobamos en cada frame si hay algún equipo capturando alguna base, para restar puntos al equipo contrario.
@@ -31,16 +39,19 @@ public class GameHandler : MonoBehaviour
 
         bool blueCapturing = false;
         bool redCapturing = false;
-        foreach( var n in _listNpcs)
+        foreach( var n in _listNpcsRed)
         {
             // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
             if( n.IsCapturing() )
-            {
-                if (n.GetUnitTeam() == (int) GlobalAttributes.Team.Red)
-                    redCapturing = true;
-                else    
-                    blueCapturing = true;
-            }
+                redCapturing = true;
+
+        }
+
+        foreach( var n in _listNpcsBlue)
+        {
+            // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
+            if( n.IsCapturing() )
+                blueCapturing = true;
 
         }
 
@@ -65,19 +76,85 @@ public class GameHandler : MonoBehaviour
     private void InitializeNPCS(){
         GameObject[] blueNPCS = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
         GameObject[] redNPCS = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
-        _listNpcs = new List<NPC>();
+        _listNpcsRed = new List<NPC>();
+        _listNpcsBlue = new List<NPC>();
+
+        //TODO:  // Se crea un NPC MÁS.. puede ser que un terreno tenga un script NPC.. Probar con el mapa definitivo
+        foreach (var npc in redNPCS){
+            if (npc.GetComponent<NPC>() != null)
+             _listNpcsRed.Add(npc.GetComponent<NPC>());
+        }
 
         foreach (var npc in blueNPCS){
-             npc.GetComponent<NPC>().GameManager = this;
-            _listNpcs.Add(npc.GetComponent<NPC>());
+            if (npc.GetComponent<NPC>() != null)
+            _listNpcsBlue.Add(npc.GetComponent<NPC>());
         }
 
-        foreach (var npc in redNPCS){
-             npc.GetComponent<NPC>().GameManager = this;
-            _listNpcs.Add(npc.GetComponent<NPC>());
-        }
+        
 
     }
+
+    // Busca los npcs más cercanos al npc pasado como parametrp
+    public List<NPC> FindNearbyAllies(NPC npc){
+
+        // Lista de los npc aliados
+        List<NPC> listAllies = new List<NPC>();
+
+        List<NPC> list = new List<NPC>();
+
+        // Dependiendo del equipo que sea, obtengo la lista de mi equipo
+        switch ( (int) npc.GetUnitTeam() )
+        {
+            case (int) GlobalAttributes.Team.Blue:
+               listAllies = _listNpcsBlue;
+
+                break;
+            case (int) GlobalAttributes.Team.Red:
+                listAllies = _listNpcsRed;
+                break;
+            default:
+                break;
+        }
+
+        // Si están en mi rango de visión...
+        foreach(var n in listAllies){
+            if ( npc.IsInVisionRange(n) )
+                list.Add(n);
+        }
+        return list;
+    }
+
+    // Busca los npcs más cercanos al npc pasado como parametrp
+    public List<NPC> FindNearbyEnemies(NPC npc){
+
+        // Lista de los npc aliados
+        List<NPC> listEnemies = new List<NPC>();
+
+        List<NPC> list = new List<NPC>();
+
+        // Dependiendo del equipo que sea, obtengo la lista de mi equipo
+        switch ( (int) npc.GetUnitTeam() )
+        {
+            case (int) GlobalAttributes.Team.Blue:
+               listEnemies = _listNpcsRed;
+
+                break;
+            case (int) GlobalAttributes.Team.Red:
+                listEnemies = _listNpcsBlue;
+                break;
+            default:
+                break;
+        }
+
+        // Si están en mi rango de visión...
+        foreach(var n in listEnemies){
+            if ( npc.IsInVisionRange(n) )
+                list.Add(n);
+        }
+        return list;
+    }
+
+    
 
 
 

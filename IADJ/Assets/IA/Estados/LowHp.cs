@@ -27,7 +27,6 @@ public class LowHp : State
         _targetNPC = null;
         medicFound = false;
 
-        Debug.Log("Me queda poca vida :(");
 
         Face face = npc.GetComponent<Face>();
         if (face == null)
@@ -75,12 +74,12 @@ public class LowHp : State
         }
         else { 
        //  Encuentro mis aliados cercanos
-            List<NPC> allies = npc.FindNearbyAllies();
+            List<NPC> allies = npc.GameManager.FindNearbyAllies(npc);
             // Hay un healear dentro de mi rango de viision ? ?
             foreach ( var a in allies)
             {
                 
-                if ((int) a.GetUnitType() == 3 && npc.IsInVisionRange(a) )
+                if ((int) a.GetUnitType() == 3)
                 {   
                     // He encontrado  un medico en mi rango de visión
 

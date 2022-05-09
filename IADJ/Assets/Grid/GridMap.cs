@@ -74,7 +74,7 @@ namespace Grid
                     z = -(sizeOfCell[1] / 2 + j * sizeOfCell[1] + primerVector3.z);
                     Vector3 center = new Vector3(x, 0, z);
                     TipoTerreno tipoTerreno = GetTipoTerrenoCell(center);
-                    _cellMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j, tipoTerreno);
+                    _cellMap[i, j] = new Cell(sizeOfCell[0], sizeOfCell[1], center, i, j, tipoTerreno, GetTerrainCost(tipoTerreno));
                 }
             }
         }
@@ -109,6 +109,40 @@ namespace Grid
                     return TipoTerreno.BaseAzul;
             }
             throw new Exception("ERROR: No se ha chocado con un elemento TERRENO, si no con otra cosa:" + str);
+        }
+
+        private float GetTerrainCost(TipoTerreno terrain){
+
+            float baseCost = 0;
+
+            switch(terrain)
+            {
+                case TipoTerreno.Camino:
+                    baseCost = 0.5f;
+                    break;
+                case TipoTerreno.Rio:
+                    baseCost = Mathf.Infinity;
+                    break;
+                case TipoTerreno.Pradera:
+                    baseCost = 2f;
+                    break;
+                case TipoTerreno.Bosque:
+                    baseCost = 4f;
+                    break;
+                case TipoTerreno.Acantilado:
+                    baseCost = Mathf.Infinity;
+                    break;
+                case TipoTerreno.BaseRoja:
+                    baseCost = 1f;
+                    break;
+                case TipoTerreno.BaseAzul:
+                    baseCost = 1f;
+                    break;
+
+            }
+
+            return baseCost;
+
         }
         
         private Vector3 GetCornetTopLeft(GameObject parent)

@@ -25,7 +25,6 @@ public class Defend : State
         movement = true;
         _targetNPC = null;
 
-        Debug.Log("Nos pegan :(");
         CreateInvisible();
 
         // Si atacan nuestra base, me voy a defenderla.

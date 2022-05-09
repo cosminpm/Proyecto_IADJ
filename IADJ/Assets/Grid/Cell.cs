@@ -15,9 +15,10 @@ public class Cell
     private bool _allowedCell = true;
     private int _coorX, _coorZ;
     private GridMap.TipoTerreno _tipoTerreno; 
+    private float _terrainCost;
     
     
-    public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ, GridMap.TipoTerreno tipoTerreno)
+    public Cell(float sizeX, float sizeZ, Vector3 center, int coorX, int coorZ, GridMap.TipoTerreno tipoTerreno, float terrainCost)
     {
         _sizeX = sizeX;
         _sizeZ = sizeZ;
@@ -25,6 +26,7 @@ public class Cell
         _coorX = coorX;
         _coorZ = coorZ;
         _tipoTerreno = tipoTerreno;
+        _terrainCost = terrainCost;
     }
 
     public Cell(Cell c)
@@ -35,6 +37,7 @@ public class Cell
         _coorX = c._coorX;
         _coorZ = c._coorZ;
         _tipoTerreno = c._tipoTerreno;
+        _terrainCost = c._terrainCost;
     }
 
     protected Cell()
@@ -45,6 +48,10 @@ public class Cell
     public GridMap.TipoTerreno GetTipoTerreno()
     {
         return _tipoTerreno;
+    }
+
+    public float GetTerrainCost(){
+        return _terrainCost;
     }
 
     public float GetSizeX()
