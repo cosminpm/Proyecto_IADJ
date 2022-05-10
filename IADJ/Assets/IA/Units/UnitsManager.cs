@@ -3,6 +3,7 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
+using Grid;
 
 public abstract class UnitsManager : MonoBehaviour
 {
@@ -49,17 +50,17 @@ public abstract class UnitsManager : MonoBehaviour
     private float _speed; // velocidad escalar
 
     
-    // Tipos de terrenos.
-    public enum TypeTerrains{
-        Path = 0,
-        Field = 1,
-        Forest = 2,
-        Cliff = 3,  
-        River = 4
-    }
+    // // Tipos de terrenos.
+    // public enum TypeTerrains{
+    //     Path = 0,
+    //     Field = 1,
+    //     Forest = 2,
+    //     Cliff = 3,  
+    //     River = 4
+    // }
 
     // Diccionario con los costes de movimiento de cada tipo de terrenos.
-    protected Dictionary<TypeTerrains, float> costsTerrains;
+    protected Dictionary<GridMap.TipoTerreno, float> costsTerrains;
 
     // Tipos de unidad.
     public enum TypeUnits{
@@ -88,6 +89,12 @@ public abstract class UnitsManager : MonoBehaviour
     protected abstract void SetMovementStats();
     protected abstract void SetUnitStats();
 
+
+    public float GetMovementCost(GridMap.TipoTerreno terrain){
+        float cost;
+        costsTerrains.TryGetValue(terrain,out cost);
+        return cost;
+    }
 
     public float HealthPointsMax
     {

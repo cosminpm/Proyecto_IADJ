@@ -40,14 +40,11 @@ public static class CombatHandler
             // más de daño.
             if (critic <= attacker.Unit.CriticRate)
             {
-                Debug.Log("critic!");
                 return attacker.Unit.AttackPoints * damageIndex * 1.5f;
             }
 
             return attacker.Unit.AttackPoints * damageIndex;
         }
-
-        Debug.Log("miss");
         // Si ha fallado, no quita vida. 
         return 0f;
     }

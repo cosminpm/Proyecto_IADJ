@@ -97,11 +97,11 @@ public class WaypointManager : MonoBehaviour
         // Estoy capturando la base enemiga
         if (npc.GetUnitTeam() == (int) GlobalAttributes.Team.Red) 
         {
-            redEnemyBase.winningPercentage+= 0.90f * Time.deltaTime;
-            Debug.Log("Estoy dando a puntos a mi equioi");
+            blueEnemyBase.winningPercentage+= 0.001f;
+           // Debug.Log("Estoy dando a puntos a mi equioi");
         }  else {
-            blueEnemyBase.winningPercentage+= 0.90f * Time.deltaTime;
-            Debug.Log("Estoy dando a puntos a mi equioi ADASDASDS " );
+            redEnemyBase.winningPercentage+= 0.001f;
+           // Debug.Log("Estoy dando a puntos a mi equioi ADASDASDS " );
         }
 
     }
@@ -111,14 +111,14 @@ public class WaypointManager : MonoBehaviour
         switch( team)
         {
             case GlobalAttributes.Team.Red:
-                blueBase.winningPercentage -= 0.40f;
-                if ( blueBase.winningPercentage <= 0)
-                    blueBase.winningPercentage = 0;
+                blueEnemyBase.winningPercentage -= 0.009f;
+                if ( blueEnemyBase.winningPercentage <= 0)
+                    blueEnemyBase.winningPercentage = 0;
                 break;
             case GlobalAttributes.Team.Blue:
-                redBase.winningPercentage -= 0.40f;
-                if ( redBase.winningPercentage <= 0)
-                    redBase.winningPercentage = 0;
+                redEnemyBase.winningPercentage -= 0.009f;
+                if ( redEnemyBase.winningPercentage <= 0)
+                    redEnemyBase.winningPercentage = 0;
                 break;
 
             default:
@@ -133,17 +133,25 @@ public class WaypointManager : MonoBehaviour
     // }
 
     public bool wonTeamBlue(){
-        if ( blueEnemyBase.winningPercentage == 200)
+        if ( blueEnemyBase.winningPercentage == 100)
             return true;
         else    
             return false;
     }
 
     public bool wonTeamRed(){
-        if ( redEnemyBase.winningPercentage == 200)
+        if ( redEnemyBase.winningPercentage == 100)
             return true;
         else
             return false;
+    }
+
+    public float GetPercentageCaptureRed(){
+        return blueEnemyBase.winningPercentage;
+    }
+
+    public float GetPercentageCaptureBlue(){
+        return redEnemyBase.winningPercentage;
     }
 
 

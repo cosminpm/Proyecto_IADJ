@@ -29,8 +29,8 @@ namespace Global
         public static int CELDA_INFLUENCIA_ROJO = 2;
         
         public static float MINIMUM_VALUE_INFLUENCE = 0.1f;
-        public static float MAXIMUM_VALUE_INFLUENCE = 20f;
-        public static float CONSTANT_DECRASING_VALUE = 0.5f;
+        public static float MAXIMUM_VALUE_INFLUENCE = 5f;
+        public static float CONSTANT_DECRASING_VALUE = 1f;
 
         public static Vector3 POS_DRAW_INFLUENCE_MAP = new Vector3(0,-1,-25);
         

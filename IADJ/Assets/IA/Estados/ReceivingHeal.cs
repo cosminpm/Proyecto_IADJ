@@ -30,7 +30,10 @@ public class ReceivingHeal : State
 
         if ( npc.IsBase())
         {
-            npc.Unit.CurrentHealthPoints+=5;
+            Debug.Log("Estoy en mi base as");
+            npc.Unit.CurrentHealthPoints+=15;
+        } else {
+             Debug.Log("NO Estoy en mi base as");
         }
 
     }

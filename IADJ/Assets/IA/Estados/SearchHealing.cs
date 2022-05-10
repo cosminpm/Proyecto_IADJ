@@ -28,7 +28,6 @@ public class SearchHealing : State
     {
         movement = false;
         _targetNPC = null;
-        Debug.Log("Encontré a alguien a quien curar :)");
        // npc.GetComponent<Wander>().enabled  = false;
     }
 

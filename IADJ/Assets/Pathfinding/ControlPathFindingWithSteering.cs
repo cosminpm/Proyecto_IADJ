@@ -27,7 +27,7 @@ namespace Pathfinding
             _pathFinding = gameObject.AddComponent<PathFinding>();
             _pathFollowing = gameObject.AddComponent<PathFollowingCell>();
             GetComponent<AgentNPC>().listSteerings.Add(_pathFollowing);
-            
+            _pathFinding.npc = gameObject.GetComponent<NPC>();
             _pathFollowing.weight = 1;
 
             _pathFollowing.path = gameObject.AddComponent<PathCell>();

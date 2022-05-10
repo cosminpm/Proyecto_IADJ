@@ -17,7 +17,6 @@ public class Healing : State
     {
         movement = false;
         _targetNPC = null;
-        Debug.Log("Me queda poca vida :(");
     }
 
     public override void ExitAction(NPC npc)

@@ -22,7 +22,6 @@ public class Attack : State
     // Cambiamos los pr�metros de entrada al estado.
     // P.E. antes de atacar, el NPC tiene que detenerse.
     public override void EntryAction(NPC npc){
-        Debug.Log("Atacando ");
         movement = false;
 
         Face f = npc.GetComponent<Face>();
@@ -57,48 +56,53 @@ public class Attack : State
     public override void Action(NPC npc, NPC _targetNPC){
 
 
+        if (_targetNPC == null){
+            Debug.Log("EL TARGET EASD NMSNDUASD");
+        }
         // LO de abajo es mejor HACERLO EN EL ENTRY NO? QUE PASA EN EL CASO QUE AHAYA MAS DE UN ENEMIGO AL QUE ATACAR EN M,IU RANGO DE VISION ==============?
     
-        Face f = npc.GetComponent<Face>();
-        if (f == null)
-        {
-            npc.gameObject.AddComponent<Face>();
-            npc.Unit.UnitAgent.UpdateListSteering();
-            npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
-        }
-        else
-        {
-            npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
-        }
+        // Face f = npc.GetComponent<Face>();
+        // if (f == null)
+        // {
+        //     npc.gameObject.AddComponent<Face>();
+        //     npc.Unit.UnitAgent.UpdateListSteering();
+        //     npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
+        // }
+        // else
+        // {
+        //     npc.gameObject.GetComponent<Face>().NewTarget(_targetNPC.Unit.UnitAgent);
+        // }
  
+        if ( !_targetNPC.IsCurrentStateDead() )
+        {
+            Vector3 direction = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
+            // Distancia que hay entre el agente y el target
+            float distance = direction.magnitude;
 
-        Vector3 direction = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
-        // Distancia que hay entre el agente y el target
-        float distance = direction.magnitude;
+            // TODO: FALTA EL CONO XD
 
-        // TODO: FALTA EL CONO XD
-
-        // Si esta dentro de nuestro rango de ataque, atacamos
-        if ( !_targetNPC.IsCurrentStateDead() && npc.Unit.AttackRange >= distance){
+                // Si esta dentro de nuestro rango de ataque, atacamos
+            if ( npc.Unit.AttackRange >= distance){
 
 
-            // me dejo de mover
-            if ( movement){
-                movement = false;
-                npc.pathFinding.ClearPath();
-            }
+                // me dejo de mover
+                if ( movement){
+                    movement = false;
+                    npc.pathFinding.ClearPath();
+                }
 
-            if (_cooldwnTime >= 360)
-            {
-                float dmg = CombatHandler.CalculateDamage(npc, _targetNPC);
-                _targetNPC.Unit.CurrentHealthPoints -= dmg;
-                _cooldwnTime = 0;
-            }
-            else
-                _cooldwnTime+=npc.Unit.AttackSpeed;
+                if (_cooldwnTime >= 360)
+                {
+                    float dmg = CombatHandler.CalculateDamage(npc, _targetNPC);
+                    _targetNPC.Unit.CurrentHealthPoints -= dmg;
+                    _cooldwnTime = 0;
+                }
+                else
+                    _cooldwnTime+=npc.Unit.AttackSpeed;
 
-            npc.GUI.UpdateBarAction(_cooldwnTime);
-        } 
+                npc.GUI.UpdateBarAction(_cooldwnTime);
+            } 
+        }
         
         else if ( !_targetNPC.IsCurrentStateDead())  {      // Tenemos que perseguir el objetivo, si se puede
 

@@ -16,8 +16,6 @@ public class Capture : State
     }
 
     public override void EntryAction(NPC npc){
-        
-        Debug.Log("Capturemos esa base jeje >:)");
         movement = false;
         _capturing = false;
     }

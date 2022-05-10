@@ -58,17 +58,23 @@ public abstract class State : MonoBehaviour
     // Si ese es el caso, pasará a estado Attack.
     protected bool EnemyFound(NPC npc){
         
-        if (FindClosestEnemy(npc))
-        {
-            npc.stateManager.stateAttack.ObjetiveNPC = npc.stateManager.CurrentState.ObjetiveNPC;
+        List<NPC> enemies = npc.GameManager.FindNearbyEnemies(npc);
+
+
+        if (enemies.Count > 0) {
+
+            Debug.Log("He encontrado un enemigo");
+            NPC target = npc.FindClosestEnemy(enemies);
+
+            npc.stateManager.stateAttack.ObjetiveNPC = target;
             npc.stateManager.ChangeState(npc.stateManager.stateAttack, npc);
+
             return true;
-        }
+        } 
 
-        else
-            npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
-
+        npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
         return false;
+
     }
 
 
@@ -82,58 +88,6 @@ public abstract class State : MonoBehaviour
 
     // Funciones auxiliares
 
-
-    // Encuentro el enemigo más cercano dentro de mi rango de visión. Me gusta más en el NPC JULIO 
-    private bool FindClosestEnemy(NPC npc){
-
-        // Lista de enemigos
-        GameObject[] enemys;
-
-        // Dependiendo del equipo que sea, busco mis enemigos
-        switch ((int) npc.Unit.UnitTeam)
-        {
-            case 0:
-                enemys = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
-                break;
-            case 1:
-                enemys = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
-                break;
-            default:
-                enemys = null;
-                break;
-        }
-
-         // Obtenemos la dirección hacia el target
-        Vector3 direction;
-        // Distancia que hay entre el agente y el target
-        float distance;
-        float minDistance = Mathf.Infinity;
-
-        NPC auxEnemy = null;
-
-        // Recorro todos mis enemigos y me quedo con el más cercano si está en mi rango de visión.
-        foreach ( var e in enemys)
-        {
-            direction = e.transform.position - npc.GetUnitPosition();
-            distance = direction.magnitude;
-
-            if ( distance < minDistance && distance <= npc.Unit.VisionDistance)
-            {
-                if ( !e.GetComponent<NPC>().IsCurrentStateDead() ){
-                    auxEnemy = e.GetComponent<NPC>();
-                    minDistance = distance;
-                }
-            } 
-        }
-
-        if ( auxEnemy != null ){
-            _targetNPC = auxEnemy;
-            return true;
-        
-        }
-        return false;
-
-    }
 
     public NPC ObjetiveNPC
     {

@@ -23,6 +23,10 @@ namespace Pathfinding
         private int _xSize, _zSize;
         private List<Node> _path;
 
+        // Modo táctico
+        public bool tactic = true;
+        public NPC npc;
+
         private void Start()
         {
             _path = new List<Node>();
@@ -138,6 +142,7 @@ namespace Pathfinding
         {
             return node != null && node.GetIsAllowedCell();
         }
+
         private List<Node> AStar(Node startNode, Node finalNode, ref List<Node> path)
         {
             List<Node> closedList = new List<Node>();
@@ -163,9 +168,9 @@ namespace Pathfinding
                 foreach (Node neighbourNode in GetNeighboursList(currentNode))
                 {
                     if (closedList.Contains(neighbourNode)) continue;
-                    float tentativeGCost =
-                        currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
-
+                    // float tentativeGCost =
+                    //     currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
+                    float tentativeGCost = currentNode.GetGCost() + CalculateCost(currentNode, neighbourNode);
                     if (tentativeGCost < neighbourNode.GetGCost())
                     {
                         neighbourNode.SetPreviousNode(currentNode);
@@ -182,6 +187,26 @@ namespace Pathfinding
             }
 
             return null;
+        }
+
+        private float CalculateCost(Node currentNode, Node neighbourNode){
+
+            float cost = 0;
+
+            if (tactic){
+                
+                Cell neighbourCell = neighbourNode.GetCell();
+
+                // Coste base del terreno + Coste de movimiento de la unidad en ese terreno
+                cost = neighbourCell.GetTerrainCost() + npc.Unit.GetMovementCost(neighbourCell.GetTipoTerreno());
+
+            // Influencia
+            } else {
+                cost = HeuristicApply(currentNode, neighbourNode, heuristic);
+            }
+
+
+            return cost;
         }
 
         // Cost functions
