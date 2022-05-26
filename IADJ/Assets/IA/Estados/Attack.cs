@@ -49,8 +49,6 @@ public class Attack : State
         npc.Unit.UnitAgent.UpdateListSteering();
         _targetNPC = null;
         npc.pathFinding.ClearPath();
-        
-
     }
 
     public override void Action(NPC npc, NPC _targetNPC){
@@ -81,12 +79,13 @@ public class Attack : State
 
             // TODO: FALTA EL CONO XD
 
-                // Si esta dentro de nuestro rango de ataque, atacamos
-            if ( npc.Unit.AttackRange >= distance){
-
+            // Si esta dentro de nuestro rango de ataque, atacamos
+            if (npc.Unit.AttackRange >= distance)
+            {
 
                 // me dejo de mover
-                if ( movement){
+                if (movement)
+                {
                     movement = false;
                     npc.pathFinding.ClearPath();
                 }
@@ -98,20 +97,15 @@ public class Attack : State
                     _cooldwnTime = 0;
                 }
                 else
-                    _cooldwnTime+=npc.Unit.AttackSpeed;
+                    _cooldwnTime += npc.Unit.AttackSpeed;
 
                 npc.GUI.UpdateBarAction(_cooldwnTime);
-            } 
-        }
-        
-        else if ( !_targetNPC.IsCurrentStateDead())  {      // Tenemos que perseguir el objetivo, si se puede
-
-            if ( !movement)
+            }
+            else 
             {
                 npc.pathFinding.CalculatePath(_targetNPC.Unit.UnitAgent.Position);
                 movement = true;
             }
-
         }
     }
 
@@ -119,12 +113,19 @@ public class Attack : State
         // Comprobamos si el NPC debe salir del estado. 
         if (IsDead(npc))
             return;
-        if (npc.stateManager.EnemiesInBase(npc))
+
+        if (IsInTotalWar(npc))
             return;
-        if (npc.stateManager.IsLowHP(npc))
-            return;
+
         if (EnemyFound(npc))
             return;
+
+        if (npc.stateManager.EnemiesInBase(npc))
+            return;
+
+        if (npc.stateManager.IsLowHP(npc))
+            return;
+
     }
 
     public override void Execute(NPC npc){

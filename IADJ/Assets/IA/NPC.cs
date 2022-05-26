@@ -48,7 +48,6 @@ public class NPC : MonoBehaviour
 
     }
 
-
     public bool IsInVisionRange(NPC npc){
 
         if (npc == null)

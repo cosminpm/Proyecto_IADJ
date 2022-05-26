@@ -25,9 +25,7 @@ public abstract class State : MonoBehaviour
     void Awake(){
         stateImage.enabled = false;
     }
-
-   
-    
+ 
     public abstract void Action(NPC npc, NPC obj);  
 
     public abstract void EntryAction(NPC npc);
@@ -38,15 +36,23 @@ public abstract class State : MonoBehaviour
 
     public abstract void Execute(NPC npc);
 
-
-    // Transiciones TODO: JAJAJAJAJAJ
-
     // Función para comprobar si el NPC está muerto. 
     // Si ese es el caso, pasará al estado Dead.
     protected bool IsDead (NPC npc){
         
         if ( npc.Unit.CurrentHealthPoints <= 0){
             npc.stateManager.ChangeState(npc.stateManager.stateDead, npc);
+            return true;
+        }
+        return false;
+    }
+
+    // Función para comprobar si el NPC está en TotalWar.
+    protected bool IsInTotalWar(NPC npc)
+    {
+        if (npc.Unit.Mode == UnitsManager.Modes.TotalWar)
+        {
+            npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
             return true;
         }
         return false;

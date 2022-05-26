@@ -35,8 +35,7 @@ public class Soldier : UnitsManager
         } else {
             costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 2f);
              costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 0.5f);
-        }
-        
+        } 
     }
 
     protected override void SetMovementStats(){

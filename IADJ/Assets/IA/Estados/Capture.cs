@@ -21,6 +21,7 @@ public class Capture : State
     }
 
     public override void ExitAction(NPC npc){
+        npc.pathFinding.ClearPath();
         _targetNPC = null;
     }
 
@@ -47,30 +48,18 @@ public class Capture : State
             } 
 
         }
-
-
-
-
-        // if (_captureTime <= 0)
-        // {
-        //     Debug.Log("He marcado un punto! :D");
-        //     _captureTime = 1200;
-        // }
-        // // TODO: Esto hay que cambiarlo. La captura se tiene que hacer si 
-        // // el NPC está en la ZONA enemiga, no en un punto concreto. 
-        // else if (npc.GetUnitPosition() == new Vector3(-115, 0, 100))
-        //     _captureTime--;
-
-
     }
 
 
     public override void CheckState(NPC npc){
 
-        // Si estoy muerto, cambio al estado a muerti
-        if  (IsDead(npc) || npc.stateManager.EnemiesInBase(npc)){
+        // Si estoy muerto, cambio al estado a muerto
+        if  (IsDead(npc))
              return;
-        }
+
+        // Si hay enemigos en nuestra base, vamos hacia allá.
+        if (npc.stateManager.EnemiesInBase(npc))
+            return;
 
         // Si hay algún al que atacar, cambio de estado a MeleeAttack
         if (EnemyFound(npc)){

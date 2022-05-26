@@ -19,23 +19,8 @@ public class StateManager: MonoBehaviour
     public SearchHealing stateSearchHealing;
 
 
-    // Estado Actual del npc
+    // Estado actual del npc
     private State _currentState;
-
-    void Awake(){
-
-    //     stateCapture = this.gameObject.GetComponent<Capture>();
-    //     stateDead = this.gameObject.GetComponent<Dead>();
-    //     stateLowHp = this.gameObject.GetComponent<LowHp>();
-    //     stateAttack = this.gameObject.GetComponent<Attack>();
-    //     stateHealing = this.gameObject.GetComponent<Healing>();
-    //     stateReceivingHeal = this.gameObject.GetComponent<ReceivingHeal>();
-    //     stateSearchHealing = this.gameObject.GetComponent<SearchHealing>();
-    //    // stateSearchHealing = this.gameObject.GetComponent<ReceivingHeal>();
-    
-    //     _currentState = stateCapture;
-    //     _currentState.stateImage.enabled = true;
-    }
 
     public void Initialize(int type, NPC npc){
         

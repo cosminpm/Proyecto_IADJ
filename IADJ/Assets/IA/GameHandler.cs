@@ -23,7 +23,10 @@ public class GameHandler : MonoBehaviour
 
     // Waypoint Manager
     [SerializeField] public WaypointManager waypointManager;
-   
+
+    // Units Manager
+    public UnitsManager unitsManager;
+
 
 
     void Start(){
@@ -43,41 +46,135 @@ public class GameHandler : MonoBehaviour
 
         bool blueCapturing = false;
         bool redCapturing = false;
-        foreach( var n in _listNpcsRed)
-        {
-            // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
-            if( n.IsCapturing() )
-                redCapturing = true;
 
+        if (!CheckVictory()) {
+
+            // Comprobamos el cambio de estado.
+            IsChangingMode();
+
+            foreach (var n in _listNpcsRed)
+            {                
+                // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
+                if (n.IsCapturing())
+                    redCapturing = true;
+            }
+
+            foreach (var n in _listNpcsBlue)
+            {
+                // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
+                if (n.IsCapturing())
+                    blueCapturing = true;
+            }
+
+            if (!redCapturing)
+            {
+                Debug.Log("No hay nadie del equipo rojo capturando");
+                waypointManager.NotCapturing(GlobalAttributes.Team.Red);
+            }
+
+            if (!blueCapturing)
+            {
+                Debug.Log("No hay nadie del equipo azul capturando");
+                waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
+            }
         }
-
-        foreach( var n in _listNpcsBlue)
-        {
-            // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
-            if( n.IsCapturing() )
-                blueCapturing = true;
-
-        }
-
-        if (!redCapturing){
-            Debug.Log("No hay nadie del equipo rojo capturando");
-            waypointManager.NotCapturing(GlobalAttributes.Team.Red);
-        }
-
-        if (!blueCapturing){
-            Debug.Log("No hay nadie del equipo azul capturando");
-            waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
-        }
-
-
     }
 
+    // Funcion para comprobar si la partida ha acabado.
+    private bool CheckVictory() {
+        if (waypointManager.blueEnemyBase.winningPercentage >= 1)
+        {
+            Debug.Log("Victoria para el equipo rojo!");
+            return true;
+        }
 
+        else if (waypointManager.redEnemyBase.winningPercentage >= 1) 
+        {
+            Debug.Log("Victoria para el equipo azul!");
+            return true;
+        }
+        return false;
+    }
 
+    // Función para comprobar si se ha realizado un cambio de modo.
+    private bool IsChangingMode() {
 
+        // Si pulsamos la tecla "T", se activa el modo TotalWar.
+        if (Input.GetKey(KeyCode.T))
+        {
+            foreach (var n in _listNpcsBlue)
+                n.Unit.ActivateTotalWar();
 
+            foreach (var n in _listNpcsRed)
+                n.Unit.ActivateTotalWar();
 
+            return true;
+        }
 
+        // Si pulsamos la tecla "R", seleccionamos al equipo rojo.
+        else if (Input.GetKey(KeyCode.R)) 
+        {
+            // Si se pulsa "A", cambiamos el modo del equipo rojo a "modo ofensivo".
+            if (Input.GetKey(KeyCode.A))
+            {
+                foreach (var n in _listNpcsRed)
+                    n.Unit.ActivateOffensiveMode();
+
+                return true;
+            }
+
+            // Si se pulsa "D", cambiamos el modo del equipo rojo a "modo defensivo".
+            else if (Input.GetKey(KeyCode.D))
+            {
+                foreach (var n in _listNpcsRed)
+                    n.Unit.ActivateDefensiveMode();
+
+                return true;
+            }
+
+            // Si se pulsa "N", cambiamos el modo del equipo rojo a "modo normal".
+            else if (Input.GetKey(KeyCode.N))
+            {
+                foreach (var n in _listNpcsRed)
+                    n.Unit.ActivateNormalMode();
+
+                return true;
+            }
+        }
+
+        // Si pulsamos la tecla "B", seleccionamos al equipo azul.
+        else if (Input.GetKey(KeyCode.B))
+        {
+            // Si se pulsa "A", cambiamos el modo del equipo azul a "modo ofensivo".
+            if (Input.GetKey(KeyCode.A))
+            {
+                foreach (var n in _listNpcsBlue)
+                    n.Unit.ActivateOffensiveMode();
+
+                return true;
+            }
+
+            // Si se pulsa "D", cambiamos el modo del equipo azul a "modo defensivo".
+            else if (Input.GetKey(KeyCode.D))
+            {
+                foreach (var n in _listNpcsBlue)
+                    n.Unit.ActivateDefensiveMode();
+
+                return true;
+            }
+
+            // Si se pulsa "N", cambiamos el modo del equipo azul a "modo normal".
+            else if (Input.GetKey(KeyCode.N))
+            {
+                foreach (var n in _listNpcsBlue)
+                    n.Unit.ActivateNormalMode();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private void InitializeNPCS(){
         GameObject[] blueNPCS = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
@@ -95,12 +192,9 @@ public class GameHandler : MonoBehaviour
             if (npc.GetComponent<NPC>() != null)
             _listNpcsBlue.Add(npc.GetComponent<NPC>());
         }
-
-        
-
     }
 
-    // Busca los npcs más cercanos al npc pasado como parametrp
+    // Busca los npcs más cercanos al npc pasado como parametro
     public List<NPC> FindNearbyAllies(NPC npc){
 
         // Lista de los npc aliados
@@ -124,13 +218,13 @@ public class GameHandler : MonoBehaviour
 
         // Si están en mi rango de visión...
         foreach(var n in listAllies){
-            if ( npc.IsInVisionRange(n) )
+            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead())
                 list.Add(n);
         }
         return list;
     }
 
-    // Busca los npcs más cercanos al npc pasado como parametrp
+    // Busca los npcs más cercanos al npc pasado como parametro
     public List<NPC> FindNearbyEnemies(NPC npc){
 
         // Lista de los npc aliados
@@ -154,17 +248,11 @@ public class GameHandler : MonoBehaviour
 
         // Si están en mi rango de visión...
         foreach(var n in listEnemies){
-            if ( npc.IsInVisionRange(n) )
+            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead())
                 list.Add(n);
         }
         return list;
     }
-
-    
-
-
-
-    
 }
 
    

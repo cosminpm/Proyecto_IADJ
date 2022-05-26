@@ -89,7 +89,32 @@ public abstract class UnitsManager : MonoBehaviour
     protected abstract void SetMovementStats();
     protected abstract void SetUnitStats();
 
+    // Funcion para activar el modo TotalWar.
+    public void ActivateTotalWar() {
+        Debug.Log("TotalWar: ON");
+        Mode = Modes.TotalWar;
+    }
 
+    // Funcion para activar el modo Offensive.
+    public void ActivateOffensiveMode()
+    {
+        Debug.Log("Offensive: ON");
+        Mode = Modes.Offensive;
+    }
+
+    // Funcion para activar el modo Defensive.
+    public void ActivateDefensiveMode()
+    {
+        Debug.Log("Defensive: ON");
+        Mode = Modes.Defensive;
+    }
+
+    // Funcion para activar el modo Normal.
+    public void ActivateNormalMode()
+    {
+        Debug.Log("Normal: ON");
+        Mode = Modes.Normal;
+    }
     public float GetMovementCost(GridMap.TipoTerreno terrain){
         float cost;
         costsTerrains.TryGetValue(terrain,out cost);

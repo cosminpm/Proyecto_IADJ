@@ -116,6 +116,9 @@ public class LowHp : State
         if (IsDead(npc))
             return;
 
+        if (IsInTotalWar(npc))
+            return;
+
         // if (npc.stateManager.HealthPointReached(posBase, npc, healer, medicFound))
         //     return;
 
