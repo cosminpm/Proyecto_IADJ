@@ -11,6 +11,7 @@ public class StateManager: MonoBehaviour
     // Estados posibles del NPC   
     public Capture stateCapture;
     public Dead stateDead;
+    public Patroll statePatroll;
     public LowHp stateLowHp;
     public Attack stateAttack;
     public Defend stateDefend;
@@ -32,10 +33,15 @@ public class StateManager: MonoBehaviour
         stateHealing = this.gameObject.GetComponent<Healing>();
         stateReceivingHeal = this.gameObject.GetComponent<ReceivingHeal>();
         stateSearchHealing = this.gameObject.GetComponent<SearchHealing>();
-    
-        if ( type == 3)  
+        statePatroll = this.gameObject.GetComponent<Patroll>();
+
+        if (type == 3)
             ChangeState(stateSearchHealing, npc);
-        else    
+        else if (npc.isPatroll)
+        {
+            ChangeState(statePatroll, npc);
+        }
+        else
             ChangeState(stateCapture, npc);
 
         _currentState.stateImage.enabled = true;
@@ -50,7 +56,6 @@ public class StateManager: MonoBehaviour
     // Función para cambiar el estado del NPC
     public void ChangeState(State newState, NPC npc){
 
-       
         if ( _currentState != null && _currentState != newState)
         {
             _currentState.ExitAction(npc);

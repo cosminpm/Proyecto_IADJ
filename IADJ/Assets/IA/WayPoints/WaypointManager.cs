@@ -20,13 +20,18 @@ public class WaypointManager : MonoBehaviour
     //GUI
     public GUIManagerGlobal GUI;
 
+    private int currentPatrollWaypoint;
+    private int pathDir = 1;
+
 
     [SerializeField] public Waypoint redBase;
     [SerializeField] public Waypoint blueBase; 
     [SerializeField] public Waypoint blueEnemyBase; 
     [SerializeField] public Waypoint redEnemyBase;  
-    [SerializeField] public Waypoint patrolArea;  
-    
+    [SerializeField] public Waypoint redPatrollArea;
+    [SerializeField] public Waypoint bluePatrollArea;
+
+    // TODO: Tener en cuenta que los objetos en el waypoint de las patrullas deben estar ordenados
 
     // Devuelve la base aliada
     public Waypoint GetBase(NPC npc){
@@ -36,6 +41,14 @@ public class WaypointManager : MonoBehaviour
             return blueBase;
     }
 
+    // Devuelve la base aliada
+    public Waypoint GetPatrollZone(NPC npc)
+    {
+        if (npc.GetUnitTeam() == (int)GlobalAttributes.Team.Red)
+            return redPatrollArea;
+        else
+            return bluePatrollArea;
+    }
     // Devuelve la zona de captura enemiga
     public Waypoint GetEnemyZone(NPC npc){
         if ( npc.GetUnitTeam() == (int)GlobalAttributes.Team.Red)
@@ -52,6 +65,43 @@ public class WaypointManager : MonoBehaviour
             return blueEnemyBase;
     }
 
+    // Obtenemos el punto de patrullaje mas cercano al NPC.
+    public Vector3 GetClosestPatrollWaypoint(NPC npc)
+    {
+        Vector3 direction;
+        float distance;
+        float minDistance = Mathf.Infinity;
+        Transform auxWaypoint = null;
+        int i = 0;
+
+        foreach (var w in GetPatrollZone(npc).waypointPos)
+        {
+            direction = w.position - npc.GetUnitPosition();
+            distance = direction.magnitude;
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                auxWaypoint = w;
+                currentPatrollWaypoint = i;
+            }
+
+            i++;
+        }
+        return auxWaypoint.position;
+    }
+
+    public Vector3 GetNextPatrollWaypoint(NPC npc)
+    {
+        if ((currentPatrollWaypoint + 1) == GetPatrollZone(npc).GetWaypointPosLenght() || currentPatrollWaypoint <= 0)
+        {
+            pathDir *= -1;
+        }
+
+        currentPatrollWaypoint = currentPatrollWaypoint + pathDir;
+        return GetPatrollZone(npc).waypointPos[currentPatrollWaypoint].position;
+    }
+
     public Vector3 GetEnemyZonePosition(NPC npc){
 
         return GetRandomWaypointPosition(GetEnemyZone(npc));
@@ -61,7 +111,6 @@ public class WaypointManager : MonoBehaviour
 
         return GetRandomWaypointPosition(GetBase(npc));
     }
-
 
     //Devuelve una posicion aleatoria dentro de un waypoint
     private Vector3 GetRandomWaypointPosition (Waypoint waypoint){
@@ -97,11 +146,12 @@ public class WaypointManager : MonoBehaviour
         // Estoy capturando la base enemiga
         if (npc.GetUnitTeam() == (int) GlobalAttributes.Team.Red) 
         {
-            blueEnemyBase.winningPercentage+= 0.001f;
-           // Debug.Log("Estoy dando a puntos a mi equioi");
-        }  else {
-            redEnemyBase.winningPercentage+= 0.001f;
-           // Debug.Log("Estoy dando a puntos a mi equioi ADASDASDS " );
+            blueEnemyBase.winningPercentage += 0.001f;
+        }  
+        
+        else 
+        {
+            redEnemyBase.winningPercentage += 0.001f;
         }
 
     }

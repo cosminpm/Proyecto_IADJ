@@ -46,7 +46,6 @@ public class Capture : State
                 npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetEnemyZonePosition(npc));
                 movement = true;
             } 
-
         }
     }
 

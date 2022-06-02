@@ -114,7 +114,7 @@ public class Attack : State
         if (IsDead(npc))
             return;
 
-        if (IsInTotalWar(npc))
+        if (npc.stateManager.IsLowHP(npc))
             return;
 
         if (EnemyFound(npc))
@@ -122,10 +122,6 @@ public class Attack : State
 
         if (npc.stateManager.EnemiesInBase(npc))
             return;
-
-        if (npc.stateManager.IsLowHP(npc))
-            return;
-
     }
 
     public override void Execute(NPC npc){

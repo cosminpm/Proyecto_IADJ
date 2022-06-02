@@ -121,7 +121,6 @@ public class LowHp : State
 
         // if (npc.stateManager.HealthPointReached(posBase, npc, healer, medicFound))
         //     return;
-
         if ( npc.stateManager.HealthPointReached(npc, npc.pathFinding.IsEndPath()))
             return;
     }

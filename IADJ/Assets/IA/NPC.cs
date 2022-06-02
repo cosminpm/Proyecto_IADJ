@@ -26,6 +26,9 @@ public class NPC : MonoBehaviour
     // GameManager
     public GameHandler _gameManager;
 
+    // Control Patrullaje
+    public bool isPatroll;
+
 
     // Manejador de combate
     void Awake(){
@@ -35,6 +38,7 @@ public class NPC : MonoBehaviour
         GUI.Initialize();
         stateManager.Initialize(GetUnitType(), this);
         pathFinding = GetComponent<ControlPathFindingWithSteering>();
+        isPatroll = true;
     }
 
     void Start(){

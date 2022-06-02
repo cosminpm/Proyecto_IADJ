@@ -14,7 +14,8 @@ public class Waypoint : MonoBehaviour
         BaseAzul,
         BaseEnemigaRoja,
         BaseEnemigaAzul,
-        Patrulla,
+        PatrullaRoja,
+        PatrullaAzul
     }
 
     [SerializeField] private TypeWayPoint typeWaypoint;
@@ -32,8 +33,13 @@ public class Waypoint : MonoBehaviour
             winningPercentage = 0;
     }
 
-
     void Update() {}
+
+
+    public int GetWaypointPosLenght()
+    {
+        return waypointPos.Length;
+    }
 }
 
    
