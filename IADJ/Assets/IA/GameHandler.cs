@@ -68,13 +68,13 @@ public class GameHandler : MonoBehaviour
 
             if (!redCapturing)
             {
-                Debug.Log("No hay nadie del equipo rojo capturando");
+            //    Debug.Log("No hay nadie del equipo rojo capturando");
                 waypointManager.NotCapturing(GlobalAttributes.Team.Red);
             }
 
             if (!blueCapturing)
             {
-                Debug.Log("No hay nadie del equipo azul capturando");
+              //  Debug.Log("No hay nadie del equipo azul capturando");
                 waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
             }
         }

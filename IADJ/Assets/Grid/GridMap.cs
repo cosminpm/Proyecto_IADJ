@@ -118,16 +118,16 @@ namespace Grid
             switch(terrain)
             {
                 case TipoTerreno.Camino:
-                    baseCost = 0.5f;
+                    baseCost = 1f;
                     break;
                 case TipoTerreno.Rio:
                     baseCost = Mathf.Infinity;
                     break;
                 case TipoTerreno.Pradera:
-                    baseCost = 2f;
+                    baseCost = 8f;
                     break;
                 case TipoTerreno.Bosque:
-                    baseCost = 4f;
+                    baseCost = 8f;
                     break;
                 case TipoTerreno.Acantilado:
                     baseCost = Mathf.Infinity;

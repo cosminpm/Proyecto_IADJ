@@ -23,18 +23,18 @@ public class Soldier : UnitsManager
     }
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
-        costsTerrains.Add(GridMap.TipoTerreno.Camino, 1.0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.9f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.2f);
-        costsTerrains.Add(GridMap.TipoTerreno.Rio, 0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0f);
+        costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.5f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 3f);
+        costsTerrains.Add(GridMap.TipoTerreno.Rio, Mathf.Infinity);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 1f);
 
         if ( UnitTeam == Team.Red){
-            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 0.5f);
-            costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 2f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 1f);
         } else {
-            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 2f);
-             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 0.5f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
+             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 1f);
         } 
     }
 
@@ -45,8 +45,8 @@ public class Soldier : UnitsManager
         UnitAgent.MaxRotation = 30;
         UnitAgent.MaxAcceleration = 2.5f;
         UnitAgent.MaxAngularAcceleartion = 35;
-        UnitAgent.InteriorRadius = 3.5f;
-        UnitAgent.ArrivalRadius = 4.0f;
+        UnitAgent.InteriorRadius = 1f;
+        UnitAgent.ArrivalRadius = 1f;
     }
 
     protected override void SetUnitStats(){

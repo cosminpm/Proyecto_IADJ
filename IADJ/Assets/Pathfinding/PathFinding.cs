@@ -16,7 +16,7 @@ namespace Pathfinding
         public Color finishColor = Color.red;
         public bool drawNumberPath, drawColorPath, drawCosts;
         public int sizeOfTextPath = 10;
-        public int heuristic = 2;
+        public int heuristic = 0;
 
         // Private variables
         private Node[,] _nodeMap;
@@ -64,7 +64,7 @@ namespace Pathfinding
 
         private List<Node> GetNeighboursList(Node node)
         {
-            return GetNeighboursList(node, 999);
+            return GetNeighboursList(node, heuristic);
         }
 
 
@@ -95,8 +95,11 @@ namespace Pathfinding
             Node lowestFNodeCost = pathNodeList[0];
             for (var index = 1; index < pathNodeList.Count; index++)
             {
-                if (pathNodeList[index].GetFCost() + pathNodeList[index].GetGCost() <
-                    lowestFNodeCost.GetFCost() + lowestFNodeCost.GetGCost())
+                // if (pathNodeList[index].GetFCost() + pathNodeList[index].GetGCost() <
+                //     lowestFNodeCost.GetFCost() + lowestFNodeCost.GetGCost())
+                //     lowestFNodeCost = pathNodeList[index];
+
+                if (pathNodeList[index].GetFCost() < lowestFNodeCost.GetFCost())
                     lowestFNodeCost = pathNodeList[index];
             }
 
@@ -146,16 +149,19 @@ namespace Pathfinding
         private List<Node> AStar(Node startNode, Node finalNode, ref List<Node> path)
         {
             List<Node> closedList = new List<Node>();
-            List<Node> openList = new List<Node> {startNode};
-
+            
             startNode.SetGCost(0);
             startNode.SetHCost(HeuristicApply(startNode, finalNode, heuristic));
-            startNode.CalculateFCost();
+          //  startNode.CalculateFCost();
             
+            startNode.SetFCost(startNode.GetHCost()+startNode.GetGCost());
+
+            List<Node> openList = new List<Node> {startNode};
+
+           
             while (openList.Count > 0)
             {
                 Node currentNode = GetLowestCostFNode(openList);
-
                 if (currentNode.Equals(finalNode))
                 {
                     List<Node> calculatedPath =  CalculatePath(currentNode);
@@ -168,15 +174,23 @@ namespace Pathfinding
                 foreach (Node neighbourNode in GetNeighboursList(currentNode))
                 {
                     if (closedList.Contains(neighbourNode)) continue;
-                    // float tentativeGCost =
-                    //     currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
-                    float tentativeGCost = currentNode.GetGCost() + CalculateCost(currentNode, neighbourNode);
+                  //   float tentativeGCost =  currentNode.GetGCost() + HeuristicApply(currentNode, neighbourNode, heuristic);
+                    float h = CalculateCost(currentNode, neighbourNode);
+                   // Debug.Log("La coste "+coste);
+                    // Debug.Log("El coste es "+ coste);
+                   // Debug.Log("El nodo actual es "+currentNode+ " y el nodo vecino es el "+neighbourNode );
+
+                    float tentativeGCost = currentNode.GetGCost() + h;
+
+                    
                     if (tentativeGCost < neighbourNode.GetGCost())
                     {
                         neighbourNode.SetPreviousNode(currentNode);
                         neighbourNode.SetGCost(tentativeGCost);
-                        neighbourNode.SetHCost(HeuristicApply(neighbourNode, finalNode, heuristic));
-                        neighbourNode.CalculateFCost();
+                        neighbourNode.SetHCost(HeuristicApply(currentNode, neighbourNode, heuristic));
+                        neighbourNode.SetFCost(neighbourNode.GetHCost()+neighbourNode.GetGCost());
+                       // neighbourNode.SetFCost(neighbour.GetFCost())
+                   //     neighbourNode.CalculateFCost();
 
                         if (!openList.Contains(neighbourNode))
                         {
@@ -198,7 +212,7 @@ namespace Pathfinding
                 Cell neighbourCell = neighbourNode.GetCell();
 
                 // Coste base del terreno + Coste de movimiento de la unidad en ese terreno
-                cost = neighbourCell.GetTerrainCost() + npc.Unit.GetMovementCost(neighbourCell.GetTipoTerreno());
+                cost = neighbourCell.GetTerrainCost() * npc.Unit.GetMovementCost(neighbourCell.GetTipoTerreno());
 
             // Influencia
             } else {
@@ -267,10 +281,11 @@ namespace Pathfinding
             {
                 foreach (var node in _nodeMap)
                 {
-                    if (node.GetHCost() < Mathf.Infinity)
+                    if (node.GetFCost() < Mathf.Infinity)
                     {
-                        float coste = node.GetHCost();
+                        float coste = node.GetFCost();
                         cost = coste.ToString(CultureInfo.CurrentCulture);
+                      
                     }
 
                     GUIStyle style = new GUIStyle();

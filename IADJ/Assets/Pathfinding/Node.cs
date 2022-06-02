@@ -39,7 +39,7 @@ namespace Pathfinding
 
         public float CalculateFCost()
         {
-            return _gCost + _fCost;
+            return _gCost + _hCost;
         }
 
         // Methods GET and SET

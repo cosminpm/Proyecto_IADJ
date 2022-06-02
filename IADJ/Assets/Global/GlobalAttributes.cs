@@ -40,7 +40,7 @@ namespace Global
         // public static float MAXIMUM_VALUE_INFLUENCE = 20f;
         // public static float CONSTANT_DECRASING_VALUE = 0.5f;
 
-        public static Vector3 POS_DRAW_INFLUENCE_MAP = new Vector3(0,-1,-25);
+        public static Vector3 POS_DRAW_INFLUENCE_MAP = new Vector3(110,-1,0);
         public static Vector3 POS_DRAW_VISIBILITY_MAP_RED = new Vector3(0,-1,-50);
         public static Vector3 POS_DRAW_VISIBILITY_MAP_BLUE = new Vector3(0,-1,-75);
 
