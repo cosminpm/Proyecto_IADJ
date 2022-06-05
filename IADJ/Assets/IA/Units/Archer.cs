@@ -34,11 +34,11 @@ public class Archer : UnitsManager
         costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.9f);
 
         if ( UnitTeam == Team.Red){
-            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 0.5f);
-            costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 2f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 1f);
         } else {
-            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 2f);
-             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 0.5f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
+             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 1f);
         }
         
     }
