@@ -14,6 +14,8 @@ public class Soldier : UnitsManager
     void Start(){
         UnitAgent = GetComponent<AgentNPC>();
         SetMovementStats();
+        _maxSpeed = UnitAgent.MaxSpeed;
+
     }
 
     public Soldier(){
@@ -23,11 +25,11 @@ public class Soldier : UnitsManager
     }
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
-        costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.5f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 1f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 3f);
+        costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.3f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.5f);
         costsTerrains.Add(GridMap.TipoTerreno.Rio, Mathf.Infinity);
-        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.9f);
 
         if ( UnitTeam == Team.Red){
             costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);

@@ -15,11 +15,11 @@ public class Archer : UnitsManager
     void Start(){
         UnitAgent = GetComponent<AgentNPC>();
         SetMovementStats();
+        _maxSpeed = UnitAgent.MaxSpeed;
     }
 
     public Archer(){
         //base();
-
         SetUnitStats();
         AddCostsTerrain();
     }
@@ -27,11 +27,11 @@ public class Archer : UnitsManager
     protected override void AddCostsTerrain(){
 
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
-        costsTerrains.Add(GridMap.TipoTerreno.Camino, 1.0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.9f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.2f);
+        costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.2f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.1f);
         costsTerrains.Add(GridMap.TipoTerreno.Rio, 0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0f);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.9f);
 
         if ( UnitTeam == Team.Red){
             costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 0.5f);
@@ -45,8 +45,8 @@ public class Archer : UnitsManager
 
     protected override void SetMovementStats(){
         // Velocidad
-        UnitAgent.Speed = 6;
-        UnitAgent.MaxSpeed = 12;
+        UnitAgent.Speed = 2.5f;
+        UnitAgent.MaxSpeed = 4.5f;
         UnitAgent.MaxRotation = 30;
         UnitAgent.MaxAcceleration = 2.5f;
         UnitAgent.MaxAngularAcceleartion = 35;
@@ -95,7 +95,6 @@ public class Archer : UnitsManager
         VisionDistance = 5f; 
         TypeUnit = TypeUnits.Archer;
     }
-
 
 
 }

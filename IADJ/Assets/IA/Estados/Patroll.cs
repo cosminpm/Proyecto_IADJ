@@ -63,14 +63,14 @@ public class Patroll : State
     {
 
         // Si estoy muerto, cambio al estado a muerto
-        if (IsDead(npc))
+        if (npc.stateManager.IsDead())
             return;
 
-        // Si hay enemigos en nuestra base, vamos hacia allá.
+        // Si hay enemigos en nuestra base, vamos hacia allï¿½.
         if (npc.stateManager.EnemiesInBase(npc))
             return;
 
-        // Si hay algún al que atacar, cambio de estado a MeleeAttack
+        // Si hay algï¿½n al que atacar, cambio de estado a MeleeAttack
 
 
         // TODO: NO FURULA

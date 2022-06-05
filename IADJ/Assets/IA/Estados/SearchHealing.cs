@@ -39,7 +39,7 @@ public class SearchHealing : State
     public override void CheckState(NPC npc)
     {
         // Cuando ccambio ? de estado
-        if ( IsDead(npc))
+        if ( npc.stateManager.IsDead())
             return;
 
         // Hay que cambiar de estado cuadno 

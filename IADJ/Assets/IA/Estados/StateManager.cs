@@ -19,9 +19,12 @@ public class StateManager: MonoBehaviour
     public ReceivingHeal stateReceivingHeal;
     public SearchHealing stateSearchHealing;
 
-
     // Estado actual del npc
     private State _currentState;
+
+    // NPC
+    private NPC _npc;
+
 
     public void Initialize(int type, NPC npc){
         
@@ -34,7 +37,8 @@ public class StateManager: MonoBehaviour
         stateReceivingHeal = this.gameObject.GetComponent<ReceivingHeal>();
         stateSearchHealing = this.gameObject.GetComponent<SearchHealing>();
         statePatroll = this.gameObject.GetComponent<Patroll>();
-
+        _npc = npc;
+        
         if (type == 3)
             ChangeState(stateSearchHealing, npc);
         else if (npc.isPatroll)
@@ -150,6 +154,17 @@ public class StateManager: MonoBehaviour
 
         if (npc.NeedHeal()) {
             npc.stateManager.ChangeState(npc.stateManager.stateLowHp, npc);
+            return true;
+        }
+        return false;
+    }
+
+    // Función para comprobar si el NPC está muerto. 
+    // Si ese es el caso, pasará al estado Dead.
+    public bool IsDead() {
+        
+        if ( _npc.Unit.CurrentHealthPoints <= 0){
+            _npc.stateManager.ChangeState(stateDead, _npc);
             return true;
         }
         return false;

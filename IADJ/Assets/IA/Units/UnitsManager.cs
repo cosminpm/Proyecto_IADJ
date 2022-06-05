@@ -40,15 +40,7 @@ public abstract class UnitsManager : MonoBehaviour
 
     protected AgentNPC _agentNPC;
 
-    // Velocidad de movimiento
-    private int _movementSpeed;
-
-    private float _maxSpeed;
-    private float _maxRotation;
-    private float _maxAcceleration;
-    private float _maxAngularAcc;
-    private float _speed; // velocidad escalar
-
+    protected float _maxSpeed;
     
     // // Tipos de terrenos.
     // public enum TypeTerrains{
@@ -88,6 +80,19 @@ public abstract class UnitsManager : MonoBehaviour
     protected abstract void AddCostsTerrain();
     protected abstract void SetMovementStats();
     protected abstract void SetUnitStats();
+
+    public void SetCostTerrainSpeed(GridMap.TipoTerreno terrain){
+
+        float coste;
+        costsTerrains.TryGetValue(terrain,out coste);
+        if ( terrain == GridMap.TipoTerreno.Camino  || terrain == GridMap.TipoTerreno.BaseAzul || terrain == GridMap.TipoTerreno.BaseRoja)
+             UnitAgent.MaxSpeed = _maxSpeed;
+
+        else {
+            if ( _maxSpeed != _maxSpeed* (1-coste) )
+                UnitAgent.MaxSpeed = _maxSpeed* (1-coste);
+        }
+    }
 
     // Funcion para activar el modo TotalWar.
     public void ActivateTotalWar() {

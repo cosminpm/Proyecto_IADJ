@@ -13,37 +13,37 @@ public class Tank : UnitsManager
     void Start(){
         UnitAgent = GetComponent<AgentNPC>();
         SetMovementStats();
+        _maxSpeed = UnitAgent.MaxSpeed;
     }
 
     public Tank(){
         //base();
-
         SetUnitStats();
         AddCostsTerrain();
     }
 
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
-        costsTerrains.Add(GridMap.TipoTerreno.Camino, 1.0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.9f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.2f);
+        costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.2f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.4f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.5f);
         costsTerrains.Add(GridMap.TipoTerreno.Rio, 0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0f);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.3f);
 
         if ( UnitTeam == Team.Red){
-            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 0.5f);
-            costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 2f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 1f);
         } else {
-            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 2f);
-             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 0.5f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
+             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 1f);
         }
         
     }
 
     protected override void SetMovementStats(){
         // Velocidad
-        UnitAgent.Speed = 1;
-        UnitAgent.MaxSpeed = 2;
+        UnitAgent.Speed = 1.5f;
+        UnitAgent.MaxSpeed = 3.5f;
         UnitAgent.MaxRotation = 30;
         UnitAgent.MaxAcceleration = 1;
         UnitAgent.MaxAngularAcceleartion = 80;

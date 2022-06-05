@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
 using Global;
+using Grid;
 
 public class NPC : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class NPC : MonoBehaviour
 
         // Si el NPC está en un estado, ejecuta la acción correspondiente
         stateManager.Execute(this); 
+        ModifyVelocityByTerrain();
 
     }
 
@@ -137,6 +139,11 @@ public class NPC : MonoBehaviour
         
         return _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetBase(this));
 
+    }
+
+    private void ModifyVelocityByTerrain(){
+        Cell cell = pathFinding.WorldToMap(GetUnitPosition());
+        Unit.SetCostTerrainSpeed(cell.GetTipoTerreno());
     }
 
 

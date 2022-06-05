@@ -55,7 +55,7 @@ public class Healing : State
     {
         // if (IsDead(npc) || npc.stateManager.CureFinished(npc))
         //     return;
-        if (IsDead(npc))
+        if (npc.stateManager.IsDead())
             return;
 
         if(npc.stateManager.CureFinished(npc, _targetNPC))

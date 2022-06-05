@@ -4,7 +4,7 @@ using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Attack : State
+public class RangeAttack : State
 {
 
 
@@ -13,7 +13,8 @@ public class Attack : State
     // Variable para indicar el tiempo (en frames)
     // que tardar� el NPC en lanzar su pr�ximo ataque.
     private int _cooldwnTime = 0;
-
+    private int threshold;
+    
     void Awake(){
      //   stateImage = Resources.Load<Sprite>("Estados/sword");
         stateImage.enabled = false;
@@ -53,14 +54,12 @@ public class Attack : State
 
     public override void Action(NPC npc, NPC _targetNPC){
 
- 
+
         if ( !_targetNPC.IsCurrentStateDead() )
         {
             Vector3 direction = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
             // Distancia que hay entre el agente y el target
             float distance = direction.magnitude;
-
-            // TODO: FALTA EL CONO XD
 
             // Si esta dentro de nuestro rango de ataque, atacamos
             if (npc.Unit.AttackRange >= distance)

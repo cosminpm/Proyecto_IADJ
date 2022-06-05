@@ -36,16 +36,6 @@ public abstract class State : MonoBehaviour
 
     public abstract void Execute(NPC npc);
 
-    // Función para comprobar si el NPC está muerto. 
-    // Si ese es el caso, pasará al estado Dead.
-    protected bool IsDead (NPC npc){
-        
-        if ( npc.Unit.CurrentHealthPoints <= 0){
-            npc.stateManager.ChangeState(npc.stateManager.stateDead, npc);
-            return true;
-        }
-        return false;
-    }
 
     // Función para comprobar si el NPC está en TotalWar.
     protected bool IsInTotalWar(NPC npc)
@@ -69,7 +59,6 @@ public abstract class State : MonoBehaviour
 
         if (enemies.Count > 0) {
 
-            Debug.Log("He encontrado un enemigo");
             NPC target = npc.FindClosestEnemy(enemies);
 
             npc.stateManager.stateAttack.ObjetiveNPC = target;

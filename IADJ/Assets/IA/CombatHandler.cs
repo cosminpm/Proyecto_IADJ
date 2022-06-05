@@ -13,6 +13,7 @@ public static class CombatHandler
         Soldier = 0,
         Archer = 1,
         Tank = 2,
+        Healer = 3
     }
     
      // Diccionaro con los costes de daño a cada tipo de unidad
@@ -56,17 +57,20 @@ public static class CombatHandler
         dmgSoldier.Add(TypeUnits.Soldier, 1f);
         dmgSoldier.Add(TypeUnits.Archer, 1.75f);
         dmgSoldier.Add(TypeUnits.Tank, 0.5f);
+        dmgSoldier.Add(TypeUnits.Healer, 1f);
 
         Dictionary<TypeUnits, float> dmgArcher = new Dictionary<TypeUnits, float>();
         dmgArcher.Add(TypeUnits.Soldier, 1.5f);
         dmgArcher.Add(TypeUnits.Archer, 1f);
         dmgArcher.Add(TypeUnits.Tank, 1f);
-
+        dmgArcher.Add(TypeUnits.Healer, 1.5f);
 
         Dictionary<TypeUnits, float> dmgTank = new Dictionary<TypeUnits, float>();
         dmgTank.Add(TypeUnits.Soldier, 1.5f);
         dmgTank.Add(TypeUnits.Archer, 1.75f);
         dmgTank.Add(TypeUnits.Tank, 1f);
+        dmgTank.Add(TypeUnits.Healer, 1.5f);
+
 
         damageTable = new Dictionary<TypeUnits, Dictionary<TypeUnits,float>>();
         damageTable.Add(TypeUnits.Soldier, dmgSoldier);

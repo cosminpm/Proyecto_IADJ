@@ -133,8 +133,7 @@ public class WaypointManager : MonoBehaviour
         // return false;
 
         foreach (Transform pos in waypoint.waypointPos) {
-     
-            if (Vector3.Distance(npc.GetUnitPosition(), pos.position) <= waypoint.distanceMinWaypoint)
+            if (Vector3.Distance(npc.GetUnitPosition(), pos.position) < waypoint.distanceMinWaypoint)
                 return true;
         }
         return false;

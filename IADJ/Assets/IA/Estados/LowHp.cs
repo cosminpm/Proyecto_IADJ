@@ -113,7 +113,7 @@ public class LowHp : State
         //
         // Tambi�n hay que comprobar si el NPC est� muerto, ya que alguien
         // puede matarlo por el camino.
-        if (IsDead(npc))
+        if (npc.stateManager.IsDead())
             return;
 
         if (IsInTotalWar(npc))

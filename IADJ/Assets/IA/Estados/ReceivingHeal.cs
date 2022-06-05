@@ -27,20 +27,16 @@ public class ReceivingHeal : State
     // cercana y huir hacia all�.
     public override void Action(NPC npc, NPC obj)
     {
-
+        
         if ( npc.IsBase())
         {
-            Debug.Log("Estoy en mi base as");
-            npc.Unit.CurrentHealthPoints+=15;
-        } else {
-             Debug.Log("NO Estoy en mi base as");
-        }
-
+            npc.Unit.CurrentHealthPoints+=0.5f;
+        } 
     }
 
     public override void CheckState(NPC npc)
     {
-        if (IsDead(npc))
+        if (npc.stateManager.IsDead())
             return;
         if (npc.stateManager.HealingFinished(npc))
             return;

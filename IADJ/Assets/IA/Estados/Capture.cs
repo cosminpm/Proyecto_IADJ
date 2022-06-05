@@ -53,8 +53,11 @@ public class Capture : State
     public override void CheckState(NPC npc){
 
         // Si estoy muerto, cambio al estado a muerto
-        if  (IsDead(npc))
+        if  (npc.stateManager.IsDead())
              return;
+
+        if (npc.stateManager.IsLowHP(npc))
+            return;
 
         // Si hay enemigos en nuestra base, vamos hacia allá.
         if (npc.stateManager.EnemiesInBase(npc))

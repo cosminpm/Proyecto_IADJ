@@ -23,10 +23,10 @@ public class PathFollowingCell : Seek
         currentPos = 0;
         pathDir = 1;
         
-        GameObject go = new GameObject("auxWallInvisible");
+        GameObject go = new GameObject("Invisible");
         Agent auxTarget = go.AddComponent<AgentInvisible>();
-        auxTarget.ArrivalRadius = 1;
-        auxTarget.InteriorRadius = 1f;
+        auxTarget.ArrivalRadius = 0.5f;
+        auxTarget.InteriorRadius = 0.5f;
         
         auxTarget.GetComponent<AgentInvisible>().DrawGizmos = true;
         Target = auxTarget;
@@ -38,7 +38,7 @@ public class PathFollowingCell : Seek
     }
 
     public bool EndPath(){
-        return currentPos == path.Length()-1;
+        return currentPos == path.Length();
     }
 
     public override Steering GetSteering(Agent agent)
@@ -52,7 +52,7 @@ public class PathFollowingCell : Seek
         if (path.CondArrive(agent.Position, currentPos))
         {
             currentPos = currentPos + pathDir;
-            if (currentPos >= path.Length() || currentPos < 0)
+            if (currentPos > path.Length() || currentPos < 0)
             {
                 currentPos = pathDir;
                 //path.nodos = new List<Node>();

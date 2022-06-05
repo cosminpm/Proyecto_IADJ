@@ -73,7 +73,7 @@ public class Defend : State
 
     public override void CheckState(NPC npc)
     {
-        if (IsDead(npc))
+        if (npc.stateManager.IsDead())
             return;
 
 

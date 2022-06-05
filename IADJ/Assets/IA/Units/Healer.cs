@@ -14,6 +14,7 @@ public class Healer : UnitsManager
     void Start(){
         UnitAgent = GetComponent<AgentNPC>();
         SetMovementStats();
+        _maxSpeed = UnitAgent.MaxSpeed;
     }
 
     public Healer(){
