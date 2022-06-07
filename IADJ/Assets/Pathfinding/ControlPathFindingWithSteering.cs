@@ -75,6 +75,11 @@ namespace Pathfinding
         }
 
 
+        public Vector3 GetClosestCellTypeInRange(Vector3 pos, float visionRange, GridMap.TipoTerreno tipo)
+        {
+            return GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().GetClosestCellTypeInRange(pos, visionRange, tipo);
+        }
+
         private void DrawPath()
         {
             if (_path != null)

@@ -89,6 +89,25 @@ namespace Grid
             throw new Exception("ERROR: El raycast no ha chocado con nada");
         }
 
+        public Vector3 GetClosestCellTypeInRange(Vector3 pos, float visionRange, TipoTerreno tipo)
+        {
+            Vector3 posCosestCell = Vector3.zero;
+            float minDistance = Mathf.Infinity;
+            foreach (var cell in _allowedCells)
+            {
+                Vector3 direction = cell.GetCenter() - pos;
+                float distance = direction.magnitude;
+
+                if (GetTipoTerrenoCell(cell.GetCenter()) == tipo && distance < visionRange && distance < minDistance)
+                {
+                    minDistance = distance;
+                    posCosestCell = cell.GetCenter();
+                }
+            }
+
+            return posCosestCell;
+        }
+
         public static TipoTerreno TagInTerrain(String str)
         {
             switch (str)
@@ -314,6 +333,18 @@ namespace Grid
             }
             _debugListVertex.Add(v);
             throw new Exception("The player with vector:"+v+" is not in the grid");
+        }
+
+        public bool IsVectorInGridMap(Vector3 v)
+        {
+            foreach (var cell in _cellMap)
+            {
+                if (cell.CheckIfVector3InsideBox(v))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 

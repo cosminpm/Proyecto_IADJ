@@ -56,9 +56,6 @@ public class NPC : MonoBehaviour
 
     public bool IsInVisionRange(NPC npc){
 
-        if (npc == null)
-            Debug.Log(" DEsauno con juevboi");
-
         // Obtenemos la dirección hacia el target
         Vector3 direction = npc.GetUnitPosition() - this.GetUnitPosition();
         // Distancia que hay entre el agente y el target
@@ -70,7 +67,7 @@ public class NPC : MonoBehaviour
         return false;
     }
 
-    // Encuentro el enemigo más cercano dentro de mi rango de visión. Me gusta más en el NPC JULIO 
+    // Encuentro el enemigo más cercano dentro de mi rango de visión. 
     public NPC FindClosestEnemy(List<NPC> listEnemy){
 
 
@@ -98,8 +95,44 @@ public class NPC : MonoBehaviour
         }
 
         return auxEnemy;
-
     }
+
+    // Encuentro el aliado más cercano dentro de mi rango de visión. 
+    public NPC FindClosestAllie()
+    {
+        // Obtenemos la lista de aliados
+        List<NPC> listAllies = GameManager.FindNearbyAllies(this);
+        Debug.Log("ALIADOS CERCANOS: " + listAllies.Count);
+
+        // Obtenemos la dirección hacia el target
+        Vector3 direction;
+        // Distancia que hay entre el agente y el target
+        float distance;
+        float minDistance = Mathf.Infinity;
+
+        NPC auxAllie = null;
+
+        // Recorro todos mis aliados y me quedo con el más cercano si está en mi rango de visión.
+        foreach (var e in listAllies)
+        {
+            if (e.name != this.name)
+            {
+                direction = e.transform.position - this.GetUnitPosition();
+                distance = direction.magnitude;
+
+                if (distance < minDistance && distance <= this.Unit.VisionDistance)
+                {
+                    if (!e.GetComponent<NPC>().IsCurrentStateDead())
+                    {
+                        auxAllie = e.GetComponent<NPC>();
+                        minDistance = distance;
+                    }
+                }
+            }
+        }
+        return auxAllie;
+    }
+
 
     public void Respawn(){
         this.Unit.UnitAgent.Position = _gameManager.waypointManager.GetBasePosition(this);

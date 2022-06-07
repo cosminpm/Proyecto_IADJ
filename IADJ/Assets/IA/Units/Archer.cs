@@ -62,7 +62,7 @@ public class Archer : UnitsManager
         // rango de ataque, la tasa de criticos y el momento en el que huyan.
         if (Mode == Modes.Normal || Mode == Modes.TotalWar)
         {
-            AttackRange = 50;
+            AttackRange = 10;
             CriticRate = 0.3f;
             HealthPointsMin = 50;
         }
@@ -92,7 +92,7 @@ public class Archer : UnitsManager
         AttackPoints = 10;
         AttackSpeed = 3;
         AttackAccuracy = 0.75f;
-        VisionDistance = 5f; 
+        VisionDistance = 15f; 
         TypeUnit = TypeUnits.Archer;
     }
 

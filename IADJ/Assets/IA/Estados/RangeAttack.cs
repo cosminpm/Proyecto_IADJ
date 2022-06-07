@@ -3,6 +3,8 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
+using Grid;
+using Global;
 
 public class RangeAttack : State
 {
@@ -61,10 +63,25 @@ public class RangeAttack : State
             // Distancia que hay entre el agente y el target
             float distance = direction.magnitude;
 
-            // Si esta dentro de nuestro rango de ataque, atacamos
-            if (npc.Unit.AttackRange >= distance)
-            {
+            // Obtenemos el tipo de terreno en el que estamos
+            Cell cell = npc.pathFinding.WorldToMap(npc.GetUnitPosition());
+            GridMap.TipoTerreno terrain = cell.GetTipoTerreno();
 
+            float distanciaAliado = Mathf.Infinity;
+            float distanciaBosque = Mathf.Infinity;
+
+            // Obtenemos el aliado más cercano dentro de 
+            // nuetro rango de vision
+            NPC targetAllie = npc.FindClosestAllie();
+
+            // Buscamos el bosque mas cercano
+            Vector3 posBosque = npc.pathFinding.GetClosestCellTypeInRange(npc.Unit.UnitAgent.Position, npc.GetUnitVisionDistance(), GridMap.TipoTerreno.Bosque);
+
+            // Si estamos justo dentro de nuestro rango de ataque, atacamos
+            if (npc.Unit.AttackRange == distance ||
+                ((npc.Unit.AttackRange >= distance && 
+                GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().WorldToMap(npc.GetUnitPosition()).GetTipoTerreno() == GridMap.TipoTerreno.Bosque)))
+            {
                 // me dejo de mover
                 if (movement)
                 {
@@ -83,7 +100,49 @@ public class RangeAttack : State
 
                 npc.GUI.UpdateBarAction(_cooldwnTime);
             }
-            else 
+
+            // Si estamos a un rango de ataque menor y hay un bosque o un aliado cerca, vamos hacia allí
+            else if (distance < npc.Unit.AttackRange && (targetAllie != null || posBosque != Vector3.zero))
+            {
+                // Si hemos encontrado al aliado, calculamos la distancia
+                // hacia el
+                if (targetAllie != null)
+                {
+                    Vector3 direccionAliado = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
+                    distanciaAliado = direccionAliado.magnitude;
+                }
+
+                // Si se ha encontrado un bosque, calculamos la distancia a el
+                if (posBosque != Vector3.zero)
+                {
+                    Vector3 dirBosque = posBosque - npc.Unit.UnitAgent.Position;
+                    distanciaBosque = dirBosque.magnitude;
+                }
+
+                // Comprobamos cual es la distancia mas cercana y mandamos el arquero hacia alli
+                if (distanciaAliado < distanciaBosque)
+                {
+                    npc.pathFinding.CalculatePath(targetAllie.Unit.UnitAgent.Position);
+                    movement = true;
+                }
+
+                else if (distanciaBosque != Mathf.Infinity)
+                {
+                    npc.pathFinding.CalculatePath(posBosque);
+                    movement = true;
+                }
+            }
+
+            // Si estamos demasiado cerca y no hay refugio, nos desplazamos a la base aliada
+            // hasta tener una distancia de ataque suficiente
+            else if (distance < npc.Unit.AttackRange && !(targetAllie != null || posBosque != Vector3.zero))
+            {
+                npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetBasePosition(npc));
+                movement = true;
+            }
+
+            // Si el enemigo esta fuera del rango de ataque, nos desplazamos hasta alcanzarlo
+            else
             {
                 npc.pathFinding.CalculatePath(_targetNPC.Unit.UnitAgent.Position);
                 movement = true;
