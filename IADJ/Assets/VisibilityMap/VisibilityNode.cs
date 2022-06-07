@@ -24,7 +24,10 @@ using UnityEngine;
         
         public float GetValueVisibility()
         {
-            return _valueOfVisibility;
+            if (_valueOfVisibility >= 0.75)
+                return 1;
+            else
+                return 0;
         }
         
         public void DecreaseVisibility(float decreaseValue)

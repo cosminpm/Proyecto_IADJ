@@ -77,6 +77,10 @@ namespace InfluenceMap
             return _valueOfInfluence;
         }
 
+        public int GetInfluenceTeam()
+        {
+            return _teamInfluence;
+        }
 
         public void DrawInfluenceNode(int i, int j)
         {

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Global;
 using Grid;
+using InfluenceMap;
 using UnityEditor;
 using UnityEngine;
 
@@ -208,18 +209,21 @@ namespace Pathfinding
             float cost = 0;
 
             if (tactic){
-                
                 Cell neighbourCell = neighbourNode.GetCell();
-
                 // Coste base del terreno + Coste de movimiento de la unidad en ese terreno
-                cost = neighbourCell.GetTerrainCost() * npc.Unit.GetMovementCost(neighbourCell.GetTipoTerreno());
-
-            // Influencia
+                
+                float costInfluence = GameObject.Find("GridController").GetComponent<InfluenceMap.InfluenceMap>().GetValueOfInfluence(neighbourCell.GetCoorX(),neighbourCell.GetCoorZ(), npc.GetUnitTeam());
+                float costeTerrain = neighbourCell.GetTerrainCost() *
+                                     npc.Unit.GetMovementCost(neighbourCell.GetTipoTerreno());
+                float costVisibility = GameObject.Find("GridController").GetComponent<VisibilityMap>()
+                    .GetVisibilityEnem(neighbourCell.GetCoorX(), neighbourCell.GetCoorZ(), npc.GetUnitTeam());
+                //float costVisibility = 
+                cost = costeTerrain+ costInfluence + costVisibility;
+                Debug.Log(costeTerrain + " " + costInfluence + " " + costVisibility);
+                // Influencia
             } else {
                 cost = HeuristicApply(currentNode, neighbourNode, heuristic);
             }
-
-
             return cost;
         }
 

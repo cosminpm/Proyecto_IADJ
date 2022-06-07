@@ -13,6 +13,7 @@ public class VisibilityMap : MonoBehaviour
     private VisibilityNode[,] _visibilityNodesRed;
     private VisibilityNode[,] _visibilityNodesBlue;
 
+    public int radio = 20;
     private int _xSize, _zSize;
     private Dictionary<GameObject, Cell> _allPlayersRed;
     private Dictionary<GameObject, Cell> _allPlayersBlue;
@@ -82,24 +83,15 @@ public class VisibilityMap : MonoBehaviour
         {
             // TODO SEGUN TIPO DE JUGADOR ASIGNAR UN VALOR O OTRO DE INFLUENCIA Y RADIO
             // TODO FUNCION PASADO OBJECT ASIGNAR INFLUENCIA Y RADIO
-            UpdateVisibilityRed(e.Value.GetCoorX(), e.Value.GetCoorZ(), TransformTagToInt(e.Key.tag),GlobalAttributes.RED_TEAM);
+            UpdateVisibility(e.Value.GetCoorX(), e.Value.GetCoorZ(), radio,GlobalAttributes.RED_TEAM);
         }
 
         foreach (var e in _allPlayersBlue)
         {
             // TODO SEGUN TIPO DE JUGADOR ASIGNAR UN VALOR O OTRO DE INFLUENCIA Y RADIO
             // TODO FUNCION PASADO OBJECT ASIGNAR INFLUENCIA Y RADIO
-            UpdateVisibilityRed(e.Value.GetCoorX(), e.Value.GetCoorZ(), TransformTagToInt(e.Key.tag), GlobalAttributes.BLUE_TEAM);
+            UpdateVisibility(e.Value.GetCoorX(), e.Value.GetCoorZ(), radio, GlobalAttributes.BLUE_TEAM);
         }
-    }
-
-    private int TransformTagToInt(String tagChar)
-    {
-        if (tagChar == GlobalAttributes.TAG_EQUIPO_AZUL)
-            return GlobalAttributes.CELDA_INFLUENCIA_AZUL;
-        if (tagChar == GlobalAttributes.TAG_EQUIPO_ROJO)
-            return GlobalAttributes.CELDA_INFLUENCIA_ROJO;
-        return GlobalAttributes.CELDA_INFLUENCIA_NADIE;
     }
 
     private void CreateInfluenceMap()
@@ -130,12 +122,12 @@ public class VisibilityMap : MonoBehaviour
     }
 
     // For multiple values
-    private void UpdateVisibilityRed(int iIndex, int jIndex, int radio, int team)
+    private void UpdateVisibility(int iIndex, int jIndex, int r, int team)
     {
-        int xStart = iIndex - radio;
-        int zStart = jIndex - radio;
-        int xFinish = iIndex + radio;
-        int zFinish = jIndex + radio;
+        int xStart = iIndex - r;
+        int zStart = jIndex - r;
+        int xFinish = iIndex + r;
+        int zFinish = jIndex + r;
 
         if (xStart < 0)
             xStart = 0;
@@ -165,6 +157,14 @@ public class VisibilityMap : MonoBehaviour
         return GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
     }
 
+    public float GetVisibilityEnem(int i, int j, int team)
+    {
+        if (team == GlobalAttributes.RED_TEAM)
+            return _visibilityNodesBlue[i, j].GetValueVisibility();
+        if (team == GlobalAttributes.BLUE_TEAM)
+            return _visibilityNodesRed[i, j].GetValueVisibility();
+        return 0;
+    }
 
     private void DrawVisibilityMap()
     {

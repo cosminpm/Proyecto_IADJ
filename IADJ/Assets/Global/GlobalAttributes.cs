@@ -27,6 +27,10 @@ namespace Global
         public static int CELDA_INFLUENCIA_NADIE = 0;
         public static int CELDA_INFLUENCIA_AZUL = 1;
         public static int CELDA_INFLUENCIA_ROJO = 2;
+
+
+
+        
         
         public static int HAS_VISIBILITY = 1;
         public static int NO_HAS_VISIBILITY = 0;
@@ -34,16 +38,17 @@ namespace Global
         
         public static float MINIMUM_VALUE_INFLUENCE = 0.1f;
         public static float MAXIMUM_VALUE_INFLUENCE = 5f;
-        public static float CONSTANT_DECRASING_VALUE = 1f;
+        public static float CONSTANT_DECRASING_VALUE = 0.5f;
         
         // public static float MINIMUM_VALUE_INFLUENCE = 0.1f;
         // public static float MAXIMUM_VALUE_INFLUENCE = 20f;
         // public static float CONSTANT_DECRASING_VALUE = 0.5f;
 
-        public static Vector3 POS_DRAW_INFLUENCE_MAP = new Vector3(110,-1,0);
-        public static Vector3 POS_DRAW_VISIBILITY_MAP_RED = new Vector3(0,-1,-50);
-        public static Vector3 POS_DRAW_VISIBILITY_MAP_BLUE = new Vector3(0,-1,-75);
+        public static Vector3 POS_DRAW_INFLUENCE_MAP = new Vector3(150,-1,0);
+        public static Vector3 POS_DRAW_VISIBILITY_MAP_RED = new Vector3(0,-1,-150);
+        public static Vector3 POS_DRAW_VISIBILITY_MAP_BLUE = new Vector3(0,-1,-300);
 
+        public static int NO_TEAM = 0;
         public static int RED_TEAM = 0;
         public static int BLUE_TEAM = 1;
         public enum Team {

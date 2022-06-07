@@ -151,7 +151,19 @@ namespace InfluenceMap
         {
             return GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
         }
-        
+
+        public float GetValueOfInfluence(int i, int j, int team)
+        {
+            float influence = _influenceNodes[i, j].GetValueInfluence();
+            int influenceOfCell = _influenceNodes[i, j].GetInfluenceTeam();
+            if (team == influenceOfCell || influenceOfCell == 0)
+                return 0;
+            if (influence < 0)
+                return 0;
+            if (influence > GlobalAttributes.MAXIMUM_VALUE_INFLUENCE)
+                return GlobalAttributes.MAXIMUM_VALUE_INFLUENCE;
+            return influence;
+        }
         
         private void DrawInfluenceMap()
         {
