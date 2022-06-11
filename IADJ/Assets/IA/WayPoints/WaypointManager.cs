@@ -30,6 +30,8 @@ public class WaypointManager : MonoBehaviour
     [SerializeField] public Waypoint redEnemyBase;  
     [SerializeField] public Waypoint redPatrollArea;
     [SerializeField] public Waypoint bluePatrollArea;
+    [SerializeField] public Waypoint redRoamingArea;
+    [SerializeField] public Waypoint blueRoaminglArea;
 
     // TODO: Tener en cuenta que los objetos en el waypoint de las patrullas deben estar ordenados
 

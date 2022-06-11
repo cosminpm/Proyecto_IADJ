@@ -61,8 +61,13 @@ public abstract class State : MonoBehaviour
 
             NPC target = npc.FindClosestEnemy(enemies);
 
-            npc.stateManager.stateAttack.ObjetiveNPC = target;
-            npc.stateManager.ChangeState(npc.stateManager.stateAttack, npc);
+            if ( npc.GetUnitType() != (int) UnitsManager.TypeUnits.Archer ){
+                npc.stateManager.stateAttack.ObjetiveNPC = target;
+                npc.stateManager.ChangeState(npc.stateManager.stateAttack, npc);
+            } else {
+                  npc.stateManager.stateRangeAttack.ObjetiveNPC = target;
+                  npc.stateManager.ChangeState(npc.stateManager.stateRangeAttack, npc);
+            }
 
             return true;
         } 

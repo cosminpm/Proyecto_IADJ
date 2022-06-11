@@ -30,25 +30,36 @@ public class Healing : State
     {
         Debug.Log("Estoy curando :)");
 
-        Vector3 direction = targetNPC.GetUnitPosition() - npc.GetUnitPosition();
-        // Distancia que hay entre el agente y el target
-        float distance = direction.magnitude;
+        if (!_targetNPC.IsCurrentStateDead()) {
 
-        // Si esta dentro de nuestro rango de ataque, atacamos
-        if (npc.Unit.AttackRange >= distance)
-        {
-            movement = false;
-            if (_cooldwnTime >= 360)
+            Vector3 direction = targetNPC.GetUnitPosition() - npc.GetUnitPosition();
+            // Distancia que hay entre el agente y el target
+            float distance = direction.magnitude;
+
+            // Si esta dentro de nuestro rango de ataque, atacamos
+            if (npc.Unit.AttackRange >= distance)
             {
-                //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
-                float dmg = npc.GetAttackPoints();
-                targetNPC.Unit.CurrentHealthPoints -= dmg;
-                _cooldwnTime = 0;
+                movement = false;
+                if (_cooldwnTime >= 360)
+                {
+                    //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
+                    float dmg = npc.GetAttackPoints();
+                    targetNPC.Unit.CurrentHealthPoints -= dmg;
+                    _cooldwnTime = 0;
+                }
+                else
+                    _cooldwnTime += npc.Unit.AttackSpeed;
+
+                npc.GUI.UpdateBarAction(_cooldwnTime);
             }
-            else
-                _cooldwnTime += npc.Unit.AttackSpeed;
+            else 
+            {
+                npc.pathFinding.CalculatePath(_targetNPC.Unit.UnitAgent.Position);
+                movement = true;
+            }
+            
+
         }
-        npc.GUI.UpdateBarAction(_cooldwnTime);
 
     }
     public override void CheckState(NPC npc)

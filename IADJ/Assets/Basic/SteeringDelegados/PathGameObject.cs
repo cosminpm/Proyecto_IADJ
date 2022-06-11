@@ -85,8 +85,8 @@ public class PathGameObject : MonoBehaviour
 
     public bool CondArrive(Vector3 agentePosicion, int nodoActual){
 
-        Debug.Log(nodoActual);
-        if  ((Vector3.Distance(agentePosicion,nodos[nodoActual].transform.position)) < radioNodo)
+
+        if  ((Vector3.Distance(agentePosicion,nodos[nodoActual].transform.position)) <= radioNodo)
         {
 
             return true;

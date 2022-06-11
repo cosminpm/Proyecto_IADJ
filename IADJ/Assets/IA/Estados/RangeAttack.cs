@@ -9,13 +9,14 @@ using Global;
 public class RangeAttack : State
 {
 
-
+    private bool _attacking;
     // TODO : SE PASA EL NPC COMO PARAMETRO XD??
 
     // Variable para indicar el tiempo (en frames)
     // que tardar� el NPC en lanzar su pr�ximo ataque.
     private int _cooldwnTime = 0;
-    private int threshold;
+    private int _threshold = 1;
+    private bool _arriveAllie;
     
     void Awake(){
      //   stateImage = Resources.Load<Sprite>("Estados/sword");
@@ -27,17 +28,9 @@ public class RangeAttack : State
     public override void EntryAction(NPC npc){
         movement = false;
 
-        Face f = npc.GetComponent<Face>();
-
-        //Pathfinding c = npc.GetComponent<Pathfinding>();
-
-        // if ( f != null )
-        //     npc.GetComponent<Face>().enabled = true;
-
-        // if ( s != null )
-        //     npc.GetComponent<Seek>().enabled = true;
-        //if ( c != null)
-       //     npc.GetComponent<Pathfinding>().enabled = true;
+        _attacking = true;
+        _arriveAllie = false;
+        
     }
 
     public override void ExitAction(NPC npc){
@@ -59,6 +52,9 @@ public class RangeAttack : State
 
         if ( !_targetNPC.IsCurrentStateDead() )
         {
+
+            // Lo de abajo se tiene Que hacer cuando huye 
+
             Vector3 direction = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
             // Distancia que hay entre el agente y el target
             float distance = direction.magnitude;
@@ -75,78 +71,60 @@ public class RangeAttack : State
             NPC targetAllie = npc.FindClosestAllie();
 
             // Buscamos el bosque mas cercano
-            Vector3 posBosque = npc.pathFinding.GetClosestCellTypeInRange(npc.Unit.UnitAgent.Position, npc.GetUnitVisionDistance(), GridMap.TipoTerreno.Bosque);
+           // Vector3 posBosque = npc.pathFinding.GetClosestCellTypeInRange(npc.Unit.UnitAgent.Position, npc.GetUnitVisionDistance(), GridMap.TipoTerreno.Bosque);
 
             // Si estamos justo dentro de nuestro rango de ataque, atacamos
-            if (npc.Unit.AttackRange == distance ||
-                ((npc.Unit.AttackRange >= distance && 
-                GameObject.Find(GlobalAttributes.NAME_GRID_CONTROLLER).GetComponent<GridMap>().WorldToMap(npc.GetUnitPosition()).GetTipoTerreno() == GridMap.TipoTerreno.Bosque)))
-            {
+        
+            if (_attacking){
                 // me dejo de mover
-                if (movement)
-                {
+                if (movement){
                     movement = false;
                     npc.pathFinding.ClearPath();
                 }
 
-                if (_cooldwnTime >= 360)
-                {
+                if (_cooldwnTime >= 360) {
+
                     float dmg = CombatHandler.CalculateDamage(npc, _targetNPC);
                     _targetNPC.Unit.CurrentHealthPoints -= dmg;
                     _cooldwnTime = 0;
+                    _attacking = false;
                 }
-                else
+
+                else { 
                     _cooldwnTime += npc.Unit.AttackSpeed;
+                }
 
                 npc.GUI.UpdateBarAction(_cooldwnTime);
+            } else if (distance > npc.GetUnitAttackRange()){
+                _attacking = true;
             }
+            
+            // Comprobamos si el target se ha acercado a mi posición
 
-            // Si estamos a un rango de ataque menor y hay un bosque o un aliado cerca, vamos hacia allí
-            else if (distance < npc.Unit.AttackRange && (targetAllie != null || posBosque != Vector3.zero))
-            {
+            else if ( distance-_threshold <= npc.GetUnitAttackRange() && !movement ) {
+
+
                 // Si hemos encontrado al aliado, calculamos la distancia
                 // hacia el
-                if (targetAllie != null)
-                {
-                    Vector3 direccionAliado = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
-                    distanciaAliado = direccionAliado.magnitude;
-                }
+                // if (targetAllie != null)
+                // {
+                //     Vector3 direccionAliado = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
+                //     distanciaAliado = direccionAliado.magnitude;
+                //     Debug.Log("Voy al ladiado weandk");
 
-                // Si se ha encontrado un bosque, calculamos la distancia a el
-                if (posBosque != Vector3.zero)
-                {
-                    Vector3 dirBosque = posBosque - npc.Unit.UnitAgent.Position;
-                    distanciaBosque = dirBosque.magnitude;
-                }
+                //     npc.pathFinding.CalculatePath(targetAllie.Unit.UnitAgent.Position);
+                //     _arriveAllie = false;
+                //     movement = true;
+                // } else {
 
-                // Comprobamos cual es la distancia mas cercana y mandamos el arquero hacia alli
-                if (distanciaAliado < distanciaBosque)
-                {
-                    npc.pathFinding.CalculatePath(targetAllie.Unit.UnitAgent.Position);
+                    npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetBasePosition(npc));
                     movement = true;
-                }
+                
 
-                else if (distanciaBosque != Mathf.Infinity)
-                {
-                    npc.pathFinding.CalculatePath(posBosque);
-                    movement = true;
-                }
-            }
 
-            // Si estamos demasiado cerca y no hay refugio, nos desplazamos a la base aliada
-            // hasta tener una distancia de ataque suficiente
-            else if (distance < npc.Unit.AttackRange && !(targetAllie != null || posBosque != Vector3.zero))
-            {
-                npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetBasePosition(npc));
-                movement = true;
             }
+            
 
-            // Si el enemigo esta fuera del rango de ataque, nos desplazamos hasta alcanzarlo
-            else
-            {
-                npc.pathFinding.CalculatePath(_targetNPC.Unit.UnitAgent.Position);
-                movement = true;
-            }
         }
     }
 

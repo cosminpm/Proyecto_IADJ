@@ -21,29 +21,30 @@ public class Healer : UnitsManager
         //base();
         SetUnitStats();
         AddCostsTerrain();
+        ActivateNormalMode();
     }
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
-        costsTerrains.Add(GridMap.TipoTerreno.Camino, 1.0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.9f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.2f);
-        costsTerrains.Add(GridMap.TipoTerreno.Rio, 0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0f);
+        costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.9f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Rio,  Mathf.Infinity);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.9f);
 
         if ( UnitTeam == Team.Red){
-            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 0.5f);
+            costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 0.3f);
             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 2f);
         } else {
             costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 2f);
-             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 0.5f);
+             costsTerrains.Add(GridMap.TipoTerreno.BaseAzul, 0.3f);
         }
         
     }
 
     protected override void SetMovementStats(){
         // Velocidad
-        UnitAgent.Speed = 2;
-        UnitAgent.MaxSpeed = 4;
+        UnitAgent.Speed = 3;
+        UnitAgent.MaxSpeed = 5;
         UnitAgent.MaxRotation = 30;
         UnitAgent.MaxAcceleration = 2.5f;
         UnitAgent.MaxAngularAcceleartion = 35;
@@ -52,36 +53,62 @@ public class Healer : UnitsManager
     }
 
     protected override void SetUnitStats(){
-
-        // Modificamos las estadisticas del
-        // NPC en funci�n del modo en el 
-        // que se encuentre.
-
-        // Los curanderos en modo ofensivo
-        // se mantienen igual que en modo
-        // normal.
-        if (Mode == Modes.Normal || Mode == Modes.Offensive || Mode == Modes.TotalWar)
-        {
-            AttackSpeed = 4;
-        }
-
-        // Los curanderos en modo defensivo
-        // curaran mas rapido de lo normal.
-        if (Mode == Modes.Defensive)
-        {
-            AttackSpeed = 7;
-        }
-
+        
         HealthPointsMax = 225;
         HealthPointsMin = 75;
         CurrentHealthPoints = HealthPointsMax;
         AttackPoints = -25;
-        AttackRange = 9;
+        AttackRange = 12;
         AttackAccuracy = 0.8f;
         CriticRate = 0.1f;
-        VisionDistance = 10; 
+        VisionDistance = 23; 
         TypeUnit = TypeUnits.Healer;
     }
+
+
+   // Funcion para activar el modo TotalWar.
+    public override void ActivateTotalWar() {
+        Mode = Modes.TotalWar;
+
+    }
+
+    // Funcion para activar el modo Offensive.
+    // Los arqueros en modo ofensivo tender�n a
+    // situarse algo mas cerca y acertar 
+    // mas golpes criticos.
+
+    public override void ActivateOffensiveMode()
+    {
+      Mode = Modes.Offensive;
+      AttackRange = 35;
+      CriticRate = 0.5f;
+      HealthPointsMin = 35;
+      UnitAgent.MaxSpeed = 45f;
+    }
+
+    // Funcion para activar el modo Defensive.
+    // En modo defensivo, los arqueros se situaran 
+    // mas lejos y huiran antes, pero acertaran 
+    // menos golpes criticos.
+
+    public override void ActivateDefensiveMode()
+    {
+        Mode = Modes.Defensive;
+        AttackRange = 75;
+        CriticRate = 0.1f;
+        HealthPointsMin = 75;
+    }
+
+    // Funcion para activar el modo Normal.
+    public override void ActivateNormalMode()
+    {
+        Mode = Modes.Normal;
+        AttackRange = 15f;
+        CriticRate = 0.3f;
+        HealthPointsMin = 75;
+    }
+
+
     
 }
 

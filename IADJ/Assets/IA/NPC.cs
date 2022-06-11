@@ -102,7 +102,7 @@ public class NPC : MonoBehaviour
     {
         // Obtenemos la lista de aliados
         List<NPC> listAllies = GameManager.FindNearbyAllies(this);
-        Debug.Log("ALIADOS CERCANOS: " + listAllies.Count);
+
 
         // Obtenemos la dirección hacia el target
         Vector3 direction;
@@ -153,19 +153,9 @@ public class NPC : MonoBehaviour
     
     public bool IsCapturing(){
 
-        if ( stateManager.CurrentStateIsCapture() && _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this))) 
+        if ( stateManager.CurrentStateIsCapture() && _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this)))
             return true;
-
         return false;
-
-        // if ( stateManager.CurrentStateIsCapture())
-        //     Debug.Log("ESTOY EN EL ESTADO ATACAR ES TRUEE EJIJIJI");
-        
-        // if (_gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this))) 
-        //     Debug.Log("He llegado al destino buaajjaja");
-
-      //  return false;
-
     }
 
     public bool IsBase(){
@@ -208,6 +198,10 @@ public class NPC : MonoBehaviour
     public float GetUnitVisionDistance(){
 
         return Unit.VisionDistance;
+    }
+
+    public float GetUnitAttackRange(){
+        return Unit.AttackRange;
     }
 
     public float GetUnitHPMax(){

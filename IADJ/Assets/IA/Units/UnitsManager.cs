@@ -4,6 +4,9 @@ using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
 using Grid;
+using UnityEditor;
+
+
 
 public abstract class UnitsManager : MonoBehaviour
 {
@@ -15,7 +18,7 @@ public abstract class UnitsManager : MonoBehaviour
 
     // Bando
     [SerializeField] private Team _team;
-
+    [SerializeField] public bool _drawGizmosAux;
 
     // CARACTERÍSTICAS DEL NPC
     // Puntos de vida Máximos
@@ -74,19 +77,35 @@ public abstract class UnitsManager : MonoBehaviour
     private TypeUnits _unitType;
 
     // Modo de comportamiento de la unidad
-    private Modes _unitMode = Modes.Normal;
+    private Modes _unitMode;
 
 
     protected abstract void AddCostsTerrain();
     protected abstract void SetMovementStats();
     protected abstract void SetUnitStats();
 
+    // Funcion para activar el modo TotalWar.
+    public abstract void ActivateTotalWar();
+
+    // Funcion para activar el modo Offensive.
+    public abstract void ActivateOffensiveMode();
+
+    // Funcion para activar el modo Defensive.
+    public abstract void ActivateDefensiveMode();
+
+    // Funcion para activar el modo Normal.
+    public abstract void ActivateNormalMode();
+
+
     public void SetCostTerrainSpeed(GridMap.TipoTerreno terrain){
 
         float coste;
         costsTerrains.TryGetValue(terrain,out coste);
-        if ( terrain == GridMap.TipoTerreno.Camino  || terrain == GridMap.TipoTerreno.BaseAzul || terrain == GridMap.TipoTerreno.BaseRoja)
+        if ( terrain == GridMap.TipoTerreno.Camino  || terrain == GridMap.TipoTerreno.BaseAzul || terrain == GridMap.TipoTerreno.BaseRoja){
+         
+           // Debug.Log("HOAHODADOAHODA Y mi max speed es "+UnitAgent.MaxSpeed);
              UnitAgent.MaxSpeed = _maxSpeed;
+        }
 
         else {
             if ( _maxSpeed != _maxSpeed* (1-coste) )
@@ -94,32 +113,6 @@ public abstract class UnitsManager : MonoBehaviour
         }
     }
 
-    // Funcion para activar el modo TotalWar.
-    public void ActivateTotalWar() {
-        Debug.Log("TotalWar: ON");
-        Mode = Modes.TotalWar;
-    }
-
-    // Funcion para activar el modo Offensive.
-    public void ActivateOffensiveMode()
-    {
-        Debug.Log("Offensive: ON");
-        Mode = Modes.Offensive;
-    }
-
-    // Funcion para activar el modo Defensive.
-    public void ActivateDefensiveMode()
-    {
-        Debug.Log("Defensive: ON");
-        Mode = Modes.Defensive;
-    }
-
-    // Funcion para activar el modo Normal.
-    public void ActivateNormalMode()
-    {
-        Debug.Log("Normal: ON");
-        Mode = Modes.Normal;
-    }
     public float GetMovementCost(GridMap.TipoTerreno terrain){
         float cost;
         costsTerrains.TryGetValue(terrain,out cost);
@@ -204,6 +197,19 @@ public abstract class UnitsManager : MonoBehaviour
     public AgentNPC UnitAgent{
         get { return _agentNPC; }
         set { _agentNPC = value; }
+    }
+
+
+    public void OnDrawGizmos()
+    {
+        if (_drawGizmosAux) {
+            
+            Handles.color = Color.blue;
+            Handles.DrawWireDisc(UnitAgent.Position, Vector3.up, VisionDistance, 3);
+            Handles.color = Color.red;
+            Handles.DrawWireDisc(UnitAgent.Position, Vector3.up, AttackRange, 5);
+        }
+
     }
 }
 

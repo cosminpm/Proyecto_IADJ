@@ -29,23 +29,27 @@ public class Capture : State
     public override void Action(NPC npc, NPC obj){
         
         
-        if (npc.IsCapturing()){
-            
-             // me dejo de mover
-            if (movement){
-                movement = false;
-                npc.pathFinding.ClearPath();
+        if (!_capturing){
+
+             if(npc.pathFinding.IsEndPath()){
+
+                _capturing = true;
+                if (movement){
+                    movement = false;
+                    npc.pathFinding.ClearPath();
+                }
+                npc.GameManager.waypointManager.Capturing(npc);
+
+            } else {
+
+                // calculo el camino a la base enemiga
+                if (!movement){
+                    npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetEnemyZonePosition(npc));
+                    movement = true;
+                } 
+
             }
 
-            npc.GameManager.waypointManager.Capturing(npc);
-
-        } else {
-
-            // calculo el camino a la base enemiga
-            if (!movement){
-                npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetEnemyZonePosition(npc));
-                movement = true;
-            } 
         }
     }
 

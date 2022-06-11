@@ -20,6 +20,7 @@ public class Tank : UnitsManager
         //base();
         SetUnitStats();
         AddCostsTerrain();
+        ActivateNormalMode();
     }
 
     protected override void AddCostsTerrain(){
@@ -54,33 +55,8 @@ public class Tank : UnitsManager
 
     protected override void SetUnitStats(){
 
-        // Modificamos las estadisticas del
-        // NPC en funci�n del modo en el 
-        // que se encuentre.
 
-        // En el caso del tanque, se modificara la 
-        // vida maxima y los puntos de ataque.
-        if (Mode == Modes.Normal || Mode == Modes.TotalWar)
-        {
-            HealthPointsMax = 500;
-            AttackPoints = 60;
-        }
-
-        if (Mode == Modes.Offensive)
-        {
-            HealthPointsMax = 400;
-            AttackPoints = 25;
-        }
-
-        // En modo defensivo, la funcion del tanque sera
-        // la de recibir golpes en defensa de sus compa�eros.
-        // A cambio de su vida extra, perdera ataque.
-        if (Mode == Modes.Defensive)
-        {
-            HealthPointsMin = 600;
-            AttackPoints = 5;
-        }
-
+        HealthPointsMax = 300;
         HealthPointsMin = 100;
         CurrentHealthPoints = HealthPointsMax;
         AttackRange = 5;
@@ -90,6 +66,51 @@ public class Tank : UnitsManager
         VisionDistance = 10; 
         TypeUnit = TypeUnits.Tank;
     }
+
+
+     // Funcion para activar el modo TotalWar.
+    public override void ActivateTotalWar() {
+        Mode = Modes.TotalWar;
+
+    }
+
+    // Funcion para activar el modo Offensive.
+    // Los arqueros en modo ofensivo tender�n a
+    // situarse algo mas cerca y acertar 
+    // mas golpes criticos.
+
+    public override void ActivateOffensiveMode()
+    {
+      Mode = Modes.Offensive;
+      CurrentHealthPoints = 0;
+      AttackRange = 35;
+      CriticRate = 0.5f;
+      HealthPointsMin = 35;
+      UnitAgent.MaxSpeed = 45f;
+    }
+
+    // Funcion para activar el modo Defensive.
+    // En modo defensivo, los arqueros se situaran 
+    // mas lejos y huiran antes, pero acertaran 
+    // menos golpes criticos.
+
+    public override void ActivateDefensiveMode()
+    {
+        Mode = Modes.Defensive;
+        AttackRange = 75;
+        CriticRate = 0.1f;
+        HealthPointsMin = 75;
+    }
+
+    // Funcion para activar el modo Normal.
+    public override void ActivateNormalMode()
+    {
+        Mode = Modes.Normal;
+        AttackRange = 15f;
+        CriticRate = 0.3f;
+        HealthPointsMin = 75;
+    }
+
 
     
 }

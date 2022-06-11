@@ -22,12 +22,13 @@ public class Soldier : UnitsManager
         //base();
         SetUnitStats();
         AddCostsTerrain();
+        ActivateNormalMode();
     }
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
         costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.1f);
         costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.3f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.5f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.1f);
         costsTerrains.Add(GridMap.TipoTerreno.Rio, Mathf.Infinity);
         costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.9f);
 
@@ -53,45 +54,61 @@ public class Soldier : UnitsManager
 
     protected override void SetUnitStats(){
 
-        // Modificamos las estadisticas del
-        // NPC en funci�n del modo en el 
-        // que se encuentre.
 
-        if (Mode == Modes.Normal || Mode == Modes.TotalWar) {
-            HealthPointsMax = 225;
-            HealthPointsMin = 75;
-            AttackPoints = 55;
-        }
-
-        // El soldado en modo ofensivo atacara mas
-        // contundentemente al enemigo y huira mas tarde,
-        // pero perdera vida maxima. 
-        if (Mode == Modes.Offensive)
-        {
-            HealthPointsMax = 200;
-            HealthPointsMin = 50;
-            AttackPoints = 35;
-        }
-
-
-        // El soldado en modo defensivo ganara puntos de
-        // vida maximos, pero huira antes y atacara con 
-        // menos fuerza.
-        if (Mode == Modes.Defensive)
-        {
-            HealthPointsMax = 250;
-            HealthPointsMin = 125;
-            AttackPoints = 15;
-        }
-
+        HealthPointsMax = 150;
         CurrentHealthPoints = HealthPointsMax;
         AttackRange = 5;
-        AttackSpeed = 4;
+        AttackSpeed = 12;
         AttackAccuracy = 0.8f;
         CriticRate = 0.1f;
         VisionDistance = 10; 
         TypeUnit = TypeUnits.Soldier;
     }
+
+
+     // Funcion para activar el modo TotalWar.
+    public override void ActivateTotalWar() {
+        Mode = Modes.TotalWar;
+
+    }
+
+    // Funcion para activar el modo Offensive.
+    // Los arqueros en modo ofensivo tender�n a
+    // situarse algo mas cerca y acertar 
+    // mas golpes criticos.
+
+    public override void ActivateOffensiveMode()
+    {
+      Mode = Modes.Offensive;
+      AttackRange = 35;
+      CriticRate = 0.5f;
+      HealthPointsMin = 35;
+      UnitAgent.MaxSpeed = 45f;
+    }
+
+    // Funcion para activar el modo Defensive.
+    // En modo defensivo, los arqueros se situaran 
+    // mas lejos y huiran antes, pero acertaran 
+    // menos golpes criticos.
+
+    public override void ActivateDefensiveMode()
+    {
+        Mode = Modes.Defensive;
+        AttackRange = 75;
+        CriticRate = 0.1f;
+        HealthPointsMin = 75;
+    }
+
+    // Funcion para activar el modo Normal.
+    public override void ActivateNormalMode()
+    {
+        Mode = Modes.Normal;
+        AttackRange = 5f;
+        CriticRate = 0.1f;
+        HealthPointsMin = 75;
+    }
+
+
 
     
 }

@@ -102,6 +102,7 @@ public class GameHandler : MonoBehaviour
         // Si pulsamos la tecla "T", se activa el modo TotalWar.
         if (Input.GetKey(KeyCode.T))
         {
+
             foreach (var n in _listNpcsBlue)
                 n.Unit.ActivateTotalWar();
 
@@ -148,6 +149,7 @@ public class GameHandler : MonoBehaviour
             // Si se pulsa "A", cambiamos el modo del equipo azul a "modo ofensivo".
             if (Input.GetKey(KeyCode.A))
             {
+                Debug.Log("Soy azul y estoy ofensivo");
                 foreach (var n in _listNpcsBlue)
                     n.Unit.ActivateOffensiveMode();
 

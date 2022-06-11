@@ -38,7 +38,7 @@ public class PathFollowingCell : Seek
     }
 
     public bool EndPath(){
-        return currentPos == path.Length();
+        return currentPos == path.Length()-1;
     }
 
     public override Steering GetSteering(Agent agent)

@@ -66,8 +66,7 @@ public class Patroll : State
         if (npc.stateManager.IsDead())
             return;
 
-        // Si hay enemigos en nuestra base, vamos hacia all�.
-        if (npc.stateManager.EnemiesInBase(npc))
+        if (npc.stateManager.AllieHealthReached(npc))
             return;
 
         // Si hay alg�n al que atacar, cambio de estado a MeleeAttack
