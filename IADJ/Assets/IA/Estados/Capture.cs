@@ -38,7 +38,7 @@ public class Capture : State
                     movement = false;
                     npc.pathFinding.ClearPath();
                 }
-                npc.GameManager.waypointManager.Capturing(npc);
+            //    npc.GameManager.waypointManager.Capturing(npc);
 
             } else {
 
@@ -63,9 +63,9 @@ public class Capture : State
         if (npc.stateManager.IsLowHP(npc))
             return;
 
-        // Si hay enemigos en nuestra base, vamos hacia allá.
-        if (npc.stateManager.EnemiesInBase(npc))
-            return;
+        // // Si hay enemigos en nuestra base, vamos hacia allá.
+        // if (npc.stateManager.EnemiesInBase(npc))
+        //     return;
 
         // Si hay algún al que atacar, cambio de estado a MeleeAttack
         if (EnemyFound(npc)){

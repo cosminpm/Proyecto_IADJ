@@ -133,6 +133,41 @@ public class NPC : MonoBehaviour
         return auxAllie;
     }
 
+    public void ActivateDefensiveMode(){
+        if ( Unit.Mode == UnitsManager.Modes.Defensive)
+            return;
+        Unit.ActivateDefensiveMode();
+    }
+
+    public void ActivateOffensiveMode(){
+        if ( Unit.Mode == UnitsManager.Modes.Offensive)
+            return;
+        Unit.ActivateOffensiveMode();
+    }
+
+    public void ActivateNormalMode(){
+        if ( Unit.Mode == UnitsManager.Modes.Normal)
+            return;
+        Unit.ActivateNormalMode();
+    }
+
+
+    public void AttackEnemyBase(){
+        if ( Unit.Mode == UnitsManager.Modes.Offensive)
+            return;
+        ActivateOffensiveMode();
+        stateManager.ChangeState(stateManager.stateCapture, this);
+    }
+    
+
+
+    public void DefendBase(){
+        if ( Unit.Mode == UnitsManager.Modes.Defensive)
+            return;
+        ActivateDefensiveMode();
+        stateManager.ChangeState(stateManager.stateDefend, this);
+    }
+
 
     public void Respawn(){
         this.Unit.UnitAgent.Position = _gameManager.waypointManager.GetBasePosition(this);
@@ -153,8 +188,10 @@ public class NPC : MonoBehaviour
     
     public bool IsCapturing(){
 
-        if ( stateManager.CurrentStateIsCapture() && _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this)))
+        if ( stateManager.CurrentStateIsCapture() && _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this))){
+            _gameManager.waypointManager.Capturing(this);
             return true;
+        }
         return false;
     }
 

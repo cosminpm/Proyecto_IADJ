@@ -147,7 +147,7 @@ public class WaypointManager : MonoBehaviour
         // Estoy capturando la base enemiga
         if (npc.GetUnitTeam() == (int) GlobalAttributes.Team.Red) 
         {
-            blueEnemyBase.winningPercentage += 0.001f;
+            blueEnemyBase.winningPercentage += 0.004f;
         }  
         
         else 
@@ -175,26 +175,6 @@ public class WaypointManager : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    // public void NotCapturingRed(){
-    //     blueBase.winningPercentage -= 0.40f
-    //     if ( blueBase.winningPercentage <= 0)
-    //         blueEnemyBase.winningPercentage = 0;
-    // }
-
-    public bool wonTeamBlue(){
-        if ( blueEnemyBase.winningPercentage == 100)
-            return true;
-        else    
-            return false;
-    }
-
-    public bool wonTeamRed(){
-        if ( redEnemyBase.winningPercentage == 100)
-            return true;
-        else
-            return false;
     }
 
     public float GetPercentageCaptureRed(){

@@ -59,6 +59,7 @@ public class Soldier : UnitsManager
         CurrentHealthPoints = HealthPointsMax;
         AttackRange = 5;
         AttackSpeed = 12;
+        AttackPoints = 20;
         AttackAccuracy = 0.8f;
         CriticRate = 0.1f;
         VisionDistance = 10; 
@@ -80,10 +81,8 @@ public class Soldier : UnitsManager
     public override void ActivateOffensiveMode()
     {
       Mode = Modes.Offensive;
-      AttackRange = 35;
       CriticRate = 0.5f;
       HealthPointsMin = 35;
-      UnitAgent.MaxSpeed = 45f;
     }
 
     // Funcion para activar el modo Defensive.
@@ -94,7 +93,7 @@ public class Soldier : UnitsManager
     public override void ActivateDefensiveMode()
     {
         Mode = Modes.Defensive;
-        AttackRange = 75;
+        AttackPoints = 20;
         CriticRate = 0.1f;
         HealthPointsMin = 75;
     }

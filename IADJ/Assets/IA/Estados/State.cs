@@ -72,7 +72,8 @@ public abstract class State : MonoBehaviour
             return true;
         } 
 
-        npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
+        if ( npc.Unit.Mode != UnitsManager.Modes.Defensive)
+            npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
         return false;
 
     }

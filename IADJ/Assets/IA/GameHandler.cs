@@ -52,17 +52,55 @@ public class GameHandler : MonoBehaviour
             // Comprobamos el cambio de estado.
             IsChangingMode();
 
-            foreach (var n in _listNpcsRed)
+            // Hay que comprobar si el porcentaje de captura de alguna es preocupante.. Pasar a estado defensivo
+            bool defensiveRed = waypointManager.GetPercentageCaptureBlue() >= 0.5f;
+            bool defensiveBlue = waypointManager.GetPercentageCaptureRed() >= 0.5f;
+
+            bool offensiveRed = waypointManager.GetPercentageCaptureRed() >= 0.1f;
+            bool offensiveBlue = waypointManager.GetPercentageCaptureBlue() >= 0.1f;
+
+            foreach (var npc in _listNpcsRed)
             {                
+                
+                if (defensiveRed){
+                    npc.DefendBase();
+                } else {
+                    npc.ActivateNormalMode();
+                }
+
+                if (offensiveRed){
+                    npc.AttackEnemyBase();
+                } else {
+                    npc.ActivateNormalMode();
+                }
+
                 // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
-                if (n.IsCapturing())
-                    redCapturing = true;
+                if (npc.IsCapturing()){
+                        redCapturing = true;
+                }
+
+                
             }
 
-            foreach (var n in _listNpcsBlue)
+            foreach (var npc in _listNpcsBlue)
             {
+
+                if (defensiveBlue){
+                    npc.DefendBase();
+                } else {
+                    npc.ActivateNormalMode();
+                }
+
+                if (offensiveRed){
+                    npc.AttackEnemyBase();
+                } else {
+                    npc.ActivateNormalMode();
+                }
+
+
+
                 // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
-                if (n.IsCapturing())
+                if (npc.IsCapturing())
                     blueCapturing = true;
             }
 
@@ -78,21 +116,25 @@ public class GameHandler : MonoBehaviour
                 waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
             }
         }
+
+        
+
+
     }
 
     // Funcion para comprobar si la partida ha acabado.
     private bool CheckVictory() {
-        if (waypointManager.blueEnemyBase.winningPercentage >= 1)
-        {
-            Debug.Log("Victoria para el equipo rojo!");
-            return true;
-        }
+        // if (waypointManager.blueEnemyBase.winningPercentage >= 1)
+        // {
+        //     Debug.Log("Victoria para el equipo rojo!");
+        //     return true;
+        // }
 
-        else if (waypointManager.redEnemyBase.winningPercentage >= 1) 
-        {
-            Debug.Log("Victoria para el equipo azul!");
-            return true;
-        }
+        // else if (waypointManager.redEnemyBase.winningPercentage >= 1) 
+        // {
+        //     Debug.Log("Victoria para el equipo azul!");
+        //     return true;
+        // }
         return false;
     }
 

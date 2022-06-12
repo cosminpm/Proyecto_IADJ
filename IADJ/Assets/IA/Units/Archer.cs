@@ -94,7 +94,7 @@ public class Archer : UnitsManager
     public override void ActivateDefensiveMode()
     {
         Mode = Modes.Defensive;
-        AttackRange = 75;
+        AttackRange = 15;
         CriticRate = 0.1f;
         HealthPointsMin = 75;
     }
