@@ -27,19 +27,9 @@ public class LowHp : State
         _targetNPC = null;
         medicFound = false;
 
+        npc.ActivateSpeedBonus();
 
-        Face face = npc.GetComponent<Face>();
-        if (face == null)
-        {
-            npc.gameObject.AddComponent<Face>();
-            npc.gameObject.GetComponent<Face>().NewTarget(zoneBase);
-            npc.Unit.UnitAgent.UpdateListSteering();
-        }
-        else
-        {
-            npc.GetComponent<Face>().enabled = true;
-            npc.gameObject.GetComponent<Face>().NewTarget(zoneBase);
-        }
+
     }
 
     public override void ExitAction(NPC npc)
@@ -53,6 +43,8 @@ public class LowHp : State
         _targetNPC = null;
         healer = null;
         npc.pathFinding.ClearPath();
+        npc.DeactivateSpeedBonus();
+
     }
 
 
@@ -82,8 +74,6 @@ public class LowHp : State
                 if ((int) a.GetUnitType() == 3)
                 {   
                     // He encontrado  un medico en mi rango de visión
-
-                    npc.gameObject.GetComponent<Face>().NewTarget(a.Unit.UnitAgent);
                     npc.pathFinding.CalculatePath(a.GetUnitPosition());
                     medicFound = true;
                     movement = true;
@@ -96,8 +86,7 @@ public class LowHp : State
             if ( !medicFound)
             {
                 if (!movement){
-                    
-                    npc.gameObject.GetComponent<Face>().NewPositionTarget(posBase);
+                
                     npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetBasePosition(npc));
                     movement = true;
                 }
@@ -115,10 +104,9 @@ public class LowHp : State
         // puede matarlo por el camino.
         if (npc.stateManager.IsDead())
             return;
-
-        if (IsInTotalWar(npc))
+        
+        if (npc.stateManager.TotalWar())
             return;
-
         // if (npc.stateManager.HealthPointReached(posBase, npc, healer, medicFound))
         //     return;
         if ( npc.stateManager.HealthPointReached(npc, npc.pathFinding.IsEndPath()))

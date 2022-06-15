@@ -27,6 +27,9 @@ public class GameHandler : MonoBehaviour
     // Units Manager
     public UnitsManager unitsManager;
 
+    // Mode Total War Activatw
+    private bool _totalWar = false;
+
 
 
     void Start(){
@@ -65,13 +68,16 @@ public class GameHandler : MonoBehaviour
                 if (defensiveRed){
                     npc.DefendBase();
                 } else {
-                    npc.ActivateNormalMode();
+                    if(!_totalWar)
+                        npc.ActivateNormalMode();
                 }
 
                 if (offensiveRed){
                     npc.AttackEnemyBase();
                 } else {
-                    npc.ActivateNormalMode();
+
+                    if (!_totalWar)
+                        npc.ActivateNormalMode();
                 }
 
                 // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
@@ -88,13 +94,15 @@ public class GameHandler : MonoBehaviour
                 if (defensiveBlue){
                     npc.DefendBase();
                 } else {
-                    npc.ActivateNormalMode();
+                    if (!_totalWar)
+                        npc.ActivateNormalMode();
                 }
 
                 if (offensiveRed){
                     npc.AttackEnemyBase();
                 } else {
-                    npc.ActivateNormalMode();
+                    if (!_totalWar)
+                        npc.ActivateNormalMode();
                 }
 
 
@@ -116,10 +124,6 @@ public class GameHandler : MonoBehaviour
                 waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
             }
         }
-
-        
-
-
     }
 
     // Funcion para comprobar si la partida ha acabado.
@@ -144,13 +148,14 @@ public class GameHandler : MonoBehaviour
         // Si pulsamos la tecla "T", se activa el modo TotalWar.
         if (Input.GetKey(KeyCode.T))
         {
-
+            Debug.Log("Total war activado");
             foreach (var n in _listNpcsBlue)
-                n.Unit.ActivateTotalWar();
+                n.ActivateTotalWarMode();
 
             foreach (var n in _listNpcsRed)
-                n.Unit.ActivateTotalWar();
+                n.ActivateTotalWarMode();
 
+            _totalWar = true;
             return true;
         }
 
@@ -191,7 +196,6 @@ public class GameHandler : MonoBehaviour
             // Si se pulsa "A", cambiamos el modo del equipo azul a "modo ofensivo".
             if (Input.GetKey(KeyCode.A))
             {
-                Debug.Log("Soy azul y estoy ofensivo");
                 foreach (var n in _listNpcsBlue)
                     n.Unit.ActivateOffensiveMode();
 
@@ -256,13 +260,14 @@ public class GameHandler : MonoBehaviour
             case (int) GlobalAttributes.Team.Red:
                 listAllies = _listNpcsRed;
                 break;
+
             default:
                 break;
         }
 
         // Si están en mi rango de visión...
         foreach(var n in listAllies){
-            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead())
+            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead() && n.name != npc.name)
                 list.Add(n);
         }
         return list;
@@ -296,6 +301,10 @@ public class GameHandler : MonoBehaviour
                 list.Add(n);
         }
         return list;
+    }
+
+    public bool GameIsTotalWar(){
+        return _totalWar;
     }
 }
 

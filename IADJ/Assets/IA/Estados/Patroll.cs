@@ -66,6 +66,9 @@ public class Patroll : State
         if (npc.stateManager.IsDead())
             return;
 
+        if (npc.stateManager.TotalWar())
+            return;
+
         if (npc.stateManager.AllieHealthReached(npc))
             return;
 

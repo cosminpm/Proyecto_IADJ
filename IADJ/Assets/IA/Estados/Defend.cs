@@ -40,6 +40,9 @@ public class Defend : State
         if  (npc.stateManager.IsDead())
              return;
 
+        if (npc.stateManager.TotalWar())
+            return;
+
         if (npc.stateManager.IsLowHP(npc))
             return;
 

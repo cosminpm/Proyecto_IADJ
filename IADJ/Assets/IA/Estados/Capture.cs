@@ -60,8 +60,16 @@ public class Capture : State
         if  (npc.stateManager.IsDead())
              return;
 
-        if (npc.stateManager.IsLowHP(npc))
+        if (!npc.IsTotalWar() && npc.stateManager.IsLowHP(npc))
             return;
+
+        // Si somos un tanque y encontramos a un aliado que necesite 
+        // de nuestra ayuda, vamos hacia él.
+        if ( !npc.IsTotalWar() && npc.stateManager.BackupNeeded()){
+
+          
+            return;
+        }
 
         // // Si hay enemigos en nuestra base, vamos hacia allá.
         // if (npc.stateManager.EnemiesInBase(npc))

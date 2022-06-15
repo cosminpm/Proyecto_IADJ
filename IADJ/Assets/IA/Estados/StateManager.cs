@@ -15,6 +15,7 @@ public class StateManager: MonoBehaviour
     public LowHp stateLowHp;
     public Attack stateAttack;
     public Defend stateDefend;
+    public Protect stateProtect;
     public Healing stateHealing;
     public ReceivingHeal stateReceivingHeal;
     public SearchHealing stateSearchHealing;
@@ -34,6 +35,7 @@ public class StateManager: MonoBehaviour
         stateLowHp = this.gameObject.GetComponent<LowHp>();
         stateAttack = this.gameObject.GetComponent<Attack>();
         stateDefend = this.gameObject.GetComponent<Defend>();
+        stateProtect = this.gameObject.GetComponent<Protect>();
         stateHealing = this.gameObject.GetComponent<Healing>();
         stateReceivingHeal = this.gameObject.GetComponent<ReceivingHeal>();
         stateRangeAttack = this.gameObject.GetComponent<RangeAttack>();
@@ -71,22 +73,6 @@ public class StateManager: MonoBehaviour
         } 
     }
 
-    // Función para comprobar si hay enemigos en la base.
-    public bool EnemiesInBase(NPC npc) {
-
-        // TODO: Comprobar que van perdiendo (GameManager).
-        // TODO: Si van perdiendo, se comprueba si hay enemigos
-        //       en la base (mapa de influencia).
-        if (false)//framesToDefend == 0)
-        {
-            ChangeState(stateDefend, npc);
-            return true;
-        }
-
-        //framesToDefend--;
-        return false;
-    }
-
     // Función para comprobar si un NPC ha acabado de
     // curarse. Si ese es el caso, pasará a estado Capture.
     public bool HealingFinished(NPC npc) {
@@ -122,7 +108,7 @@ public class StateManager: MonoBehaviour
     // Si ese es el caso, se cambiará al estado LowHp.
     public bool IsLowHP(NPC npc) {
 
-        if (npc.NeedHeal()) {
+        if (npc.NeedHeal() && !npc.IsTotalWar()) {
             npc.stateManager.ChangeState(npc.stateManager.stateLowHp, npc);
             return true;
         }
@@ -144,6 +130,37 @@ public class StateManager: MonoBehaviour
     public void RespawnUnit(NPC npc) {
         npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
         return;
+    }
+
+
+    public bool TotalWar(){
+        if (!_npc.IsTotalWar() && _npc.GameModeIsTotalWar()){
+            _npc.stateManager.ChangeState(_npc.stateManager.stateCapture, _npc);
+            return true;
+        }
+        return false;
+    }
+
+    
+
+    // Función para comprobar si un npc tiene que ir 
+    // a socorrer a un aliado.
+    public bool BackupNeeded()
+    {
+        if (_npc.GetUnitType() == (int)UnitsManager.TypeUnits.Tank)
+        {
+            NPC target = _npc.FindClosestHurtedAllie();
+
+            if (target != null)
+            {
+                _npc.stateManager.stateProtect.ObjetiveNPC = target;
+                _npc.stateManager.ChangeState(_npc.stateManager.stateProtect, _npc);
+
+                return true;
+            }
+
+        }
+        return false;
     }
 
     public bool AllieHealthReached(NPC npc){

@@ -138,9 +138,6 @@ public class RangeAttack : State
 
         if (EnemyFound(npc))
             return;
-
-        if (npc.stateManager.EnemiesInBase(npc))
-            return;
     }
 
     public override void Execute(NPC npc){

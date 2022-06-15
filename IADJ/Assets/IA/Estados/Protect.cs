@@ -1,13 +1,11 @@
-using System.Numerics;
-using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class ReceivingHeal : State
+public class Protect : State
 {
-     void Awake(){
-     //   stateImage = Resources.Load<Sprite>("Estados/sword");
+    void Awake()
+    {
         stateImage.enabled = false;
     }
 
@@ -15,40 +13,54 @@ public class ReceivingHeal : State
     public override void EntryAction(NPC npc)
     {
         movement = false;
-        _targetNPC = null;
     }
+
 
     public override void ExitAction(NPC npc)
     {
-        _targetNPC = null;
+        npc.pathFinding.ClearPath();
     }
 
-    // TODO: En este estado, el NPC deber� buscar la zona de curaci�n m�s 
-    // cercana y huir hacia all�.
     public override void Action(NPC npc, NPC obj)
     {
-        
-        if ( npc.IsBase())
+
+        if (!movement)
         {
-            npc.Unit.CurrentHealthPoints+=0.5f;
-        } 
+            npc.pathFinding.CalculatePath(ObjetiveNPC.GetUnitPosition());
+            movement = true;
+        }
+
     }
+
 
     public override void CheckState(NPC npc)
     {
+        // Si estoy muerto, cambio al estado a muerto
         if (npc.stateManager.IsDead())
             return;
-            
+
         if (npc.stateManager.TotalWar())
             return;
 
-        if (npc.stateManager.HealingFinished(npc))
+        if (npc.stateManager.IsLowHP(npc))
             return;
+
+        // Si hay alg�n al que atacar, cambio de estado a MeleeAttack
+        if ( npc.pathFinding.IsEndPath() && EnemyFound(npc))
+        {
+            return;
+        }
+
+
     }
+
 
     public override void Execute(NPC npc)
     {
         Action(npc, _targetNPC);
         CheckState(npc);
     }
+
+
+
 }

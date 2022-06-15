@@ -70,6 +70,8 @@ namespace InfluenceMap
             {
                 // TODO SEGUN TIPO DE JUGADOR ASIGNAR UN VALOR O OTRO DE INFLUENCIA Y RADIO
                 // TODO FUNCION PASADO OBJECT ASIGNAR INFLUENCIA Y RADIO
+
+                //
                 UpdateFilterInfluences(e.Value.GetCoorX(), e.Value.GetCoorZ(), 1f, TransformTagToInt(e.Key.tag), 10);
             }
         }

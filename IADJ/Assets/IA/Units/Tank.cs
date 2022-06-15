@@ -64,7 +64,7 @@ public class Tank : UnitsManager
         AttackPoints = 20;
         AttackAccuracy = 0.9f;
         CriticRate = 0.1f;
-        VisionDistance = 10; 
+        VisionDistance = 30; 
         TypeUnit = TypeUnits.Tank;
     }
 

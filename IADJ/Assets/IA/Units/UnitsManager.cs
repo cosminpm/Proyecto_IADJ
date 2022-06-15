@@ -79,6 +79,8 @@ public abstract class UnitsManager : MonoBehaviour
     // Modo de comportamiento de la unidad
     private Modes _unitMode;
 
+    private float _bonusSpeed = 2;
+
 
     protected abstract void AddCostsTerrain();
     protected abstract void SetMovementStats();
@@ -96,6 +98,16 @@ public abstract class UnitsManager : MonoBehaviour
     // Funcion para activar el modo Normal.
     public abstract void ActivateNormalMode();
 
+    public void ActivateSpeedBonus(){
+        UnitAgent.MaxSpeed += _bonusSpeed; 
+        _maxSpeed += _bonusSpeed;
+    }
+
+
+    public void DeactivateSpeedBonus(){
+        UnitAgent.MaxSpeed -= _bonusSpeed; 
+        _maxSpeed -= _bonusSpeed;
+    }
 
     public void SetCostTerrainSpeed(GridMap.TipoTerreno terrain){
 

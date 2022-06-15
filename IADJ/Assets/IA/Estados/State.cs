@@ -37,16 +37,16 @@ public abstract class State : MonoBehaviour
     public abstract void Execute(NPC npc);
 
 
-    // Función para comprobar si el NPC está en TotalWar.
-    protected bool IsInTotalWar(NPC npc)
-    {
-        if (npc.Unit.Mode == UnitsManager.Modes.TotalWar)
-        {
-            npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
-            return true;
-        }
-        return false;
-    }
+    // // Función para comprobar si el NPC está en TotalWar.
+    // protected bool IsInTotalWar(NPC npc)
+    // {
+    //     if (npc.Unit.Mode == UnitsManager.Modes.TotalWar)
+    //     {
+    //         npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     // TODO: Esto a lo mejor hay que moverlo a StateManager.
     //
@@ -78,7 +78,7 @@ public abstract class State : MonoBehaviour
 
     }
 
-
+    
 
     // Función para comprobar si el NPC está en una zona de 
     // curación y cambiar al estado Healing en ese caso.
