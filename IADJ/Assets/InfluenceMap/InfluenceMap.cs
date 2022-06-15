@@ -144,12 +144,12 @@ namespace InfluenceMap
         }
         
         
-        private GameObject[] GetBlueTeamObjects()
+        public static GameObject[] GetBlueTeamObjects()
         {
             return GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
         }
 
-        private GameObject[] GetRedTeamObjects()
+        public static GameObject[] GetRedTeamObjects()
         {
             return GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO);
         }

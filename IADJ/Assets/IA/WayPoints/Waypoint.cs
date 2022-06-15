@@ -18,7 +18,7 @@ public class Waypoint : MonoBehaviour
         PatrullaAzul
     }
 
-    [SerializeField] private TypeWayPoint typeWaypoint;
+    [SerializeField] public TypeWayPoint typeWaypoint;
 
     public float winningPercentage;
 
