@@ -210,22 +210,13 @@ namespace Pathfinding
 
             if (tactic){
                 Cell neighbourCell = neighbourNode.GetCell();
-                // Coste base del terreno + Coste de movimiento de la unidad en ese terreno
-                
-                // float costInfluence = GameObject.Find("GridController").GetComponent<InfluenceMap.InfluenceMap>().GetValueOfInfluence(neighbourCell.GetCoorX(),neighbourCell.GetCoorZ(), npc.GetUnitTeam());
-                // float costeTerrain = neighbourCell.GetTerrainCost() *
-                //                      npc.Unit.GetMovementCost(neighbourCell.GetTipoTerreno());
-                // float costVisibility = GameObject.Find("GridController").GetComponent<VisibilityMap>()
-                //     .GetVisibilityEnem(neighbourCell.GetCoorX(), neighbourCell.GetCoorZ(), npc.GetUnitTeam());
-                // cost = costeTerrain+ costInfluence + costVisibility;
 
-
+                float costInfluence = GameObject.Find("GridController").GetComponent<InfluenceMap.InfluenceMap>().GetValueOfInfluence(neighbourCell.GetCoorX(),neighbourCell.GetCoorZ(), npc.GetUnitTeam());
                 float costeTerrain = neighbourCell.GetTerrainCost() *
                                      npc.Unit.GetMovementCost(neighbourCell.GetTipoTerreno());
-                
-
-                 cost = costeTerrain;
-                
+                float costVisibility = GameObject.Find("GridController").GetComponent<VisibilityMap>()
+                    .GetVisibilityEnem(neighbourCell.GetCoorX(), neighbourCell.GetCoorZ(), npc.GetUnitTeam());
+                cost = costeTerrain+ costInfluence + costVisibility;
                 // Influencia
             } else {
                 cost = HeuristicApply(currentNode, neighbourNode, heuristic);

@@ -147,7 +147,6 @@ public class NPC : MonoBehaviour
     {
         // Obtenemos la lista de aliados
         List<NPC> listAllies = GameManager.FindNearbyAllies(this);
-        Debug.Log(listAllies.Count);
         // Obtenemos la dirección hacia el target
         Vector3 direction;
 
