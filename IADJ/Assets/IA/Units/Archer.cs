@@ -30,7 +30,7 @@ public class Archer : UnitsManager
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
         costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.2f);
         costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.3f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.2f);
         costsTerrains.Add(GridMap.TipoTerreno.Rio, Mathf.Infinity);
         costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 2f);
 

@@ -212,7 +212,8 @@ public class NPC : MonoBehaviour
         if ( Unit.Mode == UnitsManager.Modes.Offensive)
             return;
         ActivateOffensiveMode();
-        stateManager.ChangeState(stateManager.stateCapture);
+        if (!ImHealear())
+            stateManager.ChangeState(stateManager.stateCapture);
     }
     
 
@@ -220,7 +221,8 @@ public class NPC : MonoBehaviour
         if ( Unit.Mode == UnitsManager.Modes.Defensive)
             return;
         ActivateDefensiveMode();
-        stateManager.ChangeState(stateManager.stateDefend);
+        if ( !ImHealear())
+            stateManager.ChangeState(stateManager.stateDefend);
     }
 
     public void Respawn(){
@@ -311,7 +313,9 @@ public class NPC : MonoBehaviour
             return GlobalAttributes.Team.Red;
     }
 
-
+    public bool ImHealear(){
+        return GetUnitType() == (int) UnitsManager.TypeUnits.Healer;
+    }
 
 
     public Vector3 GetUnitPosition(){
