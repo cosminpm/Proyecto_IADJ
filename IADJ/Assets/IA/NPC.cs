@@ -30,6 +30,9 @@ public class NPC : MonoBehaviour
     // Control Patrullaje
     public bool isPatroll;
 
+    // NPC Seleccionado
+    public bool selected;
+
 
     // Manejador de combate
     void Awake(){
@@ -40,6 +43,7 @@ public class NPC : MonoBehaviour
         stateManager.Initialize(GetUnitType(), this);
         pathFinding = GetComponent<ControlPathFindingWithSteering>();
         isPatroll = true;
+        selected = false;
     }
 
     void Start(){
@@ -65,6 +69,13 @@ public class NPC : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void NPCSelected(Cell finishCell){
+
+        selected = true;
+        stateManager.ChangeState(stateManager.stateOrder,this);
+        pathFinding.SendOrder(finishCell);
     }
 
     // Encuentro el enemigo más cercano dentro de mi rango de visión. 
