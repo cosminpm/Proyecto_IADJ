@@ -15,11 +15,10 @@ public class RangeAttack : State
     // Variable para indicar el tiempo (en frames)
     // que tardar� el NPC en lanzar su pr�ximo ataque.
     private int _cooldwnTime = 0;
-    private int _threshold = 1;
+    private int _threshold = 15;
     private bool _arriveAllie;
     
     void Awake(){
-     //   stateImage = Resources.Load<Sprite>("Estados/sword");
         stateImage.enabled = false;
     }
 
@@ -34,20 +33,14 @@ public class RangeAttack : State
     }
 
     public override void ExitAction(NPC npc){
-        // Tenemos que limpiar el path
-        // _targetNPC = null;
         
         _cooldwnTime = 0;
         npc.GUI.UpdateBarAction(_cooldwnTime);
-        // npc.GetComponent<Seek>().enabled = false;
-        // npc.GetComponent<Face>().enabled = false;
-     //   npc.GetComponent<Pathfinding>().enabled = false;
-        npc.Unit.UnitAgent.UpdateListSteering();
         _targetNPC = null;
         npc.pathFinding.ClearPath();
     }
 
-    public override void Action(NPC npc, NPC _targetNPC){
+    public override void Action(NPC npc){
 
 
         if ( !_targetNPC.IsCurrentStateDead() )
@@ -133,15 +126,15 @@ public class RangeAttack : State
         if (npc.stateManager.IsDead())
             return;
 
-        if (npc.stateManager.IsLowHP(npc))
+        if (npc.stateManager.IsLowHP())
             return;
 
-        if (EnemyFound(npc))
+        if (npc.stateManager.EnemyFound())
             return;
     }
 
     public override void Execute(NPC npc){
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 

@@ -28,7 +28,7 @@ public class Patroll : State
     }
 
 
-    public override void Action(NPC npc, NPC obj)
+    public override void Action(NPC npc)
     {
         // Calcular el waypoint mas cercano
         if (!onWay)
@@ -69,23 +69,13 @@ public class Patroll : State
         if (npc.stateManager.TotalWar())
             return;
 
-        if (npc.stateManager.AllieHealthReached(npc))
+        if (npc.stateManager.AllieHealthReached())
             return;
-
-        // Si hay alg�n al que atacar, cambio de estado a MeleeAttack
-
-
-        // TODO: NO FURULA
-        //if (EnemyFound(npc))
-        //    return;
-       
-
-        // npc.ChangeState(npc.stateCapture);
     }
 
     public override void Execute(NPC npc)
     {
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 }

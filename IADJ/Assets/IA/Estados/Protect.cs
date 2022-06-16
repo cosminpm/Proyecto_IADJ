@@ -21,12 +21,12 @@ public class Protect : State
         npc.pathFinding.ClearPath();
     }
 
-    public override void Action(NPC npc, NPC obj)
+    public override void Action(NPC npc)
     {
 
         if (!movement)
         {
-            npc.pathFinding.CalculatePath(ObjetiveNPC.GetUnitPosition());
+            npc.pathFinding.CalculatePath(_targetNPC.GetUnitPosition());
             movement = true;
         }
 
@@ -42,11 +42,11 @@ public class Protect : State
         if (npc.stateManager.TotalWar())
             return;
 
-        if (npc.stateManager.IsLowHP(npc))
+        if (npc.stateManager.IsLowHP())
             return;
 
         // Si hay alg�n al que atacar, cambio de estado a MeleeAttack
-        if ( npc.pathFinding.IsEndPath() && EnemyFound(npc))
+        if ( npc.pathFinding.IsEndPath() && npc.stateManager.EnemyFound())
         {
             return;
         }
@@ -57,7 +57,7 @@ public class Protect : State
 
     public override void Execute(NPC npc)
     {
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 

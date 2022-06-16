@@ -52,8 +52,6 @@ public class GameHandler : MonoBehaviour
 
         if (!CheckVictory()) {
 
-            // Comprobamos el cambio de estado.
-            IsChangingMode();
 
             // Hay que comprobar si el porcentaje de captura de alguna es preocupante.. Pasar a estado defensivo
             bool defensiveRed = waypointManager.GetPercentageCaptureBlue() >= 0.5f;
@@ -142,87 +140,47 @@ public class GameHandler : MonoBehaviour
         return false;
     }
 
-    // Función para comprobar si se ha realizado un cambio de modo.
-    private bool IsChangingMode() {
+    public void ButtonModeOfensive(){
+        Debug.Log("Modo Ofensivo");
+          
+        foreach (var n in _listNpcsRed)
+            n.Unit.ActivateOffensiveMode();
 
-        // Si pulsamos la tecla "T", se activa el modo TotalWar.
-        if (Input.GetKey(KeyCode.T))
-        {
-            Debug.Log("Total war activado");
-            foreach (var n in _listNpcsBlue)
-                n.ActivateTotalWarMode();
+        foreach (var n in _listNpcsRed)
+            n.Unit.ActivateOffensiveMode();
 
-            foreach (var n in _listNpcsRed)
-                n.ActivateTotalWarMode();
-
-            _totalWar = true;
-            return true;
-        }
-
-        // Si pulsamos la tecla "R", seleccionamos al equipo rojo.
-        else if (Input.GetKey(KeyCode.R)) 
-        {
-            // Si se pulsa "A", cambiamos el modo del equipo rojo a "modo ofensivo".
-            if (Input.GetKey(KeyCode.A))
-            {
-                foreach (var n in _listNpcsRed)
-                    n.Unit.ActivateOffensiveMode();
-
-                return true;
-            }
-
-            // Si se pulsa "D", cambiamos el modo del equipo rojo a "modo defensivo".
-            else if (Input.GetKey(KeyCode.D))
-            {
-                foreach (var n in _listNpcsRed)
-                    n.Unit.ActivateDefensiveMode();
-
-                return true;
-            }
-
-            // Si se pulsa "N", cambiamos el modo del equipo rojo a "modo normal".
-            else if (Input.GetKey(KeyCode.N))
-            {
-                foreach (var n in _listNpcsRed)
-                    n.Unit.ActivateNormalMode();
-
-                return true;
-            }
-        }
-
-        // Si pulsamos la tecla "B", seleccionamos al equipo azul.
-        else if (Input.GetKey(KeyCode.B))
-        {
-            // Si se pulsa "A", cambiamos el modo del equipo azul a "modo ofensivo".
-            if (Input.GetKey(KeyCode.A))
-            {
-                foreach (var n in _listNpcsBlue)
-                    n.Unit.ActivateOffensiveMode();
-
-                return true;
-            }
-
-            // Si se pulsa "D", cambiamos el modo del equipo azul a "modo defensivo".
-            else if (Input.GetKey(KeyCode.D))
-            {
-                foreach (var n in _listNpcsBlue)
-                    n.Unit.ActivateDefensiveMode();
-
-                return true;
-            }
-
-            // Si se pulsa "N", cambiamos el modo del equipo azul a "modo normal".
-            else if (Input.GetKey(KeyCode.N))
-            {
-                foreach (var n in _listNpcsBlue)
-                    n.Unit.ActivateNormalMode();
-
-                return true;
-            }
-        }
-
-        return false;
     }
+
+    public void ButtonModeDefensive(){
+        Debug.Log("Modo defensivo");
+
+        foreach (var n in _listNpcsRed)
+            n.Unit.ActivateDefensiveMode();
+        foreach (var n in _listNpcsRed)
+            n.Unit.ActivateDefensiveMode();
+    }
+
+     public void ButtonModeNormal(){
+        Debug.Log("Modo Normal");
+
+        foreach (var n in _listNpcsRed)
+            n.Unit.ActivateNormalMode();
+        foreach (var n in _listNpcsRed)
+            n.Unit.ActivateNormalMode();
+    }
+
+
+    public void ButtonModeTotalWar(){
+        Debug.Log("Total war activado");
+        foreach (var n in _listNpcsBlue)
+            n.ActivateTotalWarMode();
+
+        foreach (var n in _listNpcsRed)
+            n.ActivateTotalWarMode();
+
+        _totalWar = true;
+    }
+
 
     private void InitializeNPCS(){
         GameObject[] blueNPCS = GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL);
@@ -230,7 +188,6 @@ public class GameHandler : MonoBehaviour
         _listNpcsRed = new List<NPC>();
         _listNpcsBlue = new List<NPC>();
 
-        //TODO:  // Se crea un NPC MÁS.. puede ser que un terreno tenga un script NPC.. Probar con el mapa definitivo
         foreach (var npc in redNPCS){
             if (npc.GetComponent<NPC>() != null)
              _listNpcsRed.Add(npc.GetComponent<NPC>());
@@ -297,7 +254,7 @@ public class GameHandler : MonoBehaviour
 
         // Si están en mi rango de visión...
         foreach(var n in listEnemies){
-            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead())
+            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead() && !n.IsCurrentStateReceivingHealing())
                 list.Add(n);
         }
         return list;

@@ -26,7 +26,7 @@ public class Capture : State
     }
 
 
-    public override void Action(NPC npc, NPC obj){
+    public override void Action(NPC npc){
         
         
         if (!_capturing){
@@ -38,7 +38,6 @@ public class Capture : State
                     movement = false;
                     npc.pathFinding.ClearPath();
                 }
-            //    npc.GameManager.waypointManager.Capturing(npc);
 
             } else {
 
@@ -47,7 +46,6 @@ public class Capture : State
                     npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetEnemyZonePosition(npc));
                     movement = true;
                 } 
-
             }
 
         }
@@ -60,32 +58,25 @@ public class Capture : State
         if  (npc.stateManager.IsDead())
              return;
 
-        if (!npc.IsTotalWar() && npc.stateManager.IsLowHP(npc))
+        if (!npc.IsTotalWar() && npc.stateManager.IsLowHP())
             return;
 
         // Si somos un tanque y encontramos a un aliado que necesite 
         // de nuestra ayuda, vamos hacia él.
         if ( !npc.IsTotalWar() && npc.stateManager.BackupNeeded()){
-
-          
             return;
         }
 
-        // // Si hay enemigos en nuestra base, vamos hacia allá.
-        // if (npc.stateManager.EnemiesInBase(npc))
-        //     return;
-
         // Si hay algún al que atacar, cambio de estado a MeleeAttack
-        if (EnemyFound(npc)){
+        if (npc.stateManager.EnemyFound()){
             _captureTime = 1200;
             return;
         }
 
-       // npc.ChangeState(npc.stateCapture);
     }
 
     public override void Execute(NPC npc){
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 }

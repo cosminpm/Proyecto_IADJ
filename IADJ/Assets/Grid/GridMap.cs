@@ -143,13 +143,13 @@ namespace Grid
                     baseCost = Mathf.Infinity;
                     break;
                 case TipoTerreno.Pradera:
-                    baseCost = 8f;
+                    baseCost = 2f;
                     break;
                 case TipoTerreno.Bosque:
-                    baseCost = 8f;
+                    baseCost = 3f;
                     break;
                 case TipoTerreno.Acantilado:
-                    baseCost = Mathf.Infinity;
+                    baseCost = 4f;
                     break;
                 case TipoTerreno.BaseRoja:
                     baseCost = 1f;

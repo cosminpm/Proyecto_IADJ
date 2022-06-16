@@ -122,17 +122,6 @@ public class WaypointManager : MonoBehaviour
 
     public bool InsideWaypoint(NPC npc, Waypoint waypoint) {
         
-        // Vector3 direction;
-        // float distance;
-
-        // foreach (var pos in waypoint.waypointPos) {
-        //     direction =  npc.GetUnitPosition( ) - pos.position;
-        //     distance  = direction.magnitude;
-
-        //     if (distance <= waypoint.distanceMinWaypoint)
-        //         return true;
-        // }
-        // return false;
 
         foreach (Transform pos in waypoint.waypointPos) {
             if (Vector3.Distance(npc.GetUnitPosition(), pos.position) < waypoint.distanceMinWaypoint)
@@ -161,16 +150,16 @@ public class WaypointManager : MonoBehaviour
         
         switch( team)
         {
-            case GlobalAttributes.Team.Red:
-                blueEnemyBase.winningPercentage -= 0.009f;
-                if ( blueEnemyBase.winningPercentage <= 0)
-                    blueEnemyBase.winningPercentage = 0;
-                break;
-            case GlobalAttributes.Team.Blue:
-                redEnemyBase.winningPercentage -= 0.009f;
-                if ( redEnemyBase.winningPercentage <= 0)
-                    redEnemyBase.winningPercentage = 0;
-                break;
+            // case GlobalAttributes.Team.Red:
+            //     blueEnemyBase.winningPercentage -= 0.009f;
+            //     if ( blueEnemyBase.winningPercentage <= 0)
+            //         blueEnemyBase.winningPercentage = 0;
+            //     break;
+            // case GlobalAttributes.Team.Blue:
+            //     redEnemyBase.winningPercentage -= 0.009f;
+            //     if ( redEnemyBase.winningPercentage <= 0)
+            //         redEnemyBase.winningPercentage = 0;
+            //     break;
 
             default:
                 break;

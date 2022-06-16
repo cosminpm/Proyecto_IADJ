@@ -26,13 +26,13 @@ public class Healing : State
 
     // TODO: En este estado, el NPC deber� buscar la zona de curaci�n m�s 
     // cercana y huir hacia all�.
-    public override void Action(NPC npc, NPC targetNPC)
+    public override void Action(NPC npc)
     {
         Debug.Log("Estoy curando :)");
 
         if (!_targetNPC.IsCurrentStateDead()) {
 
-            Vector3 direction = targetNPC.GetUnitPosition() - npc.GetUnitPosition();
+            Vector3 direction = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
             // Distancia que hay entre el agente y el target
             float distance = direction.magnitude;
 
@@ -44,7 +44,7 @@ public class Healing : State
                 {
                     //  Debug.Log(_targetNPC.Unit.TypeUnit + " tiene " + _targetNPC.Unit.CurrentHealthPoints + " puntos de vida");
                     float dmg = npc.GetAttackPoints();
-                    targetNPC.Unit.CurrentHealthPoints -= dmg;
+                    _targetNPC.Unit.CurrentHealthPoints -= dmg;
                     _cooldwnTime = 0;
                 }
                 else
@@ -64,18 +64,17 @@ public class Healing : State
     }
     public override void CheckState(NPC npc)
     {
-        // if (IsDead(npc) || npc.stateManager.CureFinished(npc))
-        //     return;
+
         if (npc.stateManager.IsDead())
             return;
 
-        if(npc.stateManager.CureFinished(npc, _targetNPC))
+        if(npc.stateManager.CureFinished(_targetNPC))
             return;
     }
 
     public override void Execute(NPC npc)
     {
-        Action(npc, npc.stateManager.CurrentState._targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 }

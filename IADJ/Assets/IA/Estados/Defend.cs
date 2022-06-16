@@ -5,6 +5,8 @@ using UnityEngine;
 public class Defend : State
 {
 
+    private float distance;
+
     void Awake()
     {
         stateImage.enabled = false;
@@ -22,15 +24,15 @@ public class Defend : State
        npc.pathFinding.ClearPath();
     }
 
-    public override void Action(NPC npc, NPC obj)
+    public override void Action(NPC npc)
     {
 
         if (!movement)
         {
             npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetBasePosition(npc));
             movement = true;
-        } 
-        
+        }
+
     }
 
 
@@ -43,7 +45,7 @@ public class Defend : State
         if (npc.stateManager.TotalWar())
             return;
 
-        if (npc.stateManager.IsLowHP(npc))
+        if (npc.stateManager.IsLowHP())
             return;
 
         // // Si hay enemigos en nuestra base, vamos hacia allá.
@@ -51,7 +53,7 @@ public class Defend : State
         //     return;
 
         // Si hay algún al que atacar, cambio de estado a MeleeAttack
-        if (EnemyFound(npc)){
+        if (npc.pathFinding.IsEndPath() && npc.stateManager.EnemyFound()){
             return;
         }
 
@@ -61,7 +63,7 @@ public class Defend : State
 
     public override void Execute(NPC npc)
     {
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 

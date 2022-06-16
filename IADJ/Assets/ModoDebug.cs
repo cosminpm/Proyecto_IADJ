@@ -22,7 +22,7 @@ public class ModoDebug : MonoBehaviour
     
     void Start()
     {
-        
+        modoTactico = true;
     }
 
     // Update is called once per frame
@@ -40,6 +40,8 @@ public class ModoDebug : MonoBehaviour
         foreach (var s in soldados)
         {
             s.GetComponent<PathFinding>().tactic = modoTactico;
+            s.GetComponent<ControlPathFindingWithSteering>().ClearPath();
+            s.GetComponent<ControlPathFindingWithSteering>().ReCalculatePath();
         }
     }
     

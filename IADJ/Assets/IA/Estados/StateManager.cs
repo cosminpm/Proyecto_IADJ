@@ -5,9 +5,6 @@ using UnityEngine;
 public class StateManager: MonoBehaviour
 {
 
-    // TODO: Variable de debug Defend. ELIMINAR.
-    int framesToDefend = 120;
-
     // Estados posibles del NPC   
     public Capture stateCapture;
     public Dead stateDead;
@@ -18,15 +15,14 @@ public class StateManager: MonoBehaviour
     public Protect stateProtect;
     public Healing stateHealing;
     public ReceivingHeal stateReceivingHeal;
-    public SearchHealing stateSearchHealing;
     public RangeAttack stateRangeAttack;
+    public Order stateOrder;
 
     // Estado actual del npc
     private State _currentState;
 
     // NPC
     private NPC _npc;
-
 
     public void Initialize(int type, NPC npc){
         
@@ -40,14 +36,15 @@ public class StateManager: MonoBehaviour
         stateReceivingHeal = this.gameObject.GetComponent<ReceivingHeal>();
         stateRangeAttack = this.gameObject.GetComponent<RangeAttack>();
         statePatroll = this.gameObject.GetComponent<Patroll>();
+        stateOrder = this.gameObject.GetComponent<Order>();
         _npc = npc;
         
         if (type == 3)
         {
-            ChangeState(statePatroll, npc);
+            ChangeState(statePatroll);
         }
         else
-            ChangeState(stateCapture, npc);
+            ChangeState(stateCapture);
 
         _currentState.stateImage.enabled = true;
      
@@ -59,26 +56,26 @@ public class StateManager: MonoBehaviour
     }
 
     // Función para cambiar el estado del NPC
-    public void ChangeState(State newState, NPC npc){
+    public void ChangeState(State newState){
 
         if ( _currentState != null && _currentState != newState)
         {
-            _currentState.ExitAction(npc);
+            _currentState.ExitAction(_npc);
         }
 
         if (_currentState != newState) {
-            npc.GUI.UpdateStateImagen(_currentState,newState);
+            _npc.GUI.UpdateStateImagen(_currentState,newState);
             _currentState = newState;
-            _currentState.EntryAction(npc);
+            _currentState.EntryAction(_npc);
         } 
     }
 
     // Función para comprobar si un NPC ha acabado de
     // curarse. Si ese es el caso, pasará a estado Capture.
-    public bool HealingFinished(NPC npc) {
-        if (npc.GetUnitCurrentHP() >= npc.GetUnitHPMax()) 
+    public bool HealingFinished() {
+        if (_npc.GetUnitCurrentHP() >= _npc.GetUnitHPMax()) 
         {
-            ChangeState(stateCapture, npc);
+            ChangeState(stateCapture);
             return true;
         }
         return false;
@@ -86,19 +83,19 @@ public class StateManager: MonoBehaviour
 
     // Función para comprobar si el Healer ha acabado de 
     // curar a un NPC.
-    public bool CureFinished(NPC npc, NPC targetNPC) {
+    public bool CureFinished(NPC targetNPC) {
         if (targetNPC.IsFullHP() || targetNPC.IsCurrentStateDead() ) {
-            ChangeState(statePatroll, npc);
+            ChangeState(statePatroll);
             return true;
         }
         return false;
     }
 
 
-    public bool HealthPointReached( NPC npc, bool finalPath ){
+    public bool HealthPointReached(bool finalPath ){
 
         if ( finalPath){
-            ChangeState(stateReceivingHeal, npc);
+            ChangeState(stateReceivingHeal);
             return true;
         }
         return false;
@@ -106,10 +103,10 @@ public class StateManager: MonoBehaviour
 
     // Función para comprobar que si el NPC necesita curación.
     // Si ese es el caso, se cambiará al estado LowHp.
-    public bool IsLowHP(NPC npc) {
+    public bool IsLowHP() {
 
-        if (npc.NeedHeal() && !npc.IsTotalWar()) {
-            npc.stateManager.ChangeState(npc.stateManager.stateLowHp, npc);
+        if (_npc.NeedHeal() && !_npc.IsTotalWar()) {
+            ChangeState(stateLowHp);
             return true;
         }
         return false;
@@ -120,29 +117,55 @@ public class StateManager: MonoBehaviour
     public bool IsDead() {
         
         if ( _npc.Unit.CurrentHealthPoints <= 0){
-            _npc.stateManager.ChangeState(stateDead, _npc);
+            ChangeState(stateDead);
             return true;
         }
         return false;
     }
+
+    public bool EnemyFound(){
+        
+        List<NPC> enemies = _npc.GameManager.FindNearbyEnemies(_npc);
+
+
+        if (enemies.Count > 0) {
+
+            NPC target = _npc.FindClosestEnemy(enemies);
+
+            if ( _npc.GetUnitType() != (int) UnitsManager.TypeUnits.Archer ){
+                stateAttack.ObjetiveNPC = target;
+                ChangeState(_npc.stateManager.stateAttack);
+            } else {
+                  _npc.stateManager.stateRangeAttack.ObjetiveNPC = target;
+                 ChangeState(_npc.stateManager.stateRangeAttack);
+            }
+
+            return true;
+        } 
+
+        if ( _npc.Unit.Mode != UnitsManager.Modes.Defensive)
+           ChangeState(_npc.stateManager.stateCapture);
+        return false;
+
+    }
+
      
         // Función para respawnear a un NPC.
-    public void RespawnUnit(NPC npc) {
-        npc.stateManager.ChangeState(npc.stateManager.stateCapture, npc);
+    public void RespawnUnit() {
+        ChangeState(stateCapture);
         return;
     }
 
-
+    // Función para comprobar que un NPC esté en el modo total war
     public bool TotalWar(){
         if (!_npc.IsTotalWar() && _npc.GameModeIsTotalWar()){
-            _npc.stateManager.ChangeState(_npc.stateManager.stateCapture, _npc);
+            ChangeState(stateCapture);
             return true;
         }
         return false;
     }
 
     
-
     // Función para comprobar si un npc tiene que ir 
     // a socorrer a un aliado.
     public bool BackupNeeded()
@@ -153,9 +176,8 @@ public class StateManager: MonoBehaviour
 
             if (target != null)
             {
-                _npc.stateManager.stateProtect.ObjetiveNPC = target;
-                _npc.stateManager.ChangeState(_npc.stateManager.stateProtect, _npc);
-
+                stateProtect.ObjetiveNPC = target;
+                ChangeState(stateProtect);
                 return true;
             }
 
@@ -163,9 +185,10 @@ public class StateManager: MonoBehaviour
         return false;
     }
 
-    public bool AllieHealthReached(NPC npc){
+    // Función para comprobar si un aliado necesita curación
+    public bool AllieHealthReached(){
 
-        List<NPC> listAllies = npc.GameManager.FindNearbyAllies(npc);
+        List<NPC> listAllies = _npc.GameManager.FindNearbyAllies(_npc);
 
         if ( listAllies.Count > 0)
         {
@@ -173,8 +196,8 @@ public class StateManager: MonoBehaviour
             {
                 if (a.NeedHeal())
                 {
-                    ChangeState(stateHealing, npc);
-                    CurrentState._targetNPC = a;
+                    ChangeState(stateHealing);
+                    CurrentState.ObjetiveNPC = a;
                     return true;
                 }
             }
@@ -196,11 +219,7 @@ public class StateManager: MonoBehaviour
         return CurrentState == stateCapture;
     }
 
-    public NPC GetStateTarget(){
-        return CurrentState.ObjetiveNPC;
+    public bool CurrentStateIsReceivingHealing(){
+        return CurrentState == stateReceivingHeal;
     }
-
-    public void SetStateAttackTarget(NPC npc){
-        stateAttack.SetObjetiveNPC(npc);
-    }     
 }

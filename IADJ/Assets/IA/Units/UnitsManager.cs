@@ -39,6 +39,8 @@ public abstract class UnitsManager : MonoBehaviour
     private float _criticRate;
     // Rango de visión
     private float _vision;
+    // Valor de la influencia que ejerce sobre el mapa
+    private float _influence;
 
 
     protected AgentNPC _agentNPC;
@@ -131,6 +133,10 @@ public abstract class UnitsManager : MonoBehaviour
         return cost;
     }
 
+    public float GetInfluence(){
+        return _influence;
+    }
+
     public float HealthPointsMax
     {
         get { return _hpMax; }
@@ -189,6 +195,12 @@ public abstract class UnitsManager : MonoBehaviour
         set { _vision = value; }
     }
 
+    public float Influence
+    {
+        get {return _influence;}
+        set { _influence = value; }
+    }
+
     public Team UnitTeam
     {
         get { return _team; }
@@ -223,6 +235,8 @@ public abstract class UnitsManager : MonoBehaviour
         }
 
     }
+
+
 }
 
    

@@ -22,6 +22,8 @@ namespace Pathfinding
         public bool drawColorPath, drawNumberPath;
         public int sizeOfTextPath = 10;
 
+        private Cell _objetiveCell;
+
         public void Start()
         {
             _pathFinding = gameObject.AddComponent<PathFinding>();
@@ -42,6 +44,7 @@ namespace Pathfinding
         
         public void SendOrder(Cell finishCell)
         {
+            _objetiveCell = finishCell;
             Cell startCell = WorldToMap(transform.position);
             _path.nodos = new List<Node>();
             _pathFollowing.currentPos = 0;
@@ -57,10 +60,18 @@ namespace Pathfinding
 
             Cell startCell = WorldToMap(transform.position);
             Cell finishCell = WorldToMap(posObjective);
-
+            _objetiveCell = finishCell;
             _path.nodos = new List<Node>();
             _pathFollowing.currentPos = 0;
             _pathFinding.ApplyAStar(startCell, finishCell, ref _path.nodos);
+            
+        }
+
+        public void ReCalculatePath(){
+            Cell startCell = WorldToMap(transform.position);
+             _path.nodos = new List<Node>();
+            _pathFollowing.currentPos = 0;
+            _pathFinding.ApplyAStar(startCell, _objetiveCell, ref _path.nodos);
         }
 
         public bool IsEndPath(){

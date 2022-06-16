@@ -23,7 +23,6 @@ public class NPC : MonoBehaviour
     // Controlador pathfinding
     public ControlPathFindingWithSteering pathFinding;
 
-    // DUDA AQUI ABAJO HACE FALTA??
     // GameManager
     public GameHandler _gameManager;
 
@@ -47,7 +46,8 @@ public class NPC : MonoBehaviour
     }
 
     void Start(){
-        
+        GetComponent<BoxCollider>().enabled = true;
+
     }
 
     void Update(){
@@ -74,7 +74,7 @@ public class NPC : MonoBehaviour
     public void NPCSelected(Cell finishCell){
 
         selected = true;
-        stateManager.ChangeState(stateManager.stateOrder,this);
+        stateManager.ChangeState(stateManager.stateOrder);
         pathFinding.SendOrder(finishCell);
     }
 
@@ -212,7 +212,7 @@ public class NPC : MonoBehaviour
         if ( Unit.Mode == UnitsManager.Modes.Offensive)
             return;
         ActivateOffensiveMode();
-        stateManager.ChangeState(stateManager.stateCapture, this);
+        stateManager.ChangeState(stateManager.stateCapture);
     }
     
 
@@ -220,7 +220,7 @@ public class NPC : MonoBehaviour
         if ( Unit.Mode == UnitsManager.Modes.Defensive)
             return;
         ActivateDefensiveMode();
-        stateManager.ChangeState(stateManager.stateDefend, this);
+        stateManager.ChangeState(stateManager.stateDefend);
     }
 
     public void Respawn(){
@@ -239,6 +239,10 @@ public class NPC : MonoBehaviour
 
     public bool IsCurrentStateDead(){
         return stateManager.CurrentStateIsDead();
+    }
+
+    public bool IsCurrentStateReceivingHealing(){
+        return stateManager.CurrentStateIsReceivingHealing();
     }
 
     public bool IsTotalWar(){
@@ -265,10 +269,9 @@ public class NPC : MonoBehaviour
     
 
     public bool IsBase(){
-        
         return _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetBase(this));
-
     }
+
 
     public void ActivateSpeedBonus(){
         Unit.ActivateSpeedBonus();
@@ -283,7 +286,10 @@ public class NPC : MonoBehaviour
         Unit.SetCostTerrainSpeed(cell.GetTipoTerreno());
     }
 
+    public float GetInfluenceValue(){
 
+        return Unit.GetInfluence();
+    }
 
     public UnitsManager Unit
     {
@@ -304,6 +310,7 @@ public class NPC : MonoBehaviour
         else 
             return GlobalAttributes.Team.Red;
     }
+
 
 
 

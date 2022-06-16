@@ -35,11 +35,6 @@ public class LowHp : State
     public override void ExitAction(NPC npc)
     {
         movement = false;
-
-        // npc.GetComponent<Seek>().enabled = false;
-        // npc.GetComponent<Face>().enabled = false;
-        npc.Unit.UnitAgent.UpdateListSteering();
-
         _targetNPC = null;
         healer = null;
         npc.pathFinding.ClearPath();
@@ -50,7 +45,7 @@ public class LowHp : State
 
     // TODO: En este estado, el NPC deber� buscar la zona de curaci�n m�s 
     // cercana y huir hacia all�.
-    public override void Action(NPC npc, NPC obj)
+    public override void Action(NPC npc)
     {
 
         // // Si no está en rango de visión, lo intento perseguir ??
@@ -109,27 +104,15 @@ public class LowHp : State
             return;
         // if (npc.stateManager.HealthPointReached(posBase, npc, healer, medicFound))
         //     return;
-        if ( npc.stateManager.HealthPointReached(npc, npc.pathFinding.IsEndPath()))
+        if ( npc.stateManager.HealthPointReached(npc.pathFinding.IsEndPath()))
             return;
     }
 
 
     public override void Execute(NPC npc)
     {
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 
-
-    // ESTO ESPRA DEBUG ELIMINAR
-    public void CreateInvisible(){
-
-        GameObject prediccionGO = new GameObject("AuxPursueIA");
-        AgentInvisible invisible = prediccionGO.AddComponent<AgentInvisible>();
-        prediccionGO.GetComponent<AgentInvisible>().DrawGizmos = true;
-        invisible.Position = posBase;
-        invisible.InteriorRadius = 1.5f;
-        invisible.ArrivalRadius = 1.0f;
-        zoneBase = invisible;
-    }
 }

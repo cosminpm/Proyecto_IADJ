@@ -27,10 +27,10 @@ public class Soldier : UnitsManager
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
         costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.1f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.3f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.5f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.6f);
         costsTerrains.Add(GridMap.TipoTerreno.Rio, Mathf.Infinity);
-        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.9f);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 1.5f);
 
         if ( UnitTeam == Team.Red){
             costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
@@ -55,15 +55,16 @@ public class Soldier : UnitsManager
     protected override void SetUnitStats(){
 
 
-        HealthPointsMax = 150;
+        HealthPointsMax = 500;
         CurrentHealthPoints = HealthPointsMax;
         AttackRange = 5;
-        AttackSpeed = 12;
+        AttackSpeed = 6;
         AttackPoints = 20;
         AttackAccuracy = 0.8f;
         CriticRate = 0.1f;
         VisionDistance = 10; 
         TypeUnit = TypeUnits.Soldier;
+        Influence = 2f;
     }
 
 

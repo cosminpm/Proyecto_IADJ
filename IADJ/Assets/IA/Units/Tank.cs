@@ -26,9 +26,9 @@ public class Tank : UnitsManager
     protected override void AddCostsTerrain(){
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
         costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.2f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.4f);
-        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.5f);
-        costsTerrains.Add(GridMap.TipoTerreno.Rio, 0f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.3f);
+        costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.8f);
+        costsTerrains.Add(GridMap.TipoTerreno.Rio, Mathf.Infinity);
         costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.3f);
 
         if ( UnitTeam == Team.Red){
@@ -59,13 +59,14 @@ public class Tank : UnitsManager
         HealthPointsMax = 300;
         HealthPointsMin = 100;
         CurrentHealthPoints = HealthPointsMax;
-        AttackRange = 5;
+        AttackRange = 3;
         AttackSpeed = 3;
         AttackPoints = 20;
         AttackAccuracy = 0.9f;
         CriticRate = 0.1f;
-        VisionDistance = 30; 
+        VisionDistance = 13; 
         TypeUnit = TypeUnits.Tank;
+        Influence = 3f;
     }
 
 
@@ -83,7 +84,7 @@ public class Tank : UnitsManager
     public override void ActivateOffensiveMode()
     {
       Mode = Modes.Offensive;
-      AttackRange = 35;
+      AttackRange = 8;
       CriticRate = 0.5f;
       HealthPointsMin = 35;
     }
@@ -105,7 +106,7 @@ public class Tank : UnitsManager
     public override void ActivateNormalMode()
     {
         Mode = Modes.Normal;
-        AttackRange = 15f;
+        AttackRange = 5f;
         CriticRate = 0.3f;
         HealthPointsMin = 75;
     }

@@ -6,7 +6,7 @@ public class Dead : State
 {
     // Variable para comprobar, en frames, el tiempo de respown.
     // 600 frames = 10s
-    private int _timeRespown = 900;
+    private int _timeRespown = 600;
     private bool _dead = false ;
 
 
@@ -18,18 +18,16 @@ public class Dead : State
 
     public override void EntryAction(NPC npc)
     {
-        // El NPC deber�a hacer respawn en su base. 
+        
     }
 
     public override void ExitAction(NPC npc)
     {
-        // movement = false;
-        // _targetNPC = null;
         npc.Unit.CurrentHealthPoints = npc.Unit.HealthPointsMax;
     }
 
     // Cambiamos la posici�n del NPC y hacemos que se cure por completo.
-    public override void Action(NPC npc, NPC obj)
+    public override void Action(NPC npc)
     {
 
         if (_timeRespown <= 450 && !_dead){
@@ -45,14 +43,14 @@ public class Dead : State
     public override void CheckState(NPC npc)
     {
         if (_timeRespown <= 0)
-            npc.stateManager.RespawnUnit(npc);
+            npc.stateManager.RespawnUnit();
         else
             _timeRespown--;
     }
 
     public override void Execute(NPC npc)
     {
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 

@@ -71,8 +71,11 @@ namespace InfluenceMap
                 // TODO SEGUN TIPO DE JUGADOR ASIGNAR UN VALOR O OTRO DE INFLUENCIA Y RADIO
                 // TODO FUNCION PASADO OBJECT ASIGNAR INFLUENCIA Y RADIO
 
-                //
-                UpdateFilterInfluences(e.Value.GetCoorX(), e.Value.GetCoorZ(), 1f, TransformTagToInt(e.Key.tag), 10);
+                // Obtengo todos los Objetcts
+               // var listNPC = e.Keys.ToArray();
+                Debug.Log("sasd "+e.Key.name);
+                var value = e.Key.GetComponent<NPC>().GetInfluenceValue();
+                UpdateFilterInfluences(e.Value.GetCoorX(), e.Value.GetCoorZ(), value, TransformTagToInt(e.Key.tag), 10);
             }
         }
 

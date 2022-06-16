@@ -29,10 +29,10 @@ public class Archer : UnitsManager
 
         costsTerrains = new Dictionary<GridMap.TipoTerreno, float>();
         costsTerrains.Add(GridMap.TipoTerreno.Camino, 0.2f);
-        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 1f);
+        costsTerrains.Add(GridMap.TipoTerreno.Pradera, 0.3f);
         costsTerrains.Add(GridMap.TipoTerreno.Bosque, 0.1f);
-        costsTerrains.Add(GridMap.TipoTerreno.Rio, 0f);
-        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 0.9f);
+        costsTerrains.Add(GridMap.TipoTerreno.Rio, Mathf.Infinity);
+        costsTerrains.Add(GridMap.TipoTerreno.Acantilado, 2f);
 
         if ( UnitTeam == Team.Red){
             costsTerrains.Add(GridMap.TipoTerreno.BaseRoja, 1f);
@@ -59,10 +59,12 @@ public class Archer : UnitsManager
         HealthPointsMax = 150;
         CurrentHealthPoints = HealthPointsMax;
         AttackPoints = 10;
-        AttackSpeed = 12;
+        AttackSpeed = 5;
         AttackAccuracy = 0.75f;
         VisionDistance = 15f; 
+        Influence = 1f;
         TypeUnit = TypeUnits.Archer;
+        
     }
 
 

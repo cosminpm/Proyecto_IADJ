@@ -8,50 +8,28 @@ public class Attack : State
 {
 
 
-    // TODO : SE PASA EL NPC COMO PARAMETRO XD??
-
     // Variable para indicar el tiempo (en frames)
     // que tardar� el NPC en lanzar su pr�ximo ataque.
     private int _cooldwnTime = 0;
 
     void Awake(){
-     //   stateImage = Resources.Load<Sprite>("Estados/sword");
         stateImage.enabled = false;
     }
 
-    // Cambiamos los pr�metros de entrada al estado.
+    // Cambiamos los prÁmetros de entrada al estado.
     // P.E. antes de atacar, el NPC tiene que detenerse.
     public override void EntryAction(NPC npc){
         movement = false;
-
-        Face f = npc.GetComponent<Face>();
-
-        //Pathfinding c = npc.GetComponent<Pathfinding>();
-
-        // if ( f != null )
-        //     npc.GetComponent<Face>().enabled = true;
-
-        // if ( s != null )
-        //     npc.GetComponent<Seek>().enabled = true;
-        //if ( c != null)
-       //     npc.GetComponent<Pathfinding>().enabled = true;
     }
 
     public override void ExitAction(NPC npc){
-        // Tenemos que limpiar el path
-        // _targetNPC = null;
-        
         _cooldwnTime = 0;
         npc.GUI.UpdateBarAction(_cooldwnTime);
-        // npc.GetComponent<Seek>().enabled = false;
-        // npc.GetComponent<Face>().enabled = false;
-     //   npc.GetComponent<Pathfinding>().enabled = false;
-        npc.Unit.UnitAgent.UpdateListSteering();
         _targetNPC = null;
         npc.pathFinding.ClearPath();
     }
 
-    public override void Action(NPC npc, NPC _targetNPC){
+    public override void Action(NPC npc){
 
  
         if ( !_targetNPC.IsCurrentStateDead() )
@@ -59,8 +37,6 @@ public class Attack : State
             Vector3 direction = _targetNPC.GetUnitPosition() - npc.GetUnitPosition();
             // Distancia que hay entre el agente y el target
             float distance = direction.magnitude;
-
-            // TODO: FALTA EL CONO XD
 
             // Si esta dentro de nuestro rango de ataque, atacamos
             if (npc.Unit.AttackRange >= distance)
@@ -97,18 +73,17 @@ public class Attack : State
         if (npc.stateManager.IsDead())
             return;
 
-        if (npc.stateManager.IsLowHP(npc))
+        if (npc.stateManager.IsLowHP())
             return;
 
-        if (EnemyFound(npc))
+        if (npc.stateManager.EnemyFound())
             return;
-
-        // if (npc.stateManager.EnemiesInBase(npc))
-        //     return;
+        
+;
     }
 
     public override void Execute(NPC npc){
-        Action(npc, _targetNPC);
+        Action(npc);
         CheckState(npc);
     }
 

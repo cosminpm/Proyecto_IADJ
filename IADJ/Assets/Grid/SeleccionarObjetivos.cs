@@ -108,8 +108,9 @@ public class SeleccionarObjetivos : MonoBehaviour
                     foreach (var npc in _listNpCs)
                     {
                         SendNewTarget(npc, agent);
-                        Cell finsihCell = GetComponent<GridMap>().CheckIfCellClicked(true);
-                        npc.GetComponent<ControlPathFindingWithSteering>().SendOrder(finsihCell);
+                       Cell finishCell = GetComponent<GridMap>().CheckIfCellClicked(true);
+                        npc.GetComponent<NPC>().NPCSelected(finishCell);
+                        npc.GetComponent<ControlPathFindingWithSteering>().SendOrder(finishCell);
                         
                     }
                 }
