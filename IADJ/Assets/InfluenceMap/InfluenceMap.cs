@@ -101,7 +101,7 @@ namespace InfluenceMap
         }
         
         // For one concrete value
-        private void UpdateOneValueOfInfluence(int i, int j, float valueOfInfluence, int teamInfluence, int radio)
+        private void UpdateOneValueOfInfluence(int i, int j, float valueOfInfluence, int teamInfluence)
         {
             _influenceNodes[i,j].SetNewInfluence(teamInfluence, valueOfInfluence);
         }
@@ -132,11 +132,11 @@ namespace InfluenceMap
                     if (distance > 0)
                     {
                         float value = valueOfInfluence / distance;
-                        UpdateOneValueOfInfluence(i, j, value, teamInfluence,radio);
+                        UpdateOneValueOfInfluence(i, j, value, teamInfluence);
                     }
                     else
                     {
-                        UpdateOneValueOfInfluence(i, j, GlobalAttributes.MAXIMUM_VALUE_INFLUENCE, teamInfluence,radio);
+                        UpdateOneValueOfInfluence(i, j, GlobalAttributes.MAXIMUM_VALUE_INFLUENCE, teamInfluence);
                     }
                 }
             }
