@@ -42,8 +42,10 @@ public class Defend : State
         if  (npc.stateManager.IsDead())
              return;
 
-        if (npc.stateManager.TotalWar())
+        if (npc.stateManager.TotalWar()){
+            Debug.Log("IIIIIIIIII");
             return;
+        }
 
         if (npc.stateManager.IsLowHP())
             return;
@@ -53,7 +55,7 @@ public class Defend : State
         //     return;
 
         // Si hay algún al que atacar, cambio de estado a MeleeAttack
-        if (npc.pathFinding.IsEndPath() && npc.stateManager.EnemyFound()){
+        if (npc.stateManager.EnemyFound()){
             return;
         }
 

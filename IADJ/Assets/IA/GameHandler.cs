@@ -31,6 +31,10 @@ public class GameHandler : MonoBehaviour
     private bool _totalWar = false;
 
 
+    private bool _blueCapturing = false;
+    private bool _redCapturing = false;
+
+
 
     void Start(){
         InitializeNPCS();
@@ -47,9 +51,6 @@ public class GameHandler : MonoBehaviour
     // Comprobamos en cada frame si hay algún equipo capturando alguna base, para restar puntos al equipo contrario.
     void Update(){
 
-        bool blueCapturing = false;
-        bool redCapturing = false;
-
         if (!CheckVictory()) {
 
 
@@ -57,8 +58,9 @@ public class GameHandler : MonoBehaviour
             bool defensiveRed = waypointManager.GetPercentageCaptureBlue() >= 0.5f;
             bool defensiveBlue = waypointManager.GetPercentageCaptureRed() >= 0.5f;
 
-            bool offensiveRed = waypointManager.GetPercentageCaptureRed() >= 0.1f;
-            bool offensiveBlue = waypointManager.GetPercentageCaptureBlue() >= 0.1f;
+            bool offensiveRed = waypointManager.GetPercentageCaptureRed() >= 0.5f;
+
+            bool offensiveBlue = waypointManager.GetPercentageCaptureBlue() >= 0.5f;
 
             foreach (var npc in _listNpcsRed)
             {                
@@ -80,7 +82,9 @@ public class GameHandler : MonoBehaviour
 
                 // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
                 if (npc.IsCapturing()){
-                        redCapturing = true;
+                    _redCapturing = true;
+                } else {
+                    _redCapturing = false;
                 }
 
                 
@@ -96,7 +100,7 @@ public class GameHandler : MonoBehaviour
                         npc.ActivateNormalMode();
                 }
 
-                if (offensiveRed){
+                if (offensiveBlue){
                     npc.AttackEnemyBase();
                 } else {
                     if (!_totalWar)
@@ -105,21 +109,23 @@ public class GameHandler : MonoBehaviour
 
 
 
-                // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
+                    // Si hay algún npc capturando la base enemiga, se resta puntos al equipo contrario.
                 if (npc.IsCapturing())
-                    blueCapturing = true;
-            }
+                    _blueCapturing = true;
+                else
+                    _blueCapturing = false;
 
-            if (!redCapturing)
-            {
-            //    Debug.Log("No hay nadie del equipo rojo capturando");
-                waypointManager.NotCapturing(GlobalAttributes.Team.Red);
-            }
+                if (!_redCapturing)
+                {
+                //    Debug.Log("No hay nadie del equipo rojo capturando");
+                    waypointManager.NotCapturing(GlobalAttributes.Team.Red);
+                }
 
-            if (!blueCapturing)
-            {
-              //  Debug.Log("No hay nadie del equipo azul capturando");
-                waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
+                if (!_blueCapturing)
+                {
+                //  Debug.Log("No hay nadie del equipo azul capturando");
+                    waypointManager.NotCapturing(GlobalAttributes.Team.Blue);
+                }
             }
         }
     }
@@ -254,14 +260,24 @@ public class GameHandler : MonoBehaviour
 
         // Si están en mi rango de visión...
         foreach(var n in listEnemies){
-            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead() && !n.IsCurrentStateReceivingHealing())
+      
+            if ( npc.IsInVisionRange(n) && !n.IsCurrentStateDead() && !n.IsCurrentStateReceivingHealing()){
                 list.Add(n);
+            }
         }
         return list;
     }
 
     public bool GameIsTotalWar(){
         return _totalWar;
+    }
+
+    public bool CapturingRedTeam(){
+        return _redCapturing;
+    }
+
+    public bool CapturingBlueTeam(){
+        return _blueCapturing;
     }
 }
 

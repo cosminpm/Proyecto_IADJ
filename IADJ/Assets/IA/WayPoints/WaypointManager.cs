@@ -108,6 +108,10 @@ public class WaypointManager : MonoBehaviour
 
         return GetRandomWaypointPosition(GetEnemyZone(npc));
     }
+    
+    public Waypoint GetWaypointEnemyZone(NPC npc){
+        return GetEnemyZone(npc);
+    }
 
     public Vector3 GetBasePosition(NPC npc){
 
@@ -122,10 +126,10 @@ public class WaypointManager : MonoBehaviour
 
     public bool InsideWaypoint(NPC npc, Waypoint waypoint) {
         
-
         foreach (Transform pos in waypoint.waypointPos) {
-            if (Vector3.Distance(npc.GetUnitPosition(), pos.position) < waypoint.distanceMinWaypoint)
+            if (Vector3.Distance(npc.GetUnitPosition(), pos.position)+2 < waypoint.distanceMinWaypoint){
                 return true;
+            }
         }
         return false;
     }
@@ -150,16 +154,16 @@ public class WaypointManager : MonoBehaviour
         
         switch( team)
         {
-            // case GlobalAttributes.Team.Red:
-            //     blueEnemyBase.winningPercentage -= 0.009f;
-            //     if ( blueEnemyBase.winningPercentage <= 0)
-            //         blueEnemyBase.winningPercentage = 0;
-            //     break;
-            // case GlobalAttributes.Team.Blue:
-            //     redEnemyBase.winningPercentage -= 0.009f;
-            //     if ( redEnemyBase.winningPercentage <= 0)
-            //         redEnemyBase.winningPercentage = 0;
-            //     break;
+            case GlobalAttributes.Team.Red:
+                blueEnemyBase.winningPercentage -= 0.009f;
+                if ( blueEnemyBase.winningPercentage <= 0)
+                    blueEnemyBase.winningPercentage = 0;
+                break;
+            case GlobalAttributes.Team.Blue:
+                redEnemyBase.winningPercentage -= 0.009f;
+                if ( redEnemyBase.winningPercentage <= 0)
+                    redEnemyBase.winningPercentage = 0;
+                break;
 
             default:
                 break;

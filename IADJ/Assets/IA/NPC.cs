@@ -64,7 +64,6 @@ public class NPC : MonoBehaviour
         Vector3 direction = npc.GetUnitPosition() - this.GetUnitPosition();
         // Distancia que hay entre el agente y el target
         float distance = direction.magnitude;
-
         if ( distance <= GetUnitVisionDistance() ){
             return true;
         }
@@ -200,29 +199,23 @@ public class NPC : MonoBehaviour
         if ( Unit.Mode == UnitsManager.Modes.TotalWar)
             return;
         Unit.ActivateTotalWar();
-        Debug.Log(" EL MODO EN EL NPC ES "+Unit.Mode+ " Y soy" + this.name);
-        if ( IsTotalWar()) {
-            Debug.Log("Esto funciona y por tanto OK");
-        }
     }
-
-
 
     public void AttackEnemyBase(){
         if ( Unit.Mode == UnitsManager.Modes.Offensive)
             return;
         ActivateOffensiveMode();
-        if (!ImHealear())
-            stateManager.ChangeState(stateManager.stateCapture);
     }
     
 
     public void DefendBase(){
-        if ( Unit.Mode == UnitsManager.Modes.Defensive)
+        if ( Unit.Mode == UnitsManager.Modes.Defensive){
             return;
+        }
         ActivateDefensiveMode();
-        if ( !ImHealear())
+        if ( !ImHealear()){
             stateManager.ChangeState(stateManager.stateDefend);
+        }
     }
 
     public void Respawn(){
@@ -263,8 +256,7 @@ public class NPC : MonoBehaviour
     public bool IsCapturing(){
 
         if ( stateManager.CurrentStateIsCapture() && _gameManager.waypointManager.InsideWaypoint(this,_gameManager.waypointManager.GetEnemyZone(this))){
-            _gameManager.waypointManager.Capturing(this);
-            return true;
+                return true;
         }
         return false;
     }
