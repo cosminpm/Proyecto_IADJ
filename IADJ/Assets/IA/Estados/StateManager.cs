@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Global;
 public class StateManager: MonoBehaviour
 {
 
@@ -127,13 +127,12 @@ public class StateManager: MonoBehaviour
         
         List<NPC> enemies = _npc.GameManager.FindNearbyEnemies(_npc);
 
-
         if (enemies.Count > 0) {
-
             NPC target = _npc.FindClosestEnemy(enemies);
 
             if ( _npc.GetUnitType() != (int) UnitsManager.TypeUnits.Archer ){
                 stateAttack.ObjetiveNPC = target;
+                Debug.Log("Ento aquí");
                 ChangeState(_npc.stateManager.stateAttack);
             } else {
                   _npc.stateManager.stateRangeAttack.ObjetiveNPC = target;
@@ -143,7 +142,7 @@ public class StateManager: MonoBehaviour
             return true;
         } 
 
-        if ( _npc.Unit.Mode != UnitsManager.Modes.Defensive)
+        if ( _currentState != stateDefend)
            ChangeState(_npc.stateManager.stateCapture);
         return false;
 
@@ -159,6 +158,7 @@ public class StateManager: MonoBehaviour
     // Función para comprobar que un NPC esté en el modo total war
     public bool TotalWar(){
         if (!_npc.IsTotalWar() && _npc.GameModeIsTotalWar()){
+            Debug.Log("AAAAAAAA");
             ChangeState(stateCapture);
             return true;
         }
@@ -183,6 +183,41 @@ public class StateManager: MonoBehaviour
 
         }
         return false;
+    }
+
+    // Están capturando mi base. Y si estoy a cierta distancia, voy a defender
+    public bool IsCapturingBase(){
+
+        Vector3 zonaEnemiga = _npc.GameManager.waypointManager.GetEnemyZonePosition(_npc);
+        Vector3 basePropia = _npc.GameManager.waypointManager.GetBasePosition(_npc);
+
+
+        float distanciaZonaEnemiga = Vector3.Distance(zonaEnemiga, _npc.GetUnitPosition());
+        float distanciaBase = Vector3.Distance(basePropia , _npc.GetUnitPosition());
+
+
+        switch ( (int) _npc.GetUnitTeam() )
+        {
+            case (int) GlobalAttributes.Team.Blue:
+               if (_npc.GameManager.CapturingRedTeam() && distanciaBase < distanciaZonaEnemiga){
+                    ChangeState(stateDefend);
+                    return true;
+               }
+                return false;
+
+                break;
+            case (int) GlobalAttributes.Team.Red:
+                if (_npc.GameManager.CapturingBlueTeam() && distanciaBase < distanciaZonaEnemiga){
+                    ChangeState(stateDefend);
+                    return true;
+                }
+                return false;
+                break;
+            default:
+                return false;
+                break;
+        }
+
     }
 
     // Función para comprobar si un aliado necesita curación

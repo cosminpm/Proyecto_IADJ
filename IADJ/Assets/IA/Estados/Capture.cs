@@ -29,26 +29,23 @@ public class Capture : State
     public override void Action(NPC npc){
         
         
-        if (!_capturing){
+      
+        if(npc.GameManager.waypointManager.InsideWaypoint(npc,npc.GameManager.waypointManager.GetWaypointEnemyZone(npc))){
 
-             if(npc.pathFinding.IsEndPath()){
-
-                _capturing = true;
-                if (movement){
-                    movement = false;
-                    npc.pathFinding.ClearPath();
-                }
-
-            } else {
-
-                // calculo el camino a la base enemiga
-                if (!movement){
-                    npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetEnemyZonePosition(npc));
-                    movement = true;
-                } 
+            if (movement){
+                movement = false;
+                npc.pathFinding.ClearPath();
             }
+            npc.GameManager.waypointManager.Capturing(npc);
 
+        } else {
+                // calculo el camino a la base enemiga
+            if (!movement){
+                npc.pathFinding.CalculatePath(npc.GameManager.waypointManager.GetEnemyZonePosition(npc));
+                movement = true;
+            } 
         }
+
     }
 
 
@@ -66,6 +63,9 @@ public class Capture : State
         if ( !npc.IsTotalWar() && npc.stateManager.BackupNeeded()){
             return;
         }
+
+        if ( !npc.IsTotalWar() && npc.stateManager.IsCapturingBase())
+            return;
 
         // Si hay algún al que atacar, cambio de estado a MeleeAttack
         if (npc.stateManager.EnemyFound()){

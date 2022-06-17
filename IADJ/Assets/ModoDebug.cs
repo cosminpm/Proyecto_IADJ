@@ -11,6 +11,7 @@ using UnityEngine;
 public class ModoDebug : MonoBehaviour
 {
 
+    
     public bool mostrarWaypoints;
 
     public bool mostrarEstados;
@@ -19,7 +20,7 @@ public class ModoDebug : MonoBehaviour
     // Start is called before the first frame update
 
     public bool modoTactico;
-    
+
     void Start()
     {
         modoTactico = true;
@@ -37,12 +38,15 @@ public class ModoDebug : MonoBehaviour
     {
         List<GameObject> soldados =  GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_AZUL).ToList();
         soldados.AddRange(GameObject.FindGameObjectsWithTag(GlobalAttributes.TAG_EQUIPO_ROJO).ToList());
+        
         foreach (var s in soldados)
         {
             s.GetComponent<PathFinding>().tactic = modoTactico;
-            s.GetComponent<ControlPathFindingWithSteering>().ClearPath();
-            s.GetComponent<ControlPathFindingWithSteering>().ReCalculatePath();
+            //    s.GetComponent<ControlPathFindingWithSteering>().ClearPath();
+             //   s.GetComponent<ControlPathFindingWithSteering>().ReCalculatePath();
         }
+
+        
     }
     
     public void MostrarWaipoints()

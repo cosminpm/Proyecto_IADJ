@@ -230,8 +230,8 @@ public abstract class UnitsManager : MonoBehaviour
             
             Handles.color = Color.blue;
             Handles.DrawWireDisc(UnitAgent.Position, Vector3.up, VisionDistance, 3);
-            Handles.color = Color.red;
-            Handles.DrawWireDisc(UnitAgent.Position, Vector3.up, AttackRange, 5);
+            // Handles.color = Color.red;
+            // Handles.DrawWireDisc(UnitAgent.Position, Vector3.up, AttackRange, 5);
         }
 
     }
